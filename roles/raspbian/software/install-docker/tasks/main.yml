@@ -1,0 +1,35 @@
+- name: Check if 'docker-ce' package is already installed
+  shell: dpkg-query -W -f='${Status}' docker-ce | grep 'install ok installed'
+  register: docker_package_status
+  changed_when: false
+  failed_when: false
+
+- block:
+    - name: Download the convenience script for Raspbian
+      get_url:
+        url: https://get.docker.com
+        dest: /tmp/get-docker.sh
+
+    - name: Install Docker Engine for Raspbian
+      command: sh /tmp/get-docker.sh
+
+    - name: Delete the downloaded convenience script
+      file:
+        path: /tmp/get-docker.sh
+        state: absent
+
+  when: docker_package_status.rc == 1
+
+- name: Add '{{ config_admin_user_name }}' user to 'docker' group
+  user:
+    name: '{{ config_admin_user_name }}'
+    groups: 'docker'
+    append: true
+
+- name: Add a cronjob to prune all Docker data every week
+  cron:
+    name: 'prune Docker data'
+    minute: '0'
+    hour: '3'
+    weekday: '0'
+    job: 'docker system prune --all --force'

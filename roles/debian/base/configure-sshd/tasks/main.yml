@@ -1,0 +1,79 @@
+- name: Disallow root login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?PermitRootLogin
+    line: PermitRootLogin {{ config_sshd_permit_root_login }}
+  notify:
+    - Restart sshd service
+
+- name: Allow public key authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?PubkeyAuthentication
+    line: PubkeyAuthentication {{ config_sshd_pubkey_authentication }}
+  notify:
+    - Restart sshd service
+
+- name: Specify where to look for authorized keys
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?AuthorizedKeysFile
+    line: AuthorizedKeysFile {{ config_sshd_authorized_keys_file }}
+  notify:
+    - Restart sshd service
+
+- name: Disallow password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?PasswordAuthentication
+    line: PasswordAuthentication {{ config_sshd_password_authentication }}
+  notify:
+    - Restart sshd service
+
+- name: Disallow challenge-response authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?ChallengeResponseAuthentication
+    line: ChallengeResponseAuthentication {{ config_sshd_challenge_response_authentication }}
+  notify:
+    - Restart sshd service
+
+- name: Enable the Pluggable Authentication Module (PAM) interface
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?UsePAM
+    line: UsePAM {{ config_sshd_use_pam }}
+  notify:
+    - Restart sshd service
+
+- name: Disallow X11 forwarding
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?X11Forwarding
+    line: X11Forwarding {{ config_sshd_x11_forwarding }}
+  notify:
+    - Restart sshd service
+
+- name: Enable '/etc/motd' printing when a user logs in interactively
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?PrintMotd
+    line: PrintMotd {{ config_sshd_print_motd }}
+  notify:
+    - Restart sshd service
+
+- name: Disable printing of last user login when a user logs in interactively
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?PrintLastLog
+    line: PrintLastLog {{ config_sshd_print_last_log }}
+  notify:
+    - Restart sshd service
+
+- name: Do not specify a path to 'chroot' to after authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?ChrootDirectory
+    line: ChrootDirectory {{ config_sshd_chroot_directory }}
+  notify:
+    - Restart sshd service

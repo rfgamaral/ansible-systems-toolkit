@@ -1,0 +1,14 @@
+- name: Upgrade all system packages to the latest versions
+  apt:
+    upgrade: full
+    update_cache: yes
+    cache_valid_time: 300
+    dpkg_options: 'force-confold,force-confdef'
+
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: true
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: true

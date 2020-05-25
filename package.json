@@ -1,0 +1,18 @@
+{
+  "name": "@rfgamaral/ansible-systems-toolkit",
+  "description": "Ansible playbooks for provisioning my personal systems.",
+  "author": {
+    "name": "Ricardo Amaral",
+    "email": "hello@ricardoamaral.net"
+  },
+  "license": "MIT",
+  "scripts": {
+    "play:polymerbox": "run-s play:polymerbox:bootstrap play:polymerbox:configure",
+    "play:polymerbox:bootstrap": "ansible-playbook ./playbooks/polymerbox.yml --tags bootstrap",
+    "play:polymerbox:configure": "ansible-playbook ./playbooks/polymerbox.yml",
+    "play:polymerbox:upgrade": "ansible-playbook ./playbooks/polymerbox.yml --tags upgrade"
+  },
+  "devDependencies": {
+    "npm-run-all": "4.1.5"
+  }
+}

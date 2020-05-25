@@ -1,0 +1,36 @@
+- name: Install 'aptitude' package required by Ansible
+  apt:
+    pkg: aptitude
+
+- name: Update repositories cache and install required packages
+  apt:
+    pkg: '{{ config_system_required_packages }}'
+    update_cache: true
+    cache_valid_time: 900
+
+- name: Set system hostname to '{{ config_system_hostname }}'
+  hostname:
+    name: '{{ config_system_hostname }}'
+
+- name: Set '/etc/hosts' hostname to '{{ config_system_hostname }}'
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: 127.0.1.1 {{ config_system_hostname }}
+
+- name: Set timezone to '{{ config_system_timezone }}'
+  timezone:
+    name: '{{ config_system_timezone }}'
+  notify:
+    - Restart cron service
+
+- name: Disable dynamically generated part of 'pam_motd.so' module
+  replace:
+    path: /etc/pam.d/sshd
+    regexp: '^(session.*motd\.dynamic)$'
+    replace: '#\1'
+
+- name: Set welcome message for all login sessions
+  copy:
+    src: '{{ inventory_hostname }}/etc/motd'
+    dest: /etc/motd

@@ -1,0 +1,56 @@
+- hosts: POLYMERBOX
+
+  pre_tasks:
+    - block:
+        - include_role:
+            name: local/ssh/update-known-hosts
+
+        - block:
+            - block:
+                - include_role:
+                    name: debian/accounts/create-admin-user
+                - meta: reset_connection
+
+              vars:
+                ansible_user: '{{ config_default_user_name }}'
+                ansible_ssh_pass: '{{ config_default_user_pass }}'
+
+            - block:
+                - include_role:
+                    name: debian/accounts/delete-default-user
+
+              vars:
+                ansible_user: '{{ config_admin_user_name }}'
+                ansible_become_pass: '{{ config_admin_user_pass }}'
+
+          become: true
+
+      tags:
+        - bootstrap
+        - never
+
+  tasks:
+    - block:
+        - include_role:
+            name: debian/base/configure-system
+        - include_role:
+            name: debian/base/configure-localization
+        - include_role:
+            name: debian/base/configure-sshd
+
+        - include_role:
+            name: debian/base/upgrade-system
+            apply:
+              tags:
+                - upgrade
+          tags:
+            - upgrade
+
+        - include_role:
+            name: raspbian/software/install-docker
+
+      vars:
+        ansible_user: '{{ config_admin_user_name }}'
+        ansible_become_pass: '{{ config_admin_user_pass }}'
+
+      become: true

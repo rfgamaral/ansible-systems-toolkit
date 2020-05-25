@@ -1,0 +1,86 @@
+- name: Ensure required localization files are available
+  locale_gen:
+    name: '{{ item }}'
+    state: present
+  with_items: '{{ config_localization_required_locale_list }}'
+
+- name: Gather the current locale settings
+  command: localectl status
+  register: locale_settings
+  changed_when: false
+
+- name: Parse 'LANG' from the current locale settings
+  set_fact:
+    locale_lang: "{{ locale_settings.stdout \
+      | regex_search('LANG=([^\n]+)', '\\1') \
+      | first }}"
+
+- name: Set 'LANG' to '{{ config_localization_locale_lang }}'
+  command: localectl set-locale LANG={{ config_localization_locale_lang }}
+  changed_when: locale_lang != config_localization_locale_lang
+
+- name: Parse 'LC_MONETARY' from the current locale settings
+  set_fact:
+    locale_lc_monetary: "{{ locale_settings.stdout \
+      | regex_search('LC_MONETARY=([^\n]+)', '\\1') \
+      | default([''], true) \
+      | first }}"
+
+- name: Set 'LC_MONETARY' to '{{ config_localization_locale_lc_monetary }}'
+  command: localectl set-locale LC_MONETARY={{ config_localization_locale_lc_monetary }}
+  changed_when: locale_lc_monetary != config_localization_locale_lc_monetary
+
+- name: Parse 'LC_MEASUREMENT' from the current locale settings
+  set_fact:
+    locale_lc_measurement: "{{ locale_settings.stdout \
+      | regex_search('LC_MEASUREMENT=([^\n]+)', '\\1') \
+      | default([''], true) \
+      | first }}"
+
+- name: Set 'LC_MEASUREMENT' to '{{ config_localization_locale_lc_measurement }}'
+  command: localectl set-locale LC_MEASUREMENT={{ config_localization_locale_lc_measurement }}
+  changed_when: locale_lc_measurement != config_localization_locale_lc_measurement
+
+- name: Parse 'LC_NUMERIC' from the current locale settings
+  set_fact:
+    locale_lc_numeric: "{{ locale_settings.stdout \
+      | regex_search('LC_NUMERIC=([^\n]+)', '\\1') \
+      | default([''], true) \
+      | first }}"
+
+- name: Set 'LC_NUMERIC' to '{{ config_localization_locale_lc_numeric }}'
+  command: localectl set-locale LC_NUMERIC={{ config_localization_locale_lc_numeric }}
+  changed_when: locale_lc_numeric != config_localization_locale_lc_numeric
+
+- name: Parse 'LC_PAPER' from the current locale settings
+  set_fact:
+    locale_lc_paper: "{{ locale_settings.stdout \
+      | regex_search('LC_PAPER=([^\n]+)', '\\1') \
+      | default([''], true) \
+      | first }}"
+
+- name: Set 'LC_PAPER' to '{{ config_localization_locale_lc_paper }}'
+  command: localectl set-locale LC_PAPER={{ config_localization_locale_lc_paper }}
+  changed_when: locale_lc_paper != config_localization_locale_lc_paper
+
+- name: Parse 'LC_TELEPHONE' from the current locale settings
+  set_fact:
+    locale_lc_telephone: "{{ locale_settings.stdout \
+      | regex_search('LC_TELEPHONE=([^\n]+)', '\\1') \
+      | default([''], true) \
+      | first }}"
+
+- name: Set 'LC_TELEPHONE' to '{{ config_localization_locale_lc_telephone }}'
+  command: localectl set-locale LC_TELEPHONE={{ config_localization_locale_lc_telephone }}
+  changed_when: locale_lc_telephone != config_localization_locale_lc_telephone
+
+- name: Parse 'LC_TIME' from the current locale settings
+  set_fact:
+    locale_lc_time: "{{ locale_settings.stdout \
+      | regex_search('LC_TIME=([^\n]+)', '\\1') \
+      | default([''], true) \
+      | first }}"
+
+- name: Set 'LC_TIME' to '{{ config_localization_locale_lc_time }}'
+  command: localectl set-locale LC_TIME={{ config_localization_locale_lc_time }}
+  changed_when: locale_lc_time != config_localization_locale_lc_time
