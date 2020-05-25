@@ -1,0 +1,5 @@
+# Ansible vault password
+.password
+
+# Project dependencies
+node_modules/

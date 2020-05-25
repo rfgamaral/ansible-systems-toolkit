@@ -1,0 +1,3 @@
+{% for public_key in query('fileglob', inventory_hostname ~ '/home/.ssh/*.pub') %}
+    {{ lookup('file', public_key) ~ '\n'}}
+{% endfor %}

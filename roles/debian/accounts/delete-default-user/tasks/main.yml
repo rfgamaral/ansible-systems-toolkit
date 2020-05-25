@@ -1,0 +1,20 @@
+- name: Lookup for an existing PAM session for the default '{{ config_default_user_name }}' user
+  shell: ps -few | grep {{ config_default_user_name }} | grep sd-pam | grep -v grep | awk '{print $2}'
+  register: pam_session_pid
+  changed_when: false
+
+- name: Wait until the default '{{ config_default_user_name }}' user PAM session is terminated
+  wait_for:
+    path: /proc/{{ pam_session_pid.stdout }}/status
+    state: absent
+
+- name: Delete default '{{ config_default_user_name }}' user account and related files
+  user:
+    name: '{{ config_default_user_name }}'
+    remove: true
+    state: absent
+
+- name: Cleanup sudo configuration for the default '{{ config_default_user_name }}' user account
+  file:
+    path: /etc/sudoers.d/010_{{ config_default_user_name }}-nopasswd
+    state: absent

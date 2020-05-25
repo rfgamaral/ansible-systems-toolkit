@@ -1,0 +1,14 @@
+- name: Create '{{ config_admin_user_name }}' admin user account with specified password and groups
+  user:
+    name: '{{ config_admin_user_name }}'
+    password: "{{ config_admin_user_pass | string | password_hash('sha512') }}"
+    update_password: on_create
+    groups: '{{ config_admin_user_groups }}'
+    state: present
+
+- name: Add SSH authorized keys to '{{ config_admin_user_name }}' admin user account
+  authorized_key:
+    user: '{{ config_admin_user_name }}'
+    key: "{{ lookup('template', 'authorized_keys.j2') }}"
+    exclusive: true
+    state: present

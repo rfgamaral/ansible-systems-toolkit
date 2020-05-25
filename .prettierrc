@@ -1,0 +1,19 @@
+{
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": [
+        ".*rc"
+      ],
+      "options": {
+        "parser": "json",
+        "printWidth": 0
+      }
+    }
+  ],
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5"
+}

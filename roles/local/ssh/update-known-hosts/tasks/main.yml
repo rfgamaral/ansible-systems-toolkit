@@ -1,0 +1,25 @@
+- block:
+    - name: Resolve '{{ inventory_hostname_full }}' to an IP address
+      local_action: 'shell dig +short {{ inventory_hostname_full }}'
+      register: inventory_ip_address
+      changed_when: false
+
+    - name: Gather SSH public keys for '{{ inventory_hostname_full }}' and '{{ inventory_ip_address.stdout }}'
+      local_action: 'shell ssh-keyscan -t ecdsa {{ item }}'
+      with_items:
+        - '{{ inventory_hostname_full }}'
+        - '{{ inventory_ip_address.stdout }}'
+      register: inventory_public_ssh_keys
+      changed_when: false
+
+    - name: Update '~/.ssh/known_hosts' with gathered public keys
+      delegate_to: localhost
+      known_hosts:
+        hash_host: true
+        name: '{{ item.item }}'
+        key: '{{ item.stdout }}'
+        path: "{{ lookup('env', 'HOME') + '/.ssh/known_hosts' }}"
+      with_items: '{{ inventory_public_ssh_keys.results }}'
+
+  vars:
+    inventory_hostname_full: '{{ inventory_hostname | lower }}.{{ config_network_domain }}'

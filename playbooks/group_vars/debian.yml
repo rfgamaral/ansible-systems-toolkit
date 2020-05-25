@@ -1,0 +1,32 @@
+config_admin_user_name: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  62343462343465333236383238646635643263383563636666626636393862333431366437346134
+  6339356436356634336635363361323063656534646339640a646365656332636534346266623666
+  33646664316130363433323335636531653635386362393564613936643534393164353464613437
+  6333363331353238620a323466643631623162303836633332616531386637373365636366336637
+  3563
+config_admin_user_groups: ['sudo']
+
+config_localization_locale_lang: 'en_US.UTF-8'
+config_localization_locale_lc_measurement: 'pt_PT.UTF-8'
+config_localization_locale_lc_monetary: 'pt_PT.UTF-8'
+config_localization_locale_lc_numeric: 'pt_PT.UTF-8'
+config_localization_locale_lc_paper: 'pt_PT.UTF-8'
+config_localization_locale_lc_telephone: 'pt_PT.UTF-8'
+config_localization_locale_lc_time: 'pt_PT.UTF-8'
+config_localization_required_locale_list:
+  - 'en_US.UTF-8'
+  - 'pt_PT.UTF-8'
+
+config_sshd_permit_root_login: 'no'
+config_sshd_pubkey_authentication: 'yes'
+config_sshd_authorized_keys_file: '.ssh/authorized_keys'
+config_sshd_password_authentication: 'no'
+config_sshd_challenge_response_authentication: 'no'
+config_sshd_use_pam: 'yes'
+config_sshd_x11_forwarding: 'no'
+config_sshd_print_motd: 'no'
+config_sshd_print_last_log: 'no'
+config_sshd_chroot_directory: 'none'
+
+config_system_timezone: 'Europe/Lisbon'
