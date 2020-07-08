@@ -1,0 +1,47 @@
+- name: Install 'zsh' package
+  apt:
+    pkg: zsh
+    update_cache: yes
+    cache_valid_time: 900
+
+- name: Check if Antibody is already installed
+  stat:
+    path: /usr/local/bin/antibody
+  register: antibody_status
+
+- block:
+    - name: Download the Antibody install script
+      get_url:
+        url: https://git.io/antibody
+        dest: /tmp/get-antibody.sh
+
+    - name: Install Antibody shell plugin manager
+      command: sh /tmp/get-antibody.sh -b /usr/local/bin
+
+    - name: Delete the downloaded Antibody install script
+      file:
+        path: /tmp/get-antibody.sh
+        state: absent
+
+  when: not antibody_status.stat.exists
+
+- name: Update '~/.zshrc' configuration for user '{{ config_admin_user_name }}'
+  copy:
+    src: zshrc
+    dest: '/home/{{ config_admin_user_name }}/.zshrc'
+    owner: '{{ config_admin_user_name }}'
+    group: '{{ config_admin_user_name }}'
+    mode: '0644'
+
+- name: Update '~/.zprofile' configuration for user '{{ config_admin_user_name }}'
+  copy:
+    src: zprofile
+    dest: '/home/{{ config_admin_user_name }}/.zprofile'
+    owner: '{{ config_admin_user_name }}'
+    group: '{{ config_admin_user_name }}'
+    mode: '0644'
+
+- name: Set default shell to Zsh for user '{{ config_admin_user_name }}'
+  user:
+    name: '{{ config_admin_user_name }}'
+    shell: /usr/bin/zsh
