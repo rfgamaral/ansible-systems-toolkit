@@ -58,6 +58,11 @@
             name: linux/dotfiles/profile
 
         - include_role:
+            name: linux/shell/configure-bash
+        - include_role:
+            name: linux/shell/switch-to-zsh
+
+        - include_role:
             name: raspbian/software/install-docker
 
       vars:

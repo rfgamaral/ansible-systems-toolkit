@@ -1,0 +1,105 @@
+# Initialize the shell completion system
+autoload -Uz compinit
+
+typeset -i updated_at=$(date +'%j' -r ~/.zcompdump 2>/dev/null || stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)
+
+if [ $(date +'%j') != $updated_at ]; then
+    compinit -i
+else
+    compinit -C -i
+fi
+
+zmodload -i zsh/complist
+
+# Save 100000 lines of history within the shell
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=$HISTSIZE
+
+# Move cursor to end if word had one match
+setopt ALWAYS_TO_END
+
+# Automatically list choices on ambiguous completion
+setopt AUTO_LIST
+
+# Show completion menu on a succesive tab presses
+setopt AUTO_MENU
+
+# Treat the '!' character specially during expansion
+setopt BANG_HIST
+
+# Try to correct the spelling of commands but not arguments
+unsetopt CORRECT_ALL
+setopt CORRECT
+
+# Write the history file in the ":start:elapsed;command" format
+setopt EXTENDED_HISTORY
+
+# Expire duplicate entries first when trimming history
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# Do not display a line previously found
+setopt HIST_FIND_NO_DUPS
+
+# Delete old recorded entry if new entry is a duplicate
+setopt HIST_IGNORE_ALL_DUPS
+
+# Don't record an entry that was just recorded again
+setopt HIST_IGNORE_DUPS
+
+# Don't record an entry starting with a space
+setopt HIST_IGNORE_SPACE
+
+# Remove superfluous blanks before recording entry
+setopt HIST_REDUCE_BLANKS
+
+# Don't write duplicate entries in the history file
+setopt HIST_SAVE_NO_DUPS
+
+# Don't execute immediately upon history expansion
+setopt HIST_VERIFY
+
+# Write to the history file immediately, not when the shell exits
+setopt INC_APPEND_HISTORY
+
+# Allow comments in interactive shells
+setopt INTERACTIVE_COMMENTS
+
+# Share history between all sessions
+setopt SHARE_HISTORY
+
+# Completetly disable shell beeping
+unsetopt BEEP
+unsetopt HIST_BEEP
+unsetopt LIST_BEEP
+
+# Improve auto-completion styles
+zstyle ':completion:*' menu select
+zstyle ':completion:*' group-name ''
+zstyle ':completion:::::' completer _expand _complete _ignored _approximate
+zstyle ':completion::complete:*' gain-privileges 1
+
+# Improve Pure prompt theme styles
+zstyle ':prompt:pure:path' color 12
+zstyle ':prompt:pure:prompt:success' color 10
+zstyle ':prompt:pure:prompt:error' color 9
+
+# Load antibody dynamically (apply all plugins)
+source <(antibody init)
+
+# Download and apply Pure prompt theme
+antibody bundle mafredri/zsh-async
+antibody bundle sindresorhus/pure
+
+# Download and apply various plugins
+antibody bundle buonomo/yarn-completion
+antibody bundle chrissicool/zsh-256color
+antibody bundle lukechilds/zsh-better-npm-completion
+antibody bundle zdharma/fast-syntax-highlighting
+antibody bundle zsh-users/zsh-autosuggestions
+antibody bundle zsh-users/zsh-completions
+antibody bundle zsh-users/zsh-history-substring-search
+
+# Keybindings to use the up/down keys with history more efficiently
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down

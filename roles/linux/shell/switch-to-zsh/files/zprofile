@@ -1,0 +1,4 @@
+# Include ~/.profile in emulation mode if it exists
+if [ -f "$HOME/.profile" ]; then
+    emulate sh -c ". $HOME/.profile"
+fi
