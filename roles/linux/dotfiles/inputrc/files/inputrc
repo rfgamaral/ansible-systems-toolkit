@@ -1,0 +1,63 @@
+# Enable 8bit input
+set meta-flag On
+set input-meta On
+
+# Turns off 8th bit stripping
+set convert-meta Off
+
+# Keep the 8th bit for display
+set output-meta On
+
+# Never rings the terminal bell
+set bell-style none
+
+# Displays possible completions using different colors to indicate their file type
+set colored-stats on
+
+# Performs filename matching and completion in a case-insensitive fashion
+set completion-ignore-case on
+
+# The length in characters of the common prefix of a list of possible completions that is displayed
+# without modification.
+set completion-prefix-display-length 3
+
+# The number of possible completions that determines when the user is asked whether the list of
+# possibilities should be displayed
+set completion-query-items 25
+
+# Completed directory names have a slash appended
+set mark-directories on
+
+# Completed names which are symbolic links to directories have a slash appended
+set mark-symlinked-directories on
+
+# Words which have more than one possible completion cause the matches to be listed immediately
+# instead of ringing the bell
+set show-all-if-ambiguous on
+
+# Words which have more than one possible completion without any possible partial completion cause
+# the matches to be listed immediately instead of ringing the bell
+set show-all-if-unmodified on
+
+# A character denoting a file’s type is appended to the filename when listing possible completions
+set visible-stats on
+
+# Allow the use of the Home/End keys
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+
+# Allow the use of the Delete/Insert keys
+"\e[3~": delete-char
+"\e[2~": quoted-insert
+
+# Mappings for Ctrl-left-arrow and Ctrl-right-arrow for word moving
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word
+
+# Search backward/forward through the history for the current prompt string
+"\C-p":history-search-backward
+"\C-n":history-search-forward

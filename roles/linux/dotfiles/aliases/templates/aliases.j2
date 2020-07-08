@@ -1,0 +1,51 @@
+# Useful common aliases definitions
+alias cd..='cd ..'
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+alias .......="cd ../../../../../.."
+alias ........="cd ../../../../../../.."
+alias .........="cd ../../../../../../../.."
+alias ..........="cd ../../../../../../../../.."
+alias ...........="cd ../../../../../../../../../.."
+alias ............="cd ../../../../../../../../../../.."
+alias .............="cd ../../../../../../../../../../../.."
+alias chgrp='chgrp --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chown='chown --preserve-root'
+alias cp='cp -i'
+alias df='df -Tha --total'
+alias du='du -ach -d2'
+alias egrep='egrep --color=auto'
+alias fastping='ping -c 100 -s.2'
+alias fgrep='fgrep --color=auto'
+alias free='free -mlt'
+alias grep='grep --color=auto'
+alias halt='sudo /sbin/halt'
+alias la='ls -lha'
+alias ll='ls -lh'
+alias ln='ln -i'
+alias ls='ls -F --color=auto --group-directories-first'
+alias mkdir='mkdir -pv'
+alias mv='mv -i'
+alias ping='ping -c 5'
+alias poweroff='sudo /sbin/poweroff'
+alias ps='ps auxf'
+alias psg='ps | grep -v grep | grep -i -e VSZ -e'
+alias reboot='sudo /sbin/reboot'
+alias rm='rm -I --preserve-root'
+alias root='sudo -i'
+alias shutdown='sudo /sbin/shutdown'
+alias wget='wget -c --hsts-file ~/.cache/wget-hsts'
+
+{% if 'debian' in group_names %}
+# Debian GNU/Linux specific aliases definitions
+alias apt-get-y='sudo apt-get --yes'
+alias apt-get='sudo apt-get'
+alias apt-y='sudo apt --yes'
+alias apt='sudo apt'
+alias diff='colordiff'
+alias rmrcpkg='dpkg --list | grep "^rc" | cut -d " " -f 3 | xargs sudo dpkg --purge'
+{% endif %}
