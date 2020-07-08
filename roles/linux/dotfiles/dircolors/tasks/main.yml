@@ -1,0 +1,7 @@
+- name: Update '~/.dircolors' configuration for user '{{ config_admin_user_name }}'
+  copy:
+    src: dircolors
+    dest: '/home/{{ config_admin_user_name }}/.dircolors'
+    owner: '{{ config_admin_user_name }}'
+    group: '{{ config_admin_user_name }}'
+    mode: '0644'

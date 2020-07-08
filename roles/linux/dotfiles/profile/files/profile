@@ -1,0 +1,5 @@
+# Set personalized LS_COLORS if ~/.dircolors exists
+[[ -e ~/.dircolors ]] && eval $(dircolors -b ~/.dircolors)
+
+# Include aliases definitions from a separate file
+[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"

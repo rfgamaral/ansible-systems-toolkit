@@ -47,6 +47,17 @@
             - upgrade
 
         - include_role:
+            name: linux/dotfiles/aliases
+        - include_role:
+            name: linux/dotfiles/dircolors
+        - include_role:
+            name: linux/dotfiles/inputrc
+        - include_role:
+            name: linux/dotfiles/nanorc
+        - include_role:
+            name: linux/dotfiles/profile
+
+        - include_role:
             name: raspbian/software/install-docker
 
       vars:
