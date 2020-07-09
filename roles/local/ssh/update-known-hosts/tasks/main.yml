@@ -5,10 +5,12 @@
       changed_when: false
 
     - name: Gather SSH public keys for '{{ inventory_hostname_full }}' and '{{ inventory_ip_address.stdout }}'
-      local_action: 'shell ssh-keyscan -t ecdsa {{ item }}'
+      local_action: 'shell ssh-keyscan -t ecdsa {{ host }}'
       with_items:
         - '{{ inventory_hostname_full }}'
         - '{{ inventory_ip_address.stdout }}'
+      loop_control:
+        loop_var: host
       register: inventory_public_ssh_keys
       changed_when: false
 
@@ -16,10 +18,12 @@
       delegate_to: localhost
       known_hosts:
         hash_host: true
-        name: '{{ item.item }}'
-        key: '{{ item.stdout }}'
+        name: '{{ public_key.host }}'
+        key: '{{ public_key.stdout }}'
         path: "{{ lookup('env', 'HOME') + '/.ssh/known_hosts' }}"
       with_items: '{{ inventory_public_ssh_keys.results }}'
+      loop_control:
+        loop_var: public_key
 
   vars:
     inventory_hostname_full: '{{ inventory_hostname | lower }}.{{ config_network_domain }}'
