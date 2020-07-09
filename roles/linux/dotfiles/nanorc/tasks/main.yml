@@ -1,7 +1,7 @@
-- name: Update '~/.nanorc' configuration for user '{{ config_admin_user_name }}'
+- name: Update '~/.nanorc' configuration for user '{{ config_role_user_name }}'
   template:
     src: nanorc.j2
-    dest: '/home/{{ config_admin_user_name }}/.nanorc'
-    owner: '{{ config_admin_user_name }}'
-    group: '{{ config_admin_user_name }}'
+    dest: '{{ config_role_user_home }}/.nanorc'
+    owner: '{{ config_role_user_name }}'
+    group: '{{ config_role_user_name }}'
     mode: '0644'
