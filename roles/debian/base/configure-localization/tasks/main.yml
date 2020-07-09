@@ -1,8 +1,10 @@
 - name: Ensure required localization files are available
   locale_gen:
-    name: '{{ item }}'
+    name: '{{ locale }}'
     state: present
   with_items: '{{ config_localization_required_locale_list }}'
+  loop_control:
+    loop_var: locale
 
 - name: Gather the current locale settings
   command: localectl status
