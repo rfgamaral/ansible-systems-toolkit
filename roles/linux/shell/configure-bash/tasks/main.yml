@@ -1,23 +1,23 @@
-- name: Update '~/.bashrc' configuration for user '{{ config_admin_user_name }}'
-  copy:
-    src: bashrc
-    dest: '/home/{{ config_admin_user_name }}/.bashrc'
-    owner: '{{ config_admin_user_name }}'
-    group: '{{ config_admin_user_name }}'
+- name: Update '~/.bashrc' configuration for user '{{ config_role_user_name }}'
+  template:
+    src: bashrc.j2
+    dest: '{{ config_role_user_home }}/.bashrc'
+    owner: '{{ config_role_user_name }}'
+    group: '{{ config_role_user_name }}'
     mode: '0644'
 
-- name: Update '~/.bash_profile' configuration for user '{{ config_admin_user_name }}'
+- name: Update '~/.bash_profile' configuration for user '{{ config_role_user_name }}'
   copy:
     src: bash_profile
-    dest: '/home/{{ config_admin_user_name }}/.bash_profile'
-    owner: '{{ config_admin_user_name }}'
-    group: '{{ config_admin_user_name }}'
+    dest: '{{ config_role_user_home }}/.bash_profile'
+    owner: '{{ config_role_user_name }}'
+    group: '{{ config_role_user_name }}'
     mode: '0644'
 
-- name: Update '~/.bash_logout' configuration for user '{{ config_admin_user_name }}'
+- name: Update '~/.bash_logout' configuration for user '{{ config_role_user_name }}'
   copy:
     src: bash_logout
-    dest: '/home/{{ config_admin_user_name }}/.bash_logout'
-    owner: '{{ config_admin_user_name }}'
-    group: '{{ config_admin_user_name }}'
+    dest: '{{ config_role_user_home }}/.bash_logout'
+    owner: '{{ config_role_user_name }}'
+    group: '{{ config_role_user_name }}'
     mode: '0644'

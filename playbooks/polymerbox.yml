@@ -51,6 +51,21 @@
           tags:
             - upgrade
 
+        - name: Setup 'root' user profile
+          include_role:
+            name: '{{ item }}'
+          with_items:
+            - linux/dotfiles/aliases
+            - linux/dotfiles/dircolors
+            - linux/dotfiles/inputrc
+            - linux/dotfiles/nanorc
+            - linux/dotfiles/profile
+            - linux/shell/configure-bash
+            - linux/shell/switch-to-zsh
+          vars:
+            config_role_user_name: 'root'
+            config_role_user_home: '/root'
+
         - name: Setup '{{ config_admin_user_name }}' user profile
           include_role:
             name: '{{ item }}'
@@ -62,6 +77,9 @@
             - linux/dotfiles/profile
             - linux/shell/configure-bash
             - linux/shell/switch-to-zsh
+          vars:
+            config_role_user_name: '{{ config_admin_user_name }}'
+            config_role_user_home: '/home/{{ config_admin_user_name }}'
 
         - name: Install additional software
           include_role:

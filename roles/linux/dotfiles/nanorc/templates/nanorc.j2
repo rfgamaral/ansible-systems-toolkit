@@ -31,11 +31,19 @@ set tabstospaces
 # Snip whitespace at the end of lines when justifying or hard-wrapping
 set trimblanks
 
+{% if config_role_user_name == 'root' %}
+# Paint the interface elements of nano
+set titlecolor brightwhite,magenta
+set statuscolor brightwhite,magenta
+set keycolor brightmagenta
+set functioncolor magenta
+{% else %}
 # Paint the interface elements of nano
 set titlecolor brightwhite,blue
 set statuscolor brightwhite,green
 set keycolor cyan
 set functioncolor green
+{% endif %}
 
 {% if 'debian' in group_names %}
 # Include all existing syntax definitions
