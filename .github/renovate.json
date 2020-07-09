@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "config:base",
+    ":disablePeerDependencies",
+    ":enableVulnerabilityAlertsWithLabel(security)",
+    ":label(dependencies)",
+    ":masterIssue",
+    ":prConcurrentLimit10",
+    ":prHourlyLimit4",
+    ":timezone(Europe/Lisbon)",
+    "schedule:earlyMondays"
+  ],
+  "postUpdateOptions": [
+    "yarnDedupeHighest"
+  ]
+}
