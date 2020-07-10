@@ -1,6 +1,6 @@
 - name: Update '~/.profile' configuration for user '{{ config_role_user_name }}'
-  copy:
-    src: profile
+  template:
+    src: profile.j2
     dest: '{{ config_role_user_home }}/.profile'
     owner: '{{ config_role_user_name }}'
     group: '{{ config_role_user_name }}'
