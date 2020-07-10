@@ -45,3 +45,16 @@
   user:
     name: '{{ config_role_user_name }}'
     shell: /usr/bin/zsh
+
+- name: Delete all Bash configuration files
+  file:
+    path: '{{ config_role_user_home }}/{{ file }}'
+    state: absent
+  with_items:
+    - .bash_history
+    - .bash_login
+    - .bash_logout
+    - .bash_profile
+    - .bashrc
+  loop_control:
+    loop_var: file
