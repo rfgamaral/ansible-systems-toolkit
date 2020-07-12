@@ -6,6 +6,7 @@
     "email": "hello@ricardoamaral.net"
   },
   "license": "MIT",
+  "private": true,
   "scripts": {
     "play:polymerbox": "run-s play:polymerbox:bootstrap play:polymerbox:configure",
     "play:polymerbox:bootstrap": "ansible-playbook ./playbooks/polymerbox.yml --tags bootstrap",
