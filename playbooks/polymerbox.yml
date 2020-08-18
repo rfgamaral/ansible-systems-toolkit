@@ -4,13 +4,13 @@
     - block:
         - name: Update known public keys for remote host
           include_role:
-            name: local/ssh/update-known-hosts
+            name: machine/local/ssh/update-known-hosts
 
         - block:
             - block:
                 - name: Create remote host administrator user account
                   include_role:
-                    name: debian/accounts/create-admin-user
+                    name: distro/debian/accounts/create-admin-user
                 - meta: reset_connection
 
               vars:
@@ -20,7 +20,7 @@
             - block:
                 - name: Delete remote host default user account
                   include_role:
-                    name: debian/accounts/delete-default-user
+                    name: distro/debian/accounts/delete-default-user
 
               vars:
                 ansible_user: '{{ config_admin_user_name }}'
@@ -38,13 +38,13 @@
           include_role:
             name: '{{ item }}'
           with_items:
-            - debian/base/configure-system
-            - debian/base/configure-localization
-            - debian/base/configure-sshd
+            - distro/debian/base/configure-system
+            - distro/debian/base/configure-localization
+            - distro/debian/base/configure-sshd
 
         - name: Upgrade distribution software and kernel
           include_role:
-            name: debian/base/upgrade-system
+            name: distro/debian/base/upgrade-system
             apply:
               tags:
                 - upgrade
@@ -83,7 +83,7 @@
           include_role:
             name: '{{ item }}'
           with_items:
-            - raspbian/software/install-docker
+            - distro/raspbian/software/install-docker
 
       vars:
         ansible_user: '{{ config_admin_user_name }}'
