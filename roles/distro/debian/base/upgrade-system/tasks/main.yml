@@ -1,7 +1,7 @@
 - name: Upgrade all system packages to the latest versions
   apt:
     upgrade: full
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 300
     dpkg_options: 'force-confold,force-confdef'
 
