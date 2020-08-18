@@ -15,5 +15,9 @@ config_system_required_packages:
   - lsof
   - mc
   - p7zip-full
+  - python3-pip
   - tree
   - zip
+config_system_required_packages_python:
+  - docker
+  - docker-compose

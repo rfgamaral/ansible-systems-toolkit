@@ -8,6 +8,10 @@
     update_cache: true
     cache_valid_time: 900
 
+- name: Install required packages for Python
+  pip:
+    name: '{{ config_system_required_packages_python }}'
+
 - name: Set system hostname to '{{ config_system_hostname }}'
   hostname:
     name: '{{ config_system_hostname }}'
