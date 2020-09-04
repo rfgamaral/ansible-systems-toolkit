@@ -1,0 +1,14 @@
+Unattended-Upgrade::Sender "{{ config_system_hostname }} Administrator <noreply-raspberry-pi@{{ config_network_domain }}>";
+Unattended-Upgrade::Mail "{{ config_primary_email }}";
+
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "05:00";
+
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+
+Unattended-Upgrade::Origins-Pattern {
+    "origin=Raspbian,codename=${distro_codename},label=Raspbian";
+    "origin=Raspberry Pi Foundation,codename=${distro_codename},label=Raspberry Pi Foundation";
+};
