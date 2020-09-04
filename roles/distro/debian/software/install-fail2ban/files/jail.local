@@ -1,0 +1,17 @@
+[DEFAULT]
+
+banaction = ufw
+
+[Definition]
+failregex = %(__prefix_line)sConnection closed by authenticating user <F-USER>.+</F-USER> <HOST> port \d+ \[preauth\]$
+            %(known/failregex)s
+
+[sshd]
+
+enabled = true
+filter = sshd
+port = ssh
+
+maxretry = 3
+findtime = 5m
+bantime = 15m

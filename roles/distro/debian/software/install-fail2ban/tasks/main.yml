@@ -1,0 +1,10 @@
+- name: Install 'fail2ban' package
+  apt:
+    pkg: fail2ban
+
+- name: Add local jail configuration
+  copy:
+    src: jail.local
+    dest: /etc/fail2ban/jail.local
+  notify:
+    - Restart fail2ban service
