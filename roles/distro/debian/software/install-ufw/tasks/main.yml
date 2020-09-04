@@ -1,0 +1,32 @@
+- name: Install 'ufw' package
+  apt:
+    pkg: ufw
+
+- name: Configure default rules
+  ufw:
+    direction: '{{ rule.direction }}'
+    policy: '{{ rule.policy }}'
+  with_items:
+    - { direction: incoming, policy: deny }
+    - { direction: outgoing, policy: allow }
+  loop_control:
+    loop_var: rule
+  notify:
+    - Restart ufw service
+
+- name: Configure service rules
+  ufw:
+    port: '{{ rule.port }}'
+    rule: '{{ rule.rule }}'
+  with_items:
+    - { port: ssh, rule: limit }
+    - { port: https, rule: allow }
+  loop_control:
+    loop_var: rule
+  notify:
+    - Restart ufw service
+
+- name: Enable firewall with logging
+  ufw:
+    state: enabled
+    logging: 'on'
