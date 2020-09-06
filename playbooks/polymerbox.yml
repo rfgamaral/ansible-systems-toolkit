@@ -84,6 +84,7 @@
           include_role:
             name: '{{ item }}'
           with_items:
+            - distro/raspbian/software/install-acme.sh
             - distro/raspbian/software/install-docker
 
       vars:
