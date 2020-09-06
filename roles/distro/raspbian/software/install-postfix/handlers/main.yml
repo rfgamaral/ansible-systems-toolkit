@@ -1,0 +1,15 @@
+- name: Update sasl_passwd table
+  command: postmap /etc/postfix/sasl_passwd
+
+- name: Update header_checks table
+  command: postmap /etc/postfix/header_checks
+
+- name: Restart postfix service
+  service:
+    name: postfix
+    state: restarted
+
+- name: Restart saslauthd service
+  service:
+    name: saslauthd
+    state: restarted
