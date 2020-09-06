@@ -1,0 +1,84 @@
+- name: Check if ACME Shell script is already installed
+  stat:
+    path: /opt/acme.sh/acme.sh
+  register: acmesh_status
+
+- block:
+    - name: Download the ACME Shell install script
+      git:
+        repo: https://github.com/Neilpang/acme.sh.git
+        dest: /tmp/acme.sh
+
+    - name: Install ACME Shell script
+      command:
+        chdir: /tmp/acme.sh
+        cmd: >
+          ./acme.sh
+            --install
+            --nocron
+            --noprofile
+            --home /opt/acme.sh
+            --accountemail {{ config_primary_email }}
+
+    - name: Delete the downloaded ACME Shell install script
+      file:
+        path: /tmp/acme.sh
+        state: absent
+
+  when: not acmesh_status.stat.exists
+
+- name: Check if '{{ config_network_domain }}' certificate have already been issued
+  stat:
+    path: /opt/acme.sh/{{ config_network_domain }}
+  register: certificate_issued_status
+
+- name: Issue '{{ config_network_domain }}' certificate with DNS challenge
+  command:
+    chdir: /opt/acme.sh
+    cmd: >
+      ./acme.sh
+        --home /opt/acme.sh
+        --issue
+        --domain '{{ config_network_domain }}'
+        --domain '*.{{ config_network_domain }}'
+        --dns dns_cf
+  environment:
+    CF_Account_ID: '{{ config_cloudflare_account_id }}'
+    CF_Zone_ID: '{{ config_cloudflare_zone_id }}'
+    CF_Token: '{{ config_cloudflare_token }}'
+  when: not certificate_issued_status.stat.exists
+
+- name: Check if '{{ config_network_domain }}' certificate have already been installed
+  stat:
+    path: /etc/ssl/{{ cert_file }}
+  with_items:
+    - 'certs/{{ config_network_domain }}.pem'
+    - 'private/{{ config_network_domain }}.pem'
+  loop_control:
+    loop_var: cert_file
+  register: certificate_installed_status
+
+- name: Install the issued '{{ config_network_domain }}' certificate to the system store
+  command:
+    chdir: /opt/acme.sh
+    cmd: >
+      ./acme.sh
+      --home /opt/acme.sh
+      --install-cert
+      --domain '{{ config_network_domain }}'
+      --cert-file '/etc/ssl/certs/{{ config_network_domain }}.pem'
+      --key-file '/etc/ssl/private/{{ config_network_domain }}.pem'
+  when: not (certificate_installed_status.results[0].stat.exists and certificate_installed_status.results[1].stat.exists)
+
+- name: Configure ACME Shell script to upgrade automatically
+  lineinfile:
+    path: /opt/acme.sh/account.conf
+    regexp: ^#AUTO_UPGRADE
+    line: AUTO_UPGRADE='1'
+
+- name: Add a cronjob to upgrade ACME Shell script and renew all certificates
+  cron:
+    name: 'upgrade acme.sh and renew all certificates'
+    minute: '0'
+    hour: '5'
+    job: '/opt/acme.sh/acme.sh --cron --home /opt/acme.sh > /dev/null'
