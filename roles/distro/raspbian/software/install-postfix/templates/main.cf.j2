@@ -1,0 +1,49 @@
+inet_interfaces = all
+inet_protocols = ipv4
+
+mydestination = $myhostname, localhost.$mydomain, $mydomain
+myhostname = polymerbox.{{ config_network_domain }}
+mynetworks = 127.0.0.0/8
+myorigin = /etc/mailname
+
+alias_database = hash:/etc/aliases
+alias_maps = hash:/etc/aliases
+append_dot_mydomain = no
+biff = no
+compatibility_level = 2
+header_checks = regexp:/etc/postfix/header_checks
+header_size_limit = 4096000
+mailbox_size_limit = 0
+readme_directory = no
+recipient_delimiter = +
+relayhost = [smtp.sendgrid.net]:587
+tls_random_source = dev:/dev/urandom
+
+smtp_use_tls = yes
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_sasl_tls_security_options = noanonymous
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtp_tls_security_level = encrypt
+smtp_tls_note_starttls_offer = yes
+smtp_tls_mandatory_protocols=!SSLv2,!SSLv3
+smtp_tls_protocols=!SSLv2,!SSLv3
+smtp_tls_session_cache_database = btree:/var/lib/postfix/smtp_tls_session_cache
+
+smtpd_banner = $myhostname ESMTP $mail_name (Raspbian)
+smtpd_use_tls = yes
+smtpd_recipient_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unauth_destination
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_path = smtpd
+smtpd_tls_cert_file = /etc/ssl/certs/{{ config_network_domain }}.pem
+smtpd_tls_key_file = /etc/ssl/private/{{ config_network_domain }}.pem
+smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtpd_tls_security_level = encrypt
+smtpd_tls_mandatory_protocols=!SSLv2,!SSLv3
+smtpd_tls_protocols=!SSLv2,!SSLv3
+smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_tls_session_cache

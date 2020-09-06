@@ -1,0 +1,140 @@
+- name: Add the mail server type to the Postfix debconf database
+  debconf:
+    name: postfix
+    question: postfix/main_mailer_type
+    value: Internet Site
+    vtype: select
+
+- name: Add the domain name to the Postfix debconf database
+  debconf:
+    name: postfix
+    question: postfix/mailname
+    value: '{{ config_network_domain }}'
+    vtype: string
+
+- name: Install 'postfix' package and dependencies
+  apt:
+    pkg:
+      - libsasl2-modules
+      - postfix
+      - sasl2-bin
+
+- name: Create a 'saslauthd-postfix' configuration based on the default
+  copy:
+    src: /etc/default/saslauthd
+    dest: /etc/default/saslauthd-postfix
+    mode: '0644'
+    force: false
+    remote_src: true
+
+- name: Modify the 'saslauthd-postfix' configuration specifically for Postfix
+  lineinfile:
+    path: /etc/default/saslauthd-postfix
+    regexp: '{{ file.regexp }}'
+    line: '{{ file.line }}'
+  with_items:
+    - { regexp: ^START, line: START=yes }
+    - { regexp: ^DESC, line: DESC="SASL Auth. Daemon for Postfix" }
+    - { regexp: ^NAME=, line: NAME="saslauthd-postf" }
+    - { regexp: ^MECHANISMS, line: MECHANISMS="shadow" }
+    - {
+        regexp: ^OPTIONS,
+        line: OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd",
+      }
+  loop_control:
+    loop_var: file
+  notify:
+    - Restart saslauthd service
+
+- name: Create required subdirectories in Postfix chroot directory
+  command: dpkg-statoverride --add root sasl 710 /var/spool/postfix/var/run/saslauthd
+  register: override_result
+  changed_when: override_result.changed and override_result.rc == 0
+  failed_when: "override_result.failed and 'already exists' not in override_result.stderr"
+  notify:
+    - Restart saslauthd service
+
+- name: Add the user 'postfix' to the group 'sasl'
+  user:
+    name: postfix
+    groups: sasl
+    append: true
+  notify:
+    - Restart saslauthd service
+
+- name: Update 'sasl_passwd' file and generate the lookup table
+  template:
+    src: sasl_passwd.j2
+    dest: /etc/postfix/sasl_passwd
+    owner: root
+    group: root
+    mode: '0600'
+  notify:
+    - Update sasl_passwd table
+    - Restart postfix service
+
+- name: Update 'header_checks' file and generate the lookup table
+  template:
+    src: header_checks.j2
+    dest: /etc/postfix/header_checks
+    owner: root
+    group: root
+    mode: '0600'
+  notify:
+    - Update header_checks table
+    - Restart postfix service
+
+- name: Update 'smtpd.conf' configuration for the SMTP daemon
+  template:
+    src: smtpd.conf.j2
+    dest: /etc/postfix/sasl/smtpd.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart postfix service
+
+- name: Update 'master.cf' configuration for Postfix
+  lineinfile:
+    path: /etc/postfix/master.cf
+    regexp: '{{ file.regexp }}'
+    line: '{{ file.line }}'
+    backrefs: true
+  with_items:
+    - { regexp: ^(smtp\s+inet\s+n\s+-\s+y\s+-\s+-\s+smtpd)$, line: '#\1' }
+    - { regexp: ^#(submission\s+inet\s+n\s+-\s+y\s+-\s+-\s+smtpd)$, line: '\1' }
+  loop_control:
+    loop_var: file
+  notify:
+    - Restart postfix service
+
+- name: Update the 'main.cf' configuration for Postfix
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart postfix service
+
+- name: Gather the current ACME Shell '{{ config_network_domain }}.conf'
+  command: cat /opt/acme.sh/{{ config_network_domain }}/{{ config_network_domain }}.conf
+  register: le_domain_config
+  changed_when: false
+
+- name: Parse 'Le_ReloadCmd' from the current ACME Shell '{{ config_network_domain }}.conf'
+  set_fact:
+    le_reload_cmd: "{{ le_domain_config.stdout \
+      | regex_search(\"Le_ReloadCmd='__ACME_BASE64__START_([A-Za-z0-9+/]+={0,2})__ACME_BASE64__END_'\", '\\1')
+      | default([''], true)
+      | first
+      | b64decode }}"
+
+- name: Update ACME Shell '{{ config_network_domain }}.conf' with Postfix reload command
+  lineinfile:
+    path: /opt/acme.sh/{{ config_network_domain }}/{{ config_network_domain }}.conf
+    regexp: ^(Le_ReloadCmd)
+    line: \1='__ACME_BASE64__START_{{ ((le_reload_cmd != '') | ternary(le_reload_cmd + ';', '') + 'service postfix reload') | b64encode }}__ACME_BASE64__END_'
+    backrefs: true
+  when: "'postfix' not in le_reload_cmd"
