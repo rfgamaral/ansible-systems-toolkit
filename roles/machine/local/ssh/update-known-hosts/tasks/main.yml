@@ -1,11 +1,11 @@
 - block:
     - name: Resolve '{{ inventory_hostname_full }}' to an IP address
-      local_action: 'shell dig +short {{ inventory_hostname_full }}'
+      local_action: shell dig +short {{ inventory_hostname_full }}
       register: inventory_ip_address
       changed_when: false
 
     - name: Gather SSH public keys for '{{ inventory_hostname_full }}' and '{{ inventory_ip_address.stdout }}'
-      local_action: 'shell ssh-keyscan -t ecdsa {{ host }}'
+      local_action: shell ssh-keyscan -t ecdsa {{ host }}
       with_items:
         - '{{ inventory_hostname_full }}'
         - '{{ inventory_ip_address.stdout }}'

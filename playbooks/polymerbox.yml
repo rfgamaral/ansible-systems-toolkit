@@ -63,8 +63,8 @@
             - linux/dotfiles/profile
             - linux/shell/switch-from-bash-to-zsh
           vars:
-            config_role_user_name: 'root'
-            config_role_user_home: '/root'
+            config_role_user_name: root
+            config_role_user_home: /root
 
         - name: Setup '{{ config_admin_user_name }}' user profile
           include_role:
@@ -78,7 +78,7 @@
             - linux/shell/switch-from-bash-to-zsh
           vars:
             config_role_user_name: '{{ config_admin_user_name }}'
-            config_role_user_home: '/home/{{ config_admin_user_name }}'
+            config_role_user_home: /home/{{ config_admin_user_name }}
 
         - name: Install additional software
           include_role:
