@@ -4,11 +4,21 @@
   "overrides": [
     {
       "files": [
+        "*.json",
         ".*rc"
       ],
       "options": {
         "parser": "json",
-        "printWidth": 0
+        "printWidth": 0,
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": [
+        "*.yml"
+      ],
+      "options": {
+        "tabWidth": 2
       }
     }
   ],
