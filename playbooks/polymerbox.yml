@@ -46,11 +46,6 @@
         - name: Upgrade distribution software and kernel
           include_role:
             name: distro/debian/base/upgrade-system
-            apply:
-              tags:
-                - upgrade
-          tags:
-            - upgrade
 
         - name: Setup 'root' user profile
           include_role:
@@ -93,3 +88,27 @@
         ansible_become_pass: '{{ config_admin_user_pass }}'
 
       become: true
+
+  post_tasks:
+    - block:
+        - name: Upgrade distribution and additional software
+          include_role:
+            name: '{{ item }}'
+            apply:
+              tags:
+                - upgrade
+          with_items:
+            - distro/debian/base/upgrade-system
+          tags:
+            - upgrade
+            - never
+
+      vars:
+        ansible_user: '{{ config_admin_user_name }}'
+        ansible_become_pass: '{{ config_admin_user_pass }}'
+
+      become: true
+
+      tags:
+        - upgrade
+        - never
