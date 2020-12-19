@@ -1,0 +1,32 @@
+- name: Add a trusted key for the Tailscale repository
+  apt_key:
+    url: https://pkgs.tailscale.com/stable/raspbian/buster.gpg
+    state: present
+
+- name: Setup 'buster' repository for Tailscale
+  apt_repository:
+    repo: deb https://pkgs.tailscale.com/stable/raspbian buster main
+    update_cache: true
+    filename: tailscale
+    mode: '0644'
+    state: present
+
+- name: Install 'tailscale' package
+  apt:
+    pkg: tailscale
+
+- name: Authenticate and connect this machine to private Tailscale network
+  command: >
+    tailscale up
+      --authkey {{ config_tailscale_pre_auth_key }}
+      --advertise-routes=10.0.10.0/24,10.0.80.0/24,10.0.90.0/24
+      --accept-dns=false
+  changed_when: false
+
+- name: Enable IP packet forwarding for IPv4
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: ^#net.ipv4.ip_forward=1
+    line: net.ipv4.ip_forward=1
+  notify:
+    - Reboot system

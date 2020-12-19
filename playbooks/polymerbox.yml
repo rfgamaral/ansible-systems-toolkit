@@ -82,6 +82,7 @@
             - distro/raspbian/software/install-acme.sh
             - distro/raspbian/software/install-docker
             - distro/raspbian/software/install-postfix
+            - distro/raspbian/software/install-tailscale
 
       vars:
         ansible_user: '{{ config_admin_user_name }}'
