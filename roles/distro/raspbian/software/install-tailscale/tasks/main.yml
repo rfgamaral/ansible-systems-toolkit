@@ -1,0 +1,72 @@
+# Command used to connect this machine to Tailscale:
+#
+# > tailscale up \
+#     --advertise-routes=10.0.10.0/24,10.0.80.0/24,10.0.90.0/24 \
+#     --advertise-exit-node \
+#     --accept-dns=false
+
+- name: Add a trusted key for the Tailscale repository
+  apt_key:
+    url: https://pkgs.tailscale.com/stable/raspbian/buster.gpg
+    state: present
+
+- name: Setup 'buster' repository for Tailscale
+  apt_repository:
+    repo: deb https://pkgs.tailscale.com/stable/raspbian buster main
+    update_cache: true
+    filename: tailscale
+    mode: '0644'
+    state: present
+
+- name: Install 'tailscale' package
+  apt:
+    pkg: tailscale
+
+- name: Stop the 'tailscaled' system service
+  systemd:
+    name: tailscaled
+    state: stopped
+
+- name: Delete all Tailscale state and local information
+  file:
+    path: /var/lib/tailscale
+    state: absent
+
+- name: Ensure system configuration directory for Tailscale exists
+  file:
+    path: '{{ directory.path }}'
+    state: directory
+    mode: '{{ directory.mode }}'
+  with_items:
+    - { path: /var/lib/tailscale, mode: '0750' }
+    - { path: /var/lib/tailscale/files, mode: '0700' }
+    - {
+        path: '/var/lib/tailscale/files/{{ config_tailscale_account_uid }}',
+        mode: '0700',
+      }
+  loop_control:
+    loop_var: directory
+
+- name: Copy Tailscale state files to system configuration directory
+  copy:
+    src: '{{ file }}'
+    dest: /var/lib/tailscale/{{ file }}
+    mode: '0600'
+  with_items:
+    - tailscaled.log.conf
+    - tailscaled.state
+  loop_control:
+    loop_var: file
+
+- name: Start the 'tailscaled' system service
+  systemd:
+    name: tailscaled
+    state: started
+
+- name: Enable IP packet forwarding for IPv4
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: ^#net.ipv4.ip_forward=1
+    line: net.ipv4.ip_forward=1
+  notify:
+    - Reboot system
