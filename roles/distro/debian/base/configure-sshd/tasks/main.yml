@@ -1,3 +1,11 @@
+- name: Allow SSH connections on IPv4 only
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: ^#?AddressFamily
+    line: AddressFamily {{ config_sshd_address_family }}
+  notify:
+    - Restart sshd service
+
 - name: Disallow root login
   lineinfile:
     path: /etc/ssh/sshd_config
