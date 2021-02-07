@@ -18,6 +18,7 @@ config_localization_required_locale_list:
   - 'en_US.UTF-8'
   - 'pt_PT.UTF-8'
 
+config_sshd_address_family: 'inet'
 config_sshd_permit_root_login: 'no'
 config_sshd_pubkey_authentication: 'yes'
 config_sshd_authorized_keys_file: '.ssh/authorized_keys'
