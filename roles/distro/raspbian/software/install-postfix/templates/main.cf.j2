@@ -1,7 +1,7 @@
 inet_interfaces = all
 inet_protocols = ipv4
 
-mydestination = $myhostname, localhost.$mydomain, $mydomain
+mydestination = $myhostname localhost.$mydomain localhost
 myhostname = polymerbox.{{ config_network_domain }}
 mynetworks = 127.0.0.0/8
 myorigin = /etc/mailname
@@ -19,7 +19,6 @@ recipient_delimiter = +
 relayhost = [smtp.sendgrid.net]:587
 tls_random_source = dev:/dev/urandom
 
-smtp_use_tls = yes
 smtp_sasl_auth_enable = yes
 smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 smtp_sasl_security_options = noanonymous
@@ -32,7 +31,6 @@ smtp_tls_protocols=!SSLv2,!SSLv3
 smtp_tls_session_cache_database = btree:/var/lib/postfix/smtp_tls_session_cache
 
 smtpd_banner = $myhostname ESMTP $mail_name (Raspbian)
-smtpd_use_tls = yes
 smtpd_recipient_restrictions =
     permit_mynetworks,
     permit_sasl_authenticated,

@@ -1,1 +1,2 @@
-/^From:\s*{{ config_primary_email }}$/ REPLACE From: "BLACKBOX Veeam Agent" <noreply-veeam-agent@{{ config_network_domain }}>
+/^From: {{ config_primary_email }}$/ REPLACE From: "Veeam Agent" <noreply-veeam-agent@{{ config_network_domain }}>
+/^From: UniFi Network Controller <(.*)>$/ REPLACE From: "UniFi Controller" <${1}>

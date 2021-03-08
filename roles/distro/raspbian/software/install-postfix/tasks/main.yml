@@ -103,6 +103,8 @@
   with_items:
     - { regexp: ^(smtp\s+inet\s+n\s+-\s+y\s+-\s+-\s+smtpd)$, line: '#\1' }
     - { regexp: ^#(submission\s+inet\s+n\s+-\s+y\s+-\s+-\s+smtpd)$, line: '\1' }
+    - { regexp: ^#(smtps\s+inet\s+n\s+-\s+y\s+-\s+-\s+smtpd)$, line: '\1' }
+    - { regexp: ^#(\s+-o\ssmtpd_tls_wrappermode=yes)$, line: '\1' }
   loop_control:
     loop_var: file
   notify:
