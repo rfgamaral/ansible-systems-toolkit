@@ -20,6 +20,7 @@
     tailscale up
       --authkey {{ config_tailscale_pre_auth_key }}
       --advertise-routes=10.0.10.0/24,10.0.80.0/24,10.0.90.0/24
+      --advertise-exit-node
       --accept-dns=false
   changed_when: false
 
