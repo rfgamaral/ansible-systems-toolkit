@@ -1,0 +1,20 @@
+- name: Update pinning priorities for stable/testing repositories
+  template:
+    src: '{{ file }}.j2'
+    dest: /etc/apt/preferences.d/{{ file }}
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - stable.pref
+    - testing.pref
+  loop_control:
+    loop_var: file
+
+- name: Setup 'testing' repository for Raspbian
+  apt_repository:
+    repo: deb http://raspbian.raspberrypi.org/raspbian/ testing main contrib non-free rpi
+    update_cache: true
+    filename: testing
+    mode: '0644'
+    state: present
