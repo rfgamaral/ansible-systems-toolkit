@@ -42,6 +42,7 @@
             - distro/debian/base/configure-localization
             - distro/debian/base/configure-sshd
             - distro/raspbian/base/configure-unattended-upgrades
+            - distro/raspbian/base/configure-testing-repository
 
         - name: Upgrade distribution software and kernel
           include_role:
