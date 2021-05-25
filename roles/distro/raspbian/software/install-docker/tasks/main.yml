@@ -26,10 +26,10 @@
     groups: 'docker'
     append: true
 
-- name: Add a cronjob to prune all Docker data every week
+- name: Add a cronjob to prune all unused Docker data every week
   cron:
-    name: 'prune Docker data'
+    name: 'prune unused Docker data'
     minute: '0'
     hour: '3'
     weekday: '0'
-    job: 'docker system prune --all --force'
+    job: 'cronic docker system prune --all --force'

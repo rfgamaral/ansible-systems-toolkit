@@ -38,7 +38,7 @@
           include_role:
             name: '{{ item }}'
           with_items:
-            - distro/debian/base/configure-system
+            - distro/raspbian/base/configure-system
             - distro/debian/base/configure-localization
             - distro/debian/base/configure-sshd
             - distro/raspbian/base/configure-unattended-upgrades

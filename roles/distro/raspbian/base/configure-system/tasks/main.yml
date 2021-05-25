@@ -1,0 +1,8 @@
+- name: Load and execute Debian system configuration role
+  include_role:
+    name: distro/debian/base/configure-system
+
+- name: Set cron 'MAILTO' to '{{ config_primary_email}}'
+  cronvar:
+    name: MAILTO
+    value: '{{ config_primary_email}}'

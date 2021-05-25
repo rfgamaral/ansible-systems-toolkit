@@ -81,4 +81,4 @@
     name: 'upgrade acme.sh and renew all certificates'
     minute: '0'
     hour: '5'
-    job: '/opt/acme.sh/acme.sh --cron --home /opt/acme.sh > /dev/null'
+    job: 'cronic /opt/acme.sh/acme.sh --cron --home /opt/acme.sh'

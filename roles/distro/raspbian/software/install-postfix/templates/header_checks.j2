@@ -1,2 +1,3 @@
+/^From: root \(Cron Daemon\).*$/ REPLACE From: "Raspberry Pi" <noreply-raspberry-pi@{{ config_network_domain }}>
 /^From: {{ config_primary_email }}$/ REPLACE From: "Veeam Agent" <noreply-veeam-agent@{{ config_network_domain }}>
 /^From: UniFi Network Controller <(.*)>$/ REPLACE From: "UniFi Controller" <${1}>
