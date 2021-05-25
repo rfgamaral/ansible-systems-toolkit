@@ -1,0 +1,12 @@
+[Unit]
+Description=HYPERCUBE Backups (mount)
+
+[Mount]
+What=//HYPERCUBE/Backups
+Where={{ hypercube_backups_path }}
+Type=cifs
+Options=username={{ config_hypercube_backup_user_name }},password={{ config_hypercube_backup_user_pass }},file_mode=0700,dir_mode=0700,rw
+DirectoryMode=0700
+
+[Install]
+WantedBy=multi-user.target

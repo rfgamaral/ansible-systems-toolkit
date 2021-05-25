@@ -1,0 +1,72 @@
+- block:
+    - name: Update 'systemd' mount and automount services for the backups location
+      template:
+        src: '{{ file }}.j2'
+        dest: /etc/systemd/system/{{ file }}
+        owner: root
+        group: root
+        mode: '0644'
+      with_items:
+        - mnt-hypercube-backups.automount
+        - mnt-hypercube-backups.mount
+      loop_control:
+        loop_var: file
+      register: copy_status
+
+    - name: Reload 'systemd' manager configuration
+      systemd:
+        daemon_reexec: true
+      when: copy_status.changed
+
+    - name: Start the backups location automount service
+      systemd:
+        name: mnt-hypercube-backups.automount
+        state: started
+
+    - name: Enable the backups location automatic system mount
+      systemd:
+        name: mnt-hypercube-backups.automount
+        enabled: true
+
+    - name: Install 'borgbackup' package and dependencies
+      apt:
+        name:
+          - borgbackup
+          - gcc-8-base
+
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoremove: true
+
+    - name: Create directory for the backups repository
+      file:
+        path: '{{ borgbackup_repository_path }}'
+        state: directory
+
+    - name: Initializes an empty repository for the backups
+      command: borg init --encryption=none {{ borgbackup_repository_path }}
+      register: borg_info_status
+      changed_when: borg_info_status.rc == 0
+      failed_when: "borg_info_status.failed and 'repository already exists' not in borg_info_status.stderr"
+
+    - name: Create directory for root-specific scripts
+      file:
+        path: /root/.local/bin
+        state: directory
+
+    - name: Copy full system backup script to root's scripts location
+      template:
+        src: full-system-backup.sh.j2
+        dest: /root/.local/bin/full-system-backup.sh
+        mode: '0744'
+
+    - name: Add a cronjob to run a full system backup every day
+      cron:
+        name: 'run full system backup with BorgBackup'
+        minute: '0'
+        hour: '2'
+        job: 'cronic /root/.local/bin/full-system-backup.sh'
+
+  vars:
+    hypercube_backups_path: /mnt/hypercube/backups
+    borgbackup_repository_path: '{{ hypercube_backups_path }}/LAB-RaspberryPi/BorgBackup'

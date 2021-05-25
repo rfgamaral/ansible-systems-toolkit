@@ -81,6 +81,7 @@
             name: '{{ item }}'
           with_items:
             - distro/raspbian/software/install-acme.sh
+            - distro/raspbian/software/install-borgbackup
             - distro/raspbian/software/install-docker
             - distro/raspbian/software/install-postfix
             - distro/raspbian/software/install-tailscale

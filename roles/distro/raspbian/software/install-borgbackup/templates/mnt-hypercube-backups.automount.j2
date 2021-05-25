@@ -1,0 +1,10 @@
+[Unit]
+Description=HYPERCUBE Backups (automount)
+Requires=network-online.target
+After=network-online.service
+
+[Automount]
+Where={{ hypercube_backups_path }}
+
+[Install]
+WantedBy=multi-user.target

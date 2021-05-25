@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# Script adapted from:
+# https://borgbackup.readthedocs.io/en/stable/quickstart.html#automating-backups
+
+info() { printf "\n%s %s\n\n" "$( date )" "$*"; }
+trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
+
+info "Starting backup"
+
+borg create \
+    --verbose \
+    --filter AME \
+    --list \
+    --stats \
+    --show-rc \
+    --compression lz4 \
+    --exclude-caches \
+    --exclude '/boot' \
+    --exclude '/boot.bak' \
+    --exclude '/dev' \
+    --exclude '/home/*/.cache/*' \
+    --exclude '/lost+found' \
+    --exclude '/mnt' \
+    --exclude '/proc' \
+    --exclude '/run' \
+    --exclude '/sys' \
+    --exclude '/tmp' \
+    --exclude '/var/tmp/*' \
+    {{ borgbackup_repository_path }}::'{hostname}-{now}' / 2>&1
+
+backup_exit=$?
+
+info "Pruning repository"
+
+borg prune \
+    --list \
+    --prefix '{hostname}-' \
+    --show-rc \
+    --keep-daily 7 \
+    --keep-weekly 4 \
+    --keep-monthly 3 \
+    {{ borgbackup_repository_path }} 2>&1
+
+prune_exit=$?
+
+global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
+
+if [ ${global_exit} -eq 0 ]; then
+    info "Backup and Prune finished successfully"
+elif [ ${global_exit} -eq 1 ]; then
+    info "Backup and/or Prune finished with warnings"
+else
+    info "Backup and/or Prune finished with errors"
+fi
+
+exit ${global_exit}
