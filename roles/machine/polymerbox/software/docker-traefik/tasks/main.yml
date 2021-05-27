@@ -35,7 +35,6 @@
   docker_container:
     name: '{{ config_role_container_name }}'
     image: traefik:latest
-    pull: "{{ 'upgrade' in ansible_run_tags }}"
     networks_cli_compatible: true
     restart_policy: always
     env:
@@ -73,8 +72,6 @@
       traefik.http.routers.traefik.tls: 'true'
       traefik.http.routers.traefik.service: 'api@internal'
   register: docker_status
-  tags:
-    - upgrade
 
 - name: Restart '{{ config_role_container_name }}' container
   docker_container:

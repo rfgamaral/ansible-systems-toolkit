@@ -42,6 +42,7 @@
         read_only: false
         type: bind
     labels:
+      com.centurylinklabs.watchtower.enable: 'false'
       traefik.enable: 'true'
       traefik.http.routers.unifi.rule: 'Host(`unifi.{{ config_network_domain }}`)'
       traefik.http.routers.unifi.middlewares: 'chain-default@file'

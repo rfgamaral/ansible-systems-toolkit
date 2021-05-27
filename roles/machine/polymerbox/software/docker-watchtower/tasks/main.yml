@@ -1,0 +1,22 @@
+- name: Create '{{ config_role_container_name }}' container
+  docker_container:
+    name: '{{ config_role_container_name }}'
+    image: containrrr/watchtower:latest
+    networks_cli_compatible: true
+    restart_policy: always
+    env:
+      TZ: '{{ config_system_timezone }}'
+      WATCHTOWER_CLEANUP: 'true'
+      WATCHTOWER_NOTIFICATIONS: 'shoutrrr'
+      WATCHTOWER_NOTIFICATION_URL: 'telegram://{{ config_telegram_bot_token }}@telegram?channels={{ config_telegram_chat_id }}'
+      WATCHTOWER_POLL_INTERVAL: '28800'
+      WATCHTOWER_ROLLING_RESTART: 'true'
+    networks:
+      - name: traefik
+    dns_servers:
+      - '172.16.10.254'
+    mounts:
+      - source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+        type: bind
