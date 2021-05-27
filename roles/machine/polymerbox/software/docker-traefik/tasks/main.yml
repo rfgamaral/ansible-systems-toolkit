@@ -1,0 +1,102 @@
+- name: Ensure directory structure for Traefik configuration exists
+  file:
+    path: /opt/traefik/{{ directory.path }}
+    state: directory
+  with_filetree: ../templates
+  when: directory.state == 'directory'
+  loop_control:
+    loop_var: directory
+
+- name: Copy all configuration files for Traefik
+  template:
+    src: '{{ file.src }}'
+    dest: /opt/traefik/{{ file.path | regex_replace('\.j2$', '') }}
+  with_filetree: '../templates'
+  when: file.state == 'file'
+  register: config_status
+  loop_control:
+    loop_var: file
+
+- name: Restrict main configuration directory access to owner
+  file:
+    path: /opt/traefik
+    mode: '0700'
+
+- name: Create a network for Traefik and all exposed containers
+  docker_network:
+    name: traefik
+    driver: bridge
+    ipam_config:
+      - subnet: '172.16.10.0/24'
+        gateway: '172.16.10.254'
+        iprange: '172.16.10.0/27'
+
+- name: Create '{{ config_role_container_name }}' container
+  docker_container:
+    name: '{{ config_role_container_name }}'
+    image: traefik:latest
+    pull: "{{ 'upgrade' in ansible_run_tags }}"
+    networks_cli_compatible: true
+    restart_policy: always
+    env:
+      TZ: '{{ config_system_timezone }}'
+    networks:
+      - name: traefik
+    ports:
+      # Reverse proxy on HTTP
+      - '80:80/tcp'
+      # Reverse proxy on HTTPS
+      - '443:443/tcp'
+    mounts:
+      - source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+        type: bind
+      - source: /etc/ssl/certs/{{ config_network_domain }}.pem
+        target: /etc/ssl/certs/{{ config_network_domain }}.pem
+        read_only: true
+        type: bind
+      - source: /etc/ssl/private/{{ config_network_domain }}.pem
+        target: /etc/ssl/private/{{ config_network_domain }}.pem
+        read_only: true
+        type: bind
+      - source: /opt/traefik
+        target: /etc/traefik
+        read_only: false
+        type: bind
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.traefik.rule: 'Host(`traefik.{{ config_network_domain }}`)'
+      traefik.http.routers.traefik.middlewares: 'chain-default@file'
+      traefik.http.routers.traefik.tls: 'true'
+      traefik.http.routers.traefik.service: 'api@internal'
+  register: docker_status
+  tags:
+    - upgrade
+
+- name: Restart '{{ config_role_container_name }}' container
+  docker_container:
+    name: '{{ config_role_container_name }}'
+    restart: true
+  when: config_status.changed and not docker_status.changed
+
+- name: Gather the current ACME Shell '{{ config_network_domain }}.conf'
+  command: cat /opt/acme.sh/{{ config_network_domain }}/{{ config_network_domain }}.conf
+  register: le_domain_config
+  changed_when: false
+
+- name: Parse 'Le_ReloadCmd' from the current ACME Shell '{{ config_network_domain }}.conf'
+  set_fact:
+    le_reload_cmd: "{{ le_domain_config.stdout \
+      | regex_search(\"Le_ReloadCmd='__ACME_BASE64__START_([A-Za-z0-9+/]+={0,2})__ACME_BASE64__END_'\", '\\1')
+      | default([''], true)
+      | first
+      | b64decode }}"
+
+- name: Update ACME Shell '{{ config_network_domain }}.conf' with Traefik reload command
+  lineinfile:
+    path: /opt/acme.sh/{{ config_network_domain }}/{{ config_network_domain }}.conf
+    regexp: ^(Le_ReloadCmd)
+    line: \1='__ACME_BASE64__START_{{ ((le_reload_cmd != '') | ternary(le_reload_cmd + ';', '') + 'docker restart traefik') | b64encode }}__ACME_BASE64__END_'
+    backrefs: true
+  when: "'traefik' not in le_reload_cmd"

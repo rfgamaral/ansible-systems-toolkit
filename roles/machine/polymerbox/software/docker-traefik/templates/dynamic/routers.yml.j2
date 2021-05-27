@@ -1,0 +1,8 @@
+http:
+  routers:
+    gateway:
+      rule: Host(`gateway.{{ config_network_domain }}`)
+      service: edgerouter-12
+      middlewares:
+        - chain-default
+      tls: {}

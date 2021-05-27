@@ -1,0 +1,7 @@
+http:
+  services:
+    edgerouter-12:
+      loadBalancer:
+        servers:
+          - url: https://10.0.10.254:443/
+        serversTransport: skip-verify-transport

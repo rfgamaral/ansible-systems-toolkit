@@ -1,0 +1,38 @@
+http:
+  services:
+    bazarr:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:34080/
+    emby:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:39080/
+    nzbget:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:36080/
+    nzbhydra:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:35080/
+    radarr:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:37080/
+    sonarr:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:38080/
+    synology-diskstation-manager:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:15080/
+    synology-file-station:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:17080/
+    synology-webdav-server:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:16080/

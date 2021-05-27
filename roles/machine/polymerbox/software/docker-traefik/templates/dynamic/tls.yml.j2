@@ -1,0 +1,8 @@
+tls:
+  certificates:
+    - certFile: /etc/ssl/certs/{{ config_network_domain }}.pem
+      keyFile: /etc/ssl/private/{{ config_network_domain }}.pem
+  options:
+    default:
+      minVersion: VersionTLS12
+      sniStrict: true

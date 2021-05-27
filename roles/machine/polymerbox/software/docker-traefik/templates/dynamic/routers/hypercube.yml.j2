@@ -1,0 +1,56 @@
+http:
+  routers:
+    bazarr:
+      rule: Host(`bazarr.{{ config_network_domain }}`)
+      service: bazarr
+      middlewares:
+        - chain-default
+      tls: {}
+    dsm:
+      rule: Host(`dsm.{{ config_network_domain }}`)
+      service: synology-diskstation-manager
+      middlewares:
+        - chain-default
+      tls: {}
+    emby:
+      rule: Host(`emby.{{ config_network_domain }}`)
+      service: emby
+      middlewares:
+        - chain-default
+      tls: {}
+    files:
+      rule: Host(`files.{{ config_network_domain }}`)
+      service: synology-file-station
+      middlewares:
+        - chain-default
+      tls: {}
+    nzbget:
+      rule: Host(`nzbget.{{ config_network_domain }}`)
+      service: nzbget
+      middlewares:
+        - chain-default
+      tls: {}
+    nzbhydra:
+      rule: Host(`nzbhydra.{{ config_network_domain }}`)
+      service: nzbhydra
+      middlewares:
+        - chain-default
+      tls: {}
+    radarr:
+      rule: Host(`radarr.{{ config_network_domain }}`)
+      service: radarr
+      middlewares:
+        - chain-default
+      tls: {}
+    sonarr:
+      rule: Host(`sonarr.{{ config_network_domain }}`)
+      service: sonarr
+      middlewares:
+        - chain-default
+      tls: {}
+    webdav:
+      rule: Host(`webdav.{{ config_network_domain }}`)
+      service: synology-webdav-server
+      middlewares:
+        - chain-default
+      tls: {}
