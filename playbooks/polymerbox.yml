@@ -94,6 +94,7 @@
           with_items:
             - machine/polymerbox/software/docker-traefik
             - machine/polymerbox/software/docker-adguard-home
+            - machine/polymerbox/software/docker-unifi-controller
 
       vars:
         ansible_user: '{{ config_admin_user_name }}'
@@ -126,6 +127,7 @@
           with_items:
             - machine/polymerbox/software/docker-traefik
             - machine/polymerbox/software/docker-adguard-home
+            - machine/polymerbox/software/docker-unifi-controller
           tags:
             - upgrade
             - never

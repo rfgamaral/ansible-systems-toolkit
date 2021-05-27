@@ -1,0 +1,53 @@
+- name: Ensure configuration directory for UniFi Controller exists
+  file:
+    path: /opt/unifi-controller
+    state: directory
+    mode: '0700'
+
+- name: Create '{{ config_role_container_name }}' container
+  docker_container:
+    name: '{{ config_role_container_name }}'
+    image: ghcr.io/linuxserver/unifi-controller:latest
+    pull: "{{ 'upgrade' in ansible_run_tags }}"
+    networks_cli_compatible: true
+    restart_policy: always
+    env:
+      TZ: '{{ config_system_timezone }}'
+      PUID: '0'
+      PGID: '0'
+    networks:
+      - name: traefik
+    dns_servers:
+      - '172.16.10.254'
+    ports:
+      # Session Traversal Utilities for NAT (STUN)
+      - '3478:3478/udp'
+      # Controller and Ubiquiti devices communication
+      - '8080:8080/tcp'
+      # Discovery service for Ubiquiti devices
+      - '10001:10001/udp'
+      # Optional: 'Make controller discoverable on L2 network' option
+      # - '1900:1900/udp'
+      # Optional: Remote syslog messages and events
+      # - '5514:5514/tcp'
+      # Optional: Mobile throughput/speed test
+      # - '6789:6789/tcp'
+      # Optional: Guest Portal HTTPS redirection
+      # - '8843:8843/tcp'
+      # Optional: Guest Portal HTTP redirection
+      # - '8880:8880/tcp'
+    mounts:
+      - source: /opt/unifi-controller
+        target: /config
+        read_only: false
+        type: bind
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.unifi.rule: 'Host(`unifi.{{ config_network_domain }}`)'
+      traefik.http.routers.unifi.middlewares: 'chain-default@file'
+      traefik.http.routers.unifi.tls: 'true'
+      traefik.http.services.unifi-controller.loadbalancer.server.scheme: 'https'
+      traefik.http.services.unifi-controller.loadbalancer.server.port: '8443'
+      traefik.http.services.unifi-controller.loadbalancer.serverstransport: 'skip-verify-transport@file'
+  tags:
+    - upgrade
