@@ -42,6 +42,8 @@
       TZ: '{{ config_system_timezone }}'
     networks:
       - name: traefik
+    dns_servers:
+      - '172.16.10.254'
     ports:
       # Reverse proxy on HTTP
       - '80:80/tcp'

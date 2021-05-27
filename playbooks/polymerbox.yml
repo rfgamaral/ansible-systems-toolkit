@@ -93,6 +93,7 @@
             name: '{{ item }}'
           with_items:
             - machine/polymerbox/software/docker-traefik
+            - machine/polymerbox/software/docker-adguard-home
 
       vars:
         ansible_user: '{{ config_admin_user_name }}'
@@ -124,6 +125,7 @@
                 - never
           with_items:
             - machine/polymerbox/software/docker-traefik
+            - machine/polymerbox/software/docker-adguard-home
           tags:
             - upgrade
             - never

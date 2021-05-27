@@ -1,0 +1,412 @@
+bind_host: 0.0.0.0
+bind_port: 80
+beta_bind_port: 0
+users: []
+auth_attempts: 5
+block_auth_min: 15
+http_proxy: ""
+language: ""
+rlimit_nofile: 0
+debug_pprof: false
+web_session_ttl: 720
+dns:
+  bind_hosts:
+  - 0.0.0.0
+  port: 53
+  statistics_interval: 30
+  querylog_enabled: true
+  querylog_file_enabled: true
+  querylog_interval: 1
+  querylog_size_memory: 1000
+  anonymize_client_ip: false
+  protection_enabled: true
+  blocking_mode: default
+  blocking_ipv4: ""
+  blocking_ipv6: ""
+  blocked_response_ttl: 10
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
+  ratelimit: 20
+  ratelimit_whitelist: []
+  refuse_any: true
+  upstream_dns:
+  - tls://1dot1dot1dot1.cloudflare-dns.com
+  - '[/{{ config_network_domain }}//]10.0.10.254:53'
+  upstream_dns_file: ""
+  bootstrap_dns:
+  - 1.1.1.1
+  - 1.0.0.1
+  all_servers: false
+  fastest_addr: false
+  allowed_clients: []
+  disallowed_clients: []
+  blocked_hosts:
+  - version.bind
+  - id.server
+  - hostname.bind
+  cache_size: 4194304
+  cache_ttl_min: 0
+  cache_ttl_max: 0
+  bogus_nxdomain: []
+  aaaa_disabled: false
+  enable_dnssec: true
+  edns_client_subnet: false
+  max_goroutines: 300
+  ipset: []
+  filtering_enabled: true
+  filters_update_interval: 24
+  parental_enabled: true
+  safesearch_enabled: true
+  safebrowsing_enabled: true
+  safebrowsing_cache_size: 1048576
+  safesearch_cache_size: 1048576
+  parental_cache_size: 1048576
+  cache_time: 30
+  rewrites: []
+  blocked_services: []
+  local_domain_name: {{ config_network_domain }}
+  resolve_clients: true
+  local_ptr_upstreams: []
+tls:
+  enabled: false
+  server_name: adguard.{{ config_network_domain }}
+  force_https: false
+  port_https: 443
+  port_dns_over_tls: 853
+  port_dns_over_quic: 784
+  port_dnscrypt: 0
+  dnscrypt_config_file: ""
+  allow_unencrypted_doh: true
+  strict_sni_check: false
+  certificate_chain: ""
+  private_key: ""
+  certificate_path: /etc/ssl/certs/{{ config_network_domain }}.pem
+  private_key_path: /etc/ssl/private/{{ config_network_domain }}.pem
+filters:
+- enabled: true
+  id: 1
+  name: AdGuard DNS Filter List
+  url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+- enabled: true
+  id: 2
+  name: Game Console AdBlock List
+  url: https://raw.githubusercontent.com/DandelionSprout/adfilt/master/GameConsoleAdblockList.txt
+- enabled: true
+  id: 3
+  name: I don't care about cookies
+  url: https://www.i-dont-care-about-cookies.eu/abp/
+- enabled: true
+  id: 4
+  name: NoCoin Filter List
+  url: https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/hosts.txt
+- enabled: true
+  id: 5
+  name: OISD Blocklist
+  url: https://raw.githubusercontent.com/ookangzheng/dbl-oisd-nl/master/dbl.txt
+- enabled: true
+  id: 6
+  name: Perflyst Smart-TV Blocklist
+  url: https://raw.githubusercontent.com/Perflyst/PiHoleBlocklist/master/SmartTV.txt
+whitelist_filters: []
+user_rules:
+- '@@||analytic.rollout.io^$client=''RFA-DellLaptop,RFA-DesktopPC,RFA-OnePlus7Pro'''
+dhcp:
+  enabled: false
+  interface_name: ""
+  dhcpv4:
+    gateway_ip: ""
+    subnet_mask: ""
+    range_start: ""
+    range_end: ""
+    lease_duration: 86400
+    icmp_timeout_msec: 1000
+    options: []
+  dhcpv6:
+    range_start: ""
+    lease_duration: 86400
+    ra_slaac_only: false
+    ra_allow_slaac: false
+clients:
+- name: DMP-BraviaX85C
+  tags:
+  - device_tv
+  - os_android
+  - user_regular
+  ids:
+  - 10.0.80.200
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: DMP-ShieldTV2015
+  tags:
+  - device_other
+  - os_android
+  - user_regular
+  ids:
+  - 10.0.80.205
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: LAB-DiskStation
+  tags:
+  - device_nas
+  - os_linux
+  - user_regular
+  ids:
+  - 10.0.10.205
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: LAB-RaspberryPi
+  tags:
+  - device_other
+  - os_linux
+  - user_admin
+  ids:
+  - 10.0.10.200
+  - 100.78.45.65
+  - 172.16.10.254
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: MMC-iPad4
+  tags:
+  - device_tablet
+  - os_ios
+  - user_regular
+  ids:
+  - 10.0.10.23
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: MMC-iPhone8Plus
+  tags:
+  - device_phone
+  - os_ios
+  - user_regular
+  ids:
+  - 10.0.10.21
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: MMC-MacBookPro
+  tags:
+  - device_laptop
+  - os_macos
+  - user_regular
+  ids:
+  - 10.0.10.22
+  - 100.76.39.78
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: MMC-NintendoSwitch
+  tags:
+  - device_gameconsole
+  - os_other
+  - user_regular
+  ids:
+  - 10.0.10.25
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: MMC-WatchSeries5
+  tags:
+  - device_other
+  - os_ios
+  - user_regular
+  ids:
+  - 10.0.10.24
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: PLG-TapoP100
+  tags:
+  - device_other
+  - os_other
+  - user_regular
+  ids:
+  - 10.0.80.51
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: RBT-Roombai7
+  tags:
+  - device_other
+  - os_other
+  - user_regular
+  ids:
+  - 10.0.80.11
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: RFA-DellLaptop
+  tags:
+  - device_laptop
+  - os_windows
+  - user_admin
+  ids:
+  - 10.0.10.13
+  - 100.126.247.121
+  use_global_settings: false
+  filtering_enabled: true
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: RFA-DesktopPC
+  tags:
+  - device_pc
+  - os_windows
+  - user_admin
+  ids:
+  - 10.0.10.12
+  use_global_settings: false
+  filtering_enabled: true
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: RFA-NintendoSwitchLite
+  tags:
+  - device_gameconsole
+  - os_other
+  - user_regular
+  ids:
+  - 10.0.10.14
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: RFA-OnePlus7Pro
+  tags:
+  - device_phone
+  - os_android
+  - user_admin
+  ids:
+  - 10.0.10.11
+  - 100.109.64.36
+  use_global_settings: false
+  filtering_enabled: true
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: RFA-PlayStation5
+  tags:
+  - device_gameconsole
+  - os_other
+  - user_regular
+  ids:
+  - 10.0.10.15
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: SNR-AwairElement
+  tags:
+  - device_other
+  - os_other
+  - user_regular
+  ids:
+  - 10.0.80.31
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+- name: UAP-nanoHD-1
+  tags:
+  - device_other
+  - os_linux
+  - user_admin
+  ids:
+  - 10.0.10.250
+  use_global_settings: true
+  filtering_enabled: false
+  parental_enabled: false
+  safesearch_enabled: false
+  safebrowsing_enabled: false
+  use_global_blocked_services: true
+  blocked_services: []
+  upstreams: []
+log_compress: false
+log_localtime: false
+log_max_backups: 0
+log_max_size: 100
+log_max_age: 3
+log_file: ""
+verbose: false
+schema_version: 10

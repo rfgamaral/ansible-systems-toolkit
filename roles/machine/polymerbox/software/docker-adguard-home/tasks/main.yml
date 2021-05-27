@@ -1,0 +1,78 @@
+- name: Ensure configuration directories for AdGuard Home exists
+  file:
+    path: /opt/adguard-home/{{ path }}
+    state: directory
+  with_items:
+    - conf
+    - work
+  loop_control:
+    loop_var: path
+
+- name: Restrict main configuration directory access to owner
+  file:
+    path: /opt/adguard-home
+    mode: '0700'
+
+- name: Copy main configuration file for AdGuard Home
+  template:
+    src: AdGuardHome.yml.j2
+    dest: /opt/adguard-home/conf/AdGuardHome.yaml
+    mode: '0644'
+  register: copy_status
+
+- name: Create '{{ config_role_container_name }}' container
+  docker_container:
+    name: '{{ config_role_container_name }}'
+    image: adguard/adguardhome:latest
+    pull: "{{ 'upgrade' in ansible_run_tags }}"
+    networks_cli_compatible: true
+    restart_policy: always
+    env:
+      TZ: '{{ config_system_timezone }}'
+    networks:
+      - name: traefik
+    dns_servers:
+      - '172.16.10.254'
+    ports:
+      # Run as a common DNS server
+      - '53:53/tcp'
+      - '53:53/udp'
+      # Optional: Run as a DNS-over-TLS server
+      # - '853:853/tcp'
+      # Optional: Run as a DNS-over-QUIC server
+      # - '784:784/udp'
+      # Optional: Run as a DNSCrypt server
+      # - '5443:5443/tcp'
+      # - '5443:5443/udp'
+    mounts:
+      - source: /etc/ssl/certs/{{ config_network_domain }}.pem
+        target: /etc/ssl/certs/{{ config_network_domain }}.pem
+        read_only: true
+        type: bind
+      - source: /etc/ssl/private/{{ config_network_domain }}.pem
+        target: /etc/ssl/private/{{ config_network_domain }}.pem
+        read_only: true
+        type: bind
+      - source: /opt/adguard-home/conf
+        target: /opt/adguardhome/conf
+        read_only: false
+        type: bind
+      - source: /opt/adguard-home/work
+        target: /opt/adguardhome/work
+        read_only: false
+        type: bind
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.adguard.rule: 'Host(`adguard.{{ config_network_domain }}`) || (Host(`adguard.{{ config_network_domain }}`) && Path(`/dns-query`))'
+      traefik.http.routers.adguard.middlewares: 'chain-default@file'
+      traefik.http.routers.adguard.tls: 'true'
+      traefik.http.services.adguard-home.loadbalancer.server.port: '80'
+  register: docker_status
+  tags:
+    - upgrade
+
+- name: Restart '{{ config_role_container_name }}' container
+  docker_container:
+    name: '{{ config_role_container_name }}'
+    restart: true
+  when: copy_status.changed and not docker_status.changed
