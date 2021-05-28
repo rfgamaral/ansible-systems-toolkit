@@ -1,0 +1,104 @@
+- name: Check the current installed version
+  shell: (cloudflared --version 2> /dev/null || echo '0') | cut -d' ' -f3
+  register: cloudflared_installed_version
+  changed_when: false
+
+- name: Get the latest published full release
+  uri:
+    url: https://api.github.com/repos/cloudflare/cloudflared/releases/latest
+    return_content: true
+  register: cloudflared_latest_release
+
+- block:
+    - name: Install 'cloudflared' binary to local system resources
+      loop: '{{ cloudflared_latest_release.json.assets }}'
+      when: "'cloudflared-linux-armv6' in asset.name"
+      loop_control:
+        loop_var: asset
+      get_url:
+        url: '{{ asset.browser_download_url }}'
+        dest: /usr/local/bin/cloudflared
+
+    - name: Add executable permissions for everyone
+      file:
+        path: /usr/local/bin/cloudflared
+        mode: '0755'
+
+  when: cloudflared_installed_version.stdout is version(cloudflared_latest_release.json.name, '!=')
+
+- name: Ensure system configuration directory for Cloudflare exists
+  file:
+    path: /etc/cloudflared
+    state: directory
+
+- name: Copy Cloudflare credentials file to system configuration directory
+  copy:
+    src: cert.pem
+    dest: /etc/cloudflared/cert.pem
+    mode: '0600'
+
+- name: Clenaup '{{ config_system_hostname }}' tunnel connections
+  command: cloudflared tunnel cleanup {{ config_system_hostname }}
+
+- name: Delete existing '{{ config_system_hostname }}' tunnel
+  command: cloudflared tunnel delete {{ config_system_hostname }}
+
+- name: Get all DNS CNAME records for '{{ config_network_domain }}' zone
+  uri:
+    url: '{{ CLOUDFLARE_API_ENDPOINT }}/zones/{{ config_cloudflare_zone_id }}/dns_records?type=CNAME'
+    method: GET
+    headers:
+      Authorization: 'Bearer {{ config_cloudflare_token }}'
+    return_content: true
+  register: dns_cname_records
+
+- name: Delete all DNS CNAME records linked to Cloudflare Tunnels for '{{ config_network_domain }}' zone
+  uri:
+    url: '{{ CLOUDFLARE_API_ENDPOINT }}/zones/{{ config_cloudflare_zone_id }}/dns_records/{{ dns_record.id }}'
+    method: DELETE
+    headers:
+      Authorization: 'Bearer {{ config_cloudflare_token }}'
+  with_items: "{{ dns_cname_records.json.result | selectattr('content', 'search', 'cfargotunnel') | list }}"
+  loop_control:
+    loop_var: dns_record
+
+- name: Create and register a tunnel for '{{ config_system_hostname }}'
+  command: cloudflared tunnel create {{ config_system_hostname }}
+  register: tunnel_create_status
+
+- name: Extract the tunnel UUID from the '{{ config_system_hostname }}' created tunnel
+  set_fact:
+    tunnel_uuid: "{{ tunnel_create_status.stdout | regex_search('with id ([a-z0-9-]+)', '\\1') | first }}"
+
+- name: Create CNAME records to route hostnames to the tunnel's address
+  command: cloudflared tunnel route dns {{ config_system_hostname }} {{ cname }}
+  with_items:
+    - emby
+    - files
+    - webdav
+  loop_control:
+    loop_var: cname
+
+- name: Copy the main configuration file for the '{{ config_system_hostname }}' tunnel
+  template:
+    src: config.yml.j2
+    dest: /etc/cloudflared/config.yml
+    mode: '0644'
+  register: main_config_status
+  when: tunnel_uuid | length > 0
+
+- name: Check if the 'cloudflared' system service is already installed
+  command: systemctl cat cloudflared
+  register: cloudflared_service_status
+  changed_when: false
+  failed_when: cloudflared_service_status.rc not in [0, 1]
+
+- name: Install the 'cloudflared' system service
+  command: cloudflared service install
+  when: cloudflared_service_status.rc == 1
+
+- name: Restart the 'cloudflared' system service
+  systemd:
+    name: cloudflared
+    state: restarted
+  when: cloudflared_service_status.rc == 0 and main_config_status.changed
