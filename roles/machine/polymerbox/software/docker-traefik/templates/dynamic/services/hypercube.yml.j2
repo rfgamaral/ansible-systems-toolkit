@@ -4,10 +4,6 @@ http:
       loadBalancer:
         servers:
           - url: http://10.0.10.205:34080/
-    emby:
-      loadBalancer:
-        servers:
-          - url: http://10.0.10.205:39080/
     nzbget:
       loadBalancer:
         servers:
@@ -16,6 +12,10 @@ http:
       loadBalancer:
         servers:
           - url: http://10.0.10.205:35080/
+    plex:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:32400/
     radarr:
       loadBalancer:
         servers:

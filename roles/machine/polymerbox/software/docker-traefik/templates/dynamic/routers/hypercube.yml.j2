@@ -12,12 +12,6 @@ http:
       middlewares:
         - chain-default
       tls: {}
-    emby:
-      rule: Host(`emby.{{ config_network_domain }}`)
-      service: emby
-      middlewares:
-        - chain-default
-      tls: {}
     files:
       rule: Host(`files.{{ config_network_domain }}`)
       service: synology-file-station
@@ -33,6 +27,12 @@ http:
     nzbhydra:
       rule: Host(`nzbhydra.{{ config_network_domain }}`)
       service: nzbhydra
+      middlewares:
+        - chain-default
+      tls: {}
+    plex:
+      rule: Host(`plex.{{ config_network_domain }}`)
+      service: plex
       middlewares:
         - chain-default
       tls: {}

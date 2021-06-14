@@ -73,8 +73,8 @@
 - name: Create CNAME records to route hostnames to the tunnel's address
   command: cloudflared tunnel route dns {{ config_system_hostname }} {{ cname }}
   with_items:
-    - emby
     - files
+    - plex
     - webdav
   loop_control:
     loop_var: cname

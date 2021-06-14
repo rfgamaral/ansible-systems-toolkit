@@ -3,11 +3,11 @@ tunnel: {{ config_system_hostname }}
 credentials-file: /etc/cloudflared/{{ tunnel_uuid }}.json
 
 ingress:
- - hostname: emby.{{ config_network_domain }}
-   service: http://10.0.10.205:39080
-
  - hostname: files.{{ config_network_domain }}
    service: http://10.0.10.205:17080
+
+ - hostname: plex.{{ config_network_domain }}
+   service: http://10.0.10.205:32400
 
  - hostname: webdav.{{ config_network_domain }}
    service: http://10.0.10.205:16080
