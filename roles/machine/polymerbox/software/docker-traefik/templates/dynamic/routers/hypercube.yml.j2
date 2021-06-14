@@ -1,8 +1,14 @@
 http:
   routers:
-    bazarr:
-      rule: Host(`bazarr.{{ config_network_domain }}`)
-      service: bazarr
+    bazarr-en:
+      rule: Host(`bazarr.{{ config_network_domain }}`) && PathPrefix(`/en`)
+      service: bazarr-en
+      middlewares:
+        - chain-default
+      tls: {}
+    bazarr-pt:
+      rule: Host(`bazarr.{{ config_network_domain }}`) && PathPrefix(`/pt`)
+      service: bazarr-pt
       middlewares:
         - chain-default
       tls: {}
@@ -18,15 +24,9 @@ http:
       middlewares:
         - chain-default
       tls: {}
-    nzbget:
-      rule: Host(`nzbget.{{ config_network_domain }}`)
-      service: nzbget
-      middlewares:
-        - chain-default
-      tls: {}
-    nzbhydra:
-      rule: Host(`nzbhydra.{{ config_network_domain }}`)
-      service: nzbhydra
+    nzbhydra2:
+      rule: Host(`nzbhydra2.{{ config_network_domain }}`)
+      service: nzbhydra2
       middlewares:
         - chain-default
       tls: {}
@@ -36,15 +36,33 @@ http:
       middlewares:
         - chain-default
       tls: {}
+    overseerr:
+      rule: Host(`overseerr.{{ config_network_domain }}`)
+      service: overseerr
+      middlewares:
+        - chain-default
+      tls: {}
     radarr:
       rule: Host(`radarr.{{ config_network_domain }}`)
       service: radarr
       middlewares:
         - chain-default
       tls: {}
+    sabnzbd:
+      rule: Host(`sabnzbd.{{ config_network_domain }}`)
+      service: sabnzbd
+      middlewares:
+        - chain-default
+      tls: {}
     sonarr:
       rule: Host(`sonarr.{{ config_network_domain }}`)
       service: sonarr
+      middlewares:
+        - chain-default
+      tls: {}
+    tautulli:
+      rule: Host(`tautulli.{{ config_network_domain }}`)
+      service: tautulli
       middlewares:
         - chain-default
       tls: {}

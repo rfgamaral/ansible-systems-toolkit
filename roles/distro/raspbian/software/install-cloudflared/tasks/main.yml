@@ -74,6 +74,7 @@
   command: cloudflared tunnel route dns {{ config_system_hostname }} {{ cname }}
   with_items:
     - files
+    - overseerr
     - plex
     - webdav
   loop_control:

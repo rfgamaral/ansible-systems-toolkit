@@ -1,0 +1,34 @@
+- name: Create a network for Servarr and all exposed containers
+  docker_network:
+    name: servarr
+    driver: bridge
+
+- block:
+    - name: Ensure configuration directory for {{ container.name }} exists
+      file:
+        path: /volume1/docker/{{ container_name }}
+        state: directory
+        owner: docker
+        group: users
+
+    - name: Create '{{ container_name }}' container
+      docker_container:
+        name: '{{ container_name }}'
+        image: ghcr.io/hotio/{{ image_name }}:latest
+        networks_cli_compatible: true
+        restart_policy: always
+        env:
+          TZ: '{{ config_system_timezone }}'
+          PUID: '{{ config_docker_user_id | string }}'
+          PGID: '{{ config_docker_group_id | string }}'
+        networks:
+          - name: servarr
+        ports: '{{ container.ports }}'
+        memory: "{{ container.memory | default('1G') }}"
+        volumes:
+          - /volume1/docker/{{ container_name }}:/config:rw
+          - /volume1/Media:/media:rw
+
+  vars:
+    container_name: "{{ container.name | lower }}{{ container.key is defined | ternary('-' + container.key | default(omit), '') }}"
+    image_name: '{{ container.name | lower }}'

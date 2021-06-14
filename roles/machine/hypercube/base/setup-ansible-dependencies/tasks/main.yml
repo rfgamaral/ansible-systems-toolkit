@@ -1,0 +1,19 @@
+- name: Bootstrap the 'pip' installer into an existing Python installation
+  command: /usr/local/bin/python3 -m ensurepip
+  register: install_pip_result
+  changed_when: "'Requirement already satisfied' not in install_pip_result.stdout"
+
+- name: Upgrade 'pip' to the latest available version
+  command: /usr/local/bin/python3 -m pip install --upgrade pip
+  register: upgrade_pip_result
+  changed_when: "'Requirement already satisfied' not in upgrade_pip_result.stdout"
+
+- name: Install required packages for Python
+  command: /usr/local/bin/python3 -m pip install {{ package }}
+  register: install_pip_package_result
+  changed_when: "'Requirement already satisfied' not in install_pip_package_result.stdout"
+  loop:
+    - docker
+    - six
+  loop_control:
+    loop_var: package

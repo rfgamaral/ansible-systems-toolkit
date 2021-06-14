@@ -1,0 +1,41 @@
+- hosts: HYPERCUBE
+
+  tasks:
+    - block:
+        - name: Configure base system settings and services
+          include_role:
+            name: '{{ item }}'
+          with_items:
+            - machine/hypercube/base/setup-ansible-dependencies
+
+        - name: Install Docker container applications (Common)
+          vars:
+            config_role_container_name: "{{ role | basename | replace('docker-', '') }}"
+          include_role:
+            name: '{{ role }}'
+          loop:
+            - machine/hypercube/software/docker-kitana
+            - machine/hypercube/software/docker-watchtower
+          loop_control:
+            loop_var: role
+
+        - name: Install Docker container applications (Servarr)
+          include_role:
+            name: machine/hypercube/software/docker-servarr
+          loop:
+            - { name: 'Bazarr', key: 'en', ports: ['23080:6767'], memory: '512M' }
+            - { name: 'Bazarr', key: 'pt', ports: ['23081:6767'], memory: '512M' }
+            - { name: 'NZBHydra2', ports: ['22080:5076'], memory: '512M' }
+            - { name: 'Overseerr', ports: ['26080:5055'], memory: '512M' }
+            - { name: 'Radarr', ports: ['24080:7878'] }
+            - { name: 'SABnzbd', ports: ['21080:8080'], memory: '2G' }
+            - { name: 'Sonarr', ports: ['25080:8989'] }
+            - { name: 'Tautulli', ports: ['27080:8181'], memory: '512M' }
+          loop_control:
+            loop_var: container
+
+      vars:
+        ansible_user: '{{ config_admin_user_name }}'
+        ansible_become_pass: '{{ config_admin_user_pass }}'
+
+      become: true

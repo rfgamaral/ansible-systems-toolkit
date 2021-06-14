@@ -1,29 +1,37 @@
 http:
   services:
-    bazarr:
+    bazarr-en:
       loadBalancer:
         servers:
-          - url: http://10.0.10.205:34080/
-    nzbget:
+          - url: http://10.0.10.205:23080/
+    bazarr-pt:
       loadBalancer:
         servers:
-          - url: http://10.0.10.205:36080/
-    nzbhydra:
+          - url: http://10.0.10.205:23081/
+    nzbhydra2:
       loadBalancer:
         servers:
-          - url: http://10.0.10.205:35080/
+          - url: http://10.0.10.205:22080/
     plex:
       loadBalancer:
         servers:
           - url: http://10.0.10.205:32400/
+    overseerr:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:26080/
     radarr:
       loadBalancer:
         servers:
-          - url: http://10.0.10.205:37080/
+          - url: http://10.0.10.205:24080/
+    sabnzbd:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:21080/
     sonarr:
       loadBalancer:
         servers:
-          - url: http://10.0.10.205:38080/
+          - url: http://10.0.10.205:25080/
     synology-diskstation-manager:
       loadBalancer:
         servers:
@@ -36,3 +44,7 @@ http:
       loadBalancer:
         servers:
           - url: http://10.0.10.205:16080/
+    tautulli:
+      loadBalancer:
+        servers:
+          - url: http://10.0.10.205:27080/

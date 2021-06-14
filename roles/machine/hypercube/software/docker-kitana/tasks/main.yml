@@ -1,0 +1,19 @@
+- name: Ensure configuration directory for Kitana exists
+  file:
+    path: /volume1/docker/{{ config_role_container_name }}
+    state: directory
+    owner: docker
+    group: users
+
+- name: Create '{{ config_role_container_name }}' container
+  docker_container:
+    name: '{{ config_role_container_name }}'
+    image: pannal/kitana:latest
+    restart_policy: always
+    env:
+      TZ: '{{ config_system_timezone }}'
+    ports:
+      - '34400:34400/tcp'
+    volumes:
+      - /volume1/docker/{{ config_role_container_name }}:/app/data:rw
+    command: -B 0.0.0.0:34400

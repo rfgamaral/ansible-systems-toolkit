@@ -9,6 +9,9 @@ ingress:
  - hostname: plex.{{ config_network_domain }}
    service: http://10.0.10.205:32400
 
+ - hostname: overseerr.{{ config_network_domain }}
+   service: http://10.0.10.205:26080
+
  - hostname: webdav.{{ config_network_domain }}
    service: http://10.0.10.205:16080
 
