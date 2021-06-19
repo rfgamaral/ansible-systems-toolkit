@@ -1,0 +1,20 @@
+{
+  "log_debug_messages": false,
+  "logging": {
+    "append": false
+  },
+  "sync": {
+    "liked_lists": false,
+    "watchlist": false,
+    "watched_status": true,
+    "collection": false,
+    "ratings": false
+  },
+  "xbmc-providers": {
+    "movies": "imdb",
+    "shows": "tvdb"
+  },
+  "excluded-libraries": [
+    "Samples"
+  ]
+}
