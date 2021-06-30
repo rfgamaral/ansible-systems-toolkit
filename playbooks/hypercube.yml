@@ -15,6 +15,7 @@
             name: '{{ role }}'
           loop:
             - machine/hypercube/software/docker-kitana
+            - machine/hypercube/software/docker-plex
             - machine/hypercube/software/docker-watchtower
           loop_control:
             loop_var: role
