@@ -25,10 +25,9 @@
           - name: servarr
         ports: '{{ container.ports }}'
         memory: "{{ container.memory | default('1G') }}"
-        volumes:
-          - /volume1/docker/{{ container_name }}:/config:rw
-          - /volume1/Media:/media:rw
+        volumes: '{{ container_volumes }}'
 
   vars:
     container_name: "{{ container.name | lower }}{{ container.key is defined | ternary('-' + container.key | default(omit), '') }}"
+    container_volumes: "{{ (['/volume1/docker/' + container_name + ':/config:rw'] + [container.media_volume is defined | ternary('', '/volume1/Media:/media:rw')]) | select() | list() }}"
     image_name: '{{ container.name | lower }}'
