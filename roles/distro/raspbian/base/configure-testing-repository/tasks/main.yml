@@ -1,4 +1,4 @@
-- name: Update pinning priorities for stable/testing repositories
+- name: Update pinning priorities for multiple releases/repositories
   template:
     src: '{{ file }}.j2'
     dest: /etc/apt/preferences.d/{{ file }}
@@ -6,8 +6,8 @@
     group: root
     mode: '0644'
   with_items:
-    - stable.pref
-    - testing.pref
+    - 10-buster.pref
+    - 12-bookworm.pref
   loop_control:
     loop_var: file
 
