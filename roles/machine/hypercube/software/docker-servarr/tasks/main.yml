@@ -14,7 +14,7 @@
     - name: Create '{{ container_name }}' container
       docker_container:
         name: '{{ container_name }}'
-        image: ghcr.io/hotio/{{ image_name }}:latest
+        image: hotio/{{ image_name }}:latest
         networks_cli_compatible: true
         restart_policy: always
         env:

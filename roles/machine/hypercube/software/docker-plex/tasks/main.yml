@@ -13,7 +13,7 @@
 - name: Create '{{ config_role_container_name }}' container
   docker_container:
     name: '{{ config_role_container_name }}'
-    image: ghcr.io/hotio/plex:latest
+    image: hotio/plex:latest
     networks_cli_compatible: true
     restart_policy: always
     env:
