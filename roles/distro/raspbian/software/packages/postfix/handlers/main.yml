@@ -4,6 +4,9 @@
 - name: Update header_checks table
   command: postmap /etc/postfix/header_checks
 
+- name: Update sender_canonical table
+  command: postmap /etc/postfix/sender_canonical
+
 - name: Restart postfix service
   service:
     name: postfix

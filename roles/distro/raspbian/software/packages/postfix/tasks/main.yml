@@ -37,10 +37,7 @@
     - { regexp: ^DESC, line: DESC="SASL Auth. Daemon for Postfix" }
     - { regexp: ^NAME=, line: NAME="saslauthd-postf" }
     - { regexp: ^MECHANISMS, line: MECHANISMS="shadow" }
-    - {
-        regexp: ^OPTIONS,
-        line: OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd",
-      }
+    - { regexp: ^OPTIONS, line: OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd" }
   loop_control:
     loop_var: file
   notify:
@@ -82,6 +79,17 @@
     mode: '0600'
   notify:
     - Update header_checks table
+    - Restart postfix service
+
+- name: Update 'sender_canonical' file and generate the lookup table
+  template:
+    src: sender_canonical.j2
+    dest: /etc/postfix/sender_canonical
+    owner: root
+    group: root
+    mode: '0600'
+  notify:
+    - Update sender_canonical table
     - Restart postfix service
 
 - name: Update 'smtpd.conf' configuration for the SMTP daemon
