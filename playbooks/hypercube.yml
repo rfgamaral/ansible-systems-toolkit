@@ -6,23 +6,21 @@
           include_role:
             name: '{{ item }}'
           with_items:
-            - machine/hypercube/base/setup-ansible-dependencies
+            - distro/synology/base/setup-ansible-dependencies
 
         - name: Install Docker container applications (Common)
-          vars:
-            config_role_container_name: "{{ role | basename | replace('docker-', '') }}"
           include_role:
             name: '{{ role }}'
           loop:
-            - machine/hypercube/software/docker-plex
-            - machine/hypercube/software/docker-plex-trakt-sync
-            - machine/hypercube/software/docker-watchtower
+            - distro/synology/software/containers/plex
+            - distro/synology/software/containers/plex-trakt-sync
+            - distro/synology/software/containers/watchtower
           loop_control:
             loop_var: role
 
         - name: Install Docker container applications (Servarr)
           include_role:
-            name: machine/hypercube/software/docker-servarr
+            name: distro/synology/software/containers/servarr
           loop:
             - { name: 'Bazarr', key: 'en', ports: ['23080:6767'], memory: '512M' }
             - { name: 'Bazarr', key: 'pt', ports: ['23081:6767'], memory: '512M' }

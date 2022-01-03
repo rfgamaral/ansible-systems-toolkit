@@ -1,6 +1,6 @@
-- name: Create '{{ config_role_container_name }}' container
+- name: Create '{{ role_name | basename }}' container
   docker_container:
-    name: '{{ config_role_container_name }}'
+    name: '{{ role_name | basename }}'
     image: containrrr/watchtower:latest
     networks_cli_compatible: true
     restart_policy: always

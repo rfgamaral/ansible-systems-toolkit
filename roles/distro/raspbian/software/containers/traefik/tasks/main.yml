@@ -31,9 +31,9 @@
         gateway: '172.16.10.254'
         iprange: '172.16.10.0/27'
 
-- name: Create '{{ config_role_container_name }}' container
+- name: Create '{{ role_name | basename }}' container
   docker_container:
-    name: '{{ config_role_container_name }}'
+    name: '{{ role_name | basename }}'
     image: traefik:latest
     networks_cli_compatible: true
     restart_policy: always
@@ -73,9 +73,9 @@
       traefik.http.routers.traefik.service: 'api@internal'
   register: docker_status
 
-- name: Restart '{{ config_role_container_name }}' container
+- name: Restart '{{ role_name | basename }}' container
   docker_container:
-    name: '{{ config_role_container_name }}'
+    name: '{{ role_name | basename }}'
     restart: true
   when: config_status.changed and not docker_status.changed
 

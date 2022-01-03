@@ -20,9 +20,9 @@
     mode: '0644'
   register: copy_status
 
-- name: Create '{{ config_role_container_name }}' container
+- name: Create '{{ role_name | basename }}' container
   docker_container:
-    name: '{{ config_role_container_name }}'
+    name: '{{ role_name | basename }}'
     image: adguard/adguardhome:latest
     networks_cli_compatible: true
     restart_policy: always
@@ -68,8 +68,8 @@
       traefik.http.services.adguard-home.loadbalancer.server.port: '80'
   register: docker_status
 
-- name: Restart '{{ config_role_container_name }}' container
+- name: Restart '{{ role_name | basename }}' container
   docker_container:
-    name: '{{ config_role_container_name }}'
+    name: '{{ role_name | basename }}'
     restart: true
   when: copy_status.changed and not docker_status.changed

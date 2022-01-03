@@ -4,9 +4,9 @@
     state: directory
     mode: '0700'
 
-- name: Create '{{ config_role_container_name }}' container
+- name: Create '{{ role_name | basename }}' container
   docker_container:
-    name: '{{ config_role_container_name }}'
+    name: '{{ role_name | basename }}'
     image: ghcr.io/linuxserver/unifi-controller:latest
     pull: "{{ 'upgrade' in ansible_run_tags }}"
     networks_cli_compatible: true

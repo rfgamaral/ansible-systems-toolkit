@@ -1,6 +1,6 @@
 - name: Ensure configuration directory for Plex-Trakt-Sync exists
   file:
-    path: /volume1/docker/{{ config_role_container_name }}
+    path: /volume1/docker/{{ role_name | basename }}
     state: directory
     owner: docker
     group: users
@@ -8,38 +8,38 @@
 - name: Copy Plex credentials file to project configuration directory
   copy:
     src: .env
-    dest: /volume1/docker/{{ config_role_container_name }}/.env
+    dest: /volume1/docker/{{ role_name | basename }}/.env
     owner: docker
     group: users
 
 - name: Copy Trakt.tv credentials file to project configuration directory
   copy:
     src: .pytrakt.json
-    dest: /volume1/docker/{{ config_role_container_name }}/.pytrakt.json
+    dest: /volume1/docker/{{ role_name | basename }}/.pytrakt.json
     owner: docker
     group: users
 
 - name: Copy configuration file to project configuration directory
   copy:
     src: config.json
-    dest: /volume1/docker/{{ config_role_container_name }}/config.json
+    dest: /volume1/docker/{{ role_name | basename }}/config.json
     owner: docker
     group: users
 
 - name: Create default log file with correct permissions
   copy:
     content: ''
-    dest: /volume1/docker/{{ config_role_container_name }}/last_update.log
+    dest: /volume1/docker/{{ role_name | basename }}/last_update.log
     owner: docker
     group: users
 
-- name: Create '{{ config_role_container_name }}' container
+- name: Create '{{ role_name | basename }}' container
   docker_container:
-    name: '{{ config_role_container_name }}'
+    name: '{{ role_name | basename }}'
     image: ghcr.io/taxel/plextraktsync:latest
     restart_policy: always
     env:
       TZ: '{{ config_system_timezone }}'
     volumes:
-      - /volume1/docker/{{ config_role_container_name }}:/app/config:rw
+      - /volume1/docker/{{ role_name | basename }}:/app/config:rw
     entrypoint: python -m plextraktsync watch

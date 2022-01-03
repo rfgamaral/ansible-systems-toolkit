@@ -4,7 +4,7 @@
     - block:
         - name: Update known public keys for remote host
           include_role:
-            name: machine/local/ssh/update-known-hosts
+            name: local/wsl/ssh/update-known-hosts
 
         - block:
             - block:
@@ -52,12 +52,12 @@
           include_role:
             name: '{{ item }}'
           with_items:
-            - linux/dotfiles/aliases
-            - linux/dotfiles/dircolors
-            - linux/dotfiles/inputrc
-            - linux/dotfiles/nanorc
-            - linux/dotfiles/profile
-            - linux/shell/switch-from-bash-to-zsh
+            - distro/linux/dotfiles/aliases
+            - distro/linux/dotfiles/dircolors
+            - distro/linux/dotfiles/inputrc
+            - distro/linux/dotfiles/nanorc
+            - distro/linux/dotfiles/profile
+            - distro/linux/shell/switch-from-bash-to-zsh
           vars:
             config_role_user_name: root
             config_role_user_home: /root
@@ -66,12 +66,12 @@
           include_role:
             name: '{{ item }}'
           with_items:
-            - linux/dotfiles/aliases
-            - linux/dotfiles/dircolors
-            - linux/dotfiles/inputrc
-            - linux/dotfiles/nanorc
-            - linux/dotfiles/profile
-            - linux/shell/switch-from-bash-to-zsh
+            - distro/linux/dotfiles/aliases
+            - distro/linux/dotfiles/dircolors
+            - distro/linux/dotfiles/inputrc
+            - distro/linux/dotfiles/nanorc
+            - distro/linux/dotfiles/profile
+            - distro/linux/shell/switch-from-bash-to-zsh
           vars:
             config_role_user_name: '{{ config_admin_user_name }}'
             config_role_user_home: /home/{{ config_admin_user_name }}
@@ -80,23 +80,21 @@
           include_role:
             name: '{{ item }}'
           with_items:
-            - distro/raspbian/software/install-acme.sh
-            - distro/raspbian/software/install-borgbackup
-            - distro/raspbian/software/install-cloudflared
-            - distro/raspbian/software/install-docker
-            - distro/raspbian/software/install-postfix
-            - distro/raspbian/software/install-tailscale
+            - distro/raspbian/software/packages/acme.sh
+            - distro/raspbian/software/packages/borgbackup
+            - distro/raspbian/software/packages/cloudflared
+            - distro/raspbian/software/packages/docker
+            - distro/raspbian/software/packages/postfix
+            - distro/raspbian/software/packages/tailscale
 
         - name: Install Docker container applications
-          vars:
-            config_role_container_name: "{{ item | basename | replace('docker-', '') }}"
           include_role:
             name: '{{ item }}'
           with_items:
-            - machine/polymerbox/software/docker-traefik
-            - machine/polymerbox/software/docker-adguard-home
-            - machine/polymerbox/software/docker-unifi-controller
-            - machine/polymerbox/software/docker-watchtower
+            - distro/raspbian/software/containers/traefik
+            - distro/raspbian/software/containers/adguard-home
+            - distro/raspbian/software/containers/unifi-controller
+            - distro/raspbian/software/containers/watchtower
 
       vars:
         ansible_user: '{{ config_admin_user_name }}'
@@ -119,15 +117,13 @@
             - never
 
         - name: Upgrade Docker container applications
-          vars:
-            config_role_container_name: "{{ item | basename | replace('docker-', '') }}"
           include_role:
             name: '{{ item }}'
             apply:
               tags:
                 - never
           with_items:
-            - machine/polymerbox/software/docker-unifi-controller
+            - distro/raspbian/software/containers/unifi-controller
           tags:
             - upgrade
             - never

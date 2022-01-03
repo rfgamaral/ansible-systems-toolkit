@@ -1,6 +1,6 @@
-- name: Create '{{ config_role_container_name }}' container
+- name: Create '{{ role_name | basename }}' container
   docker_container:
-    name: '{{ config_role_container_name }}'
+    name: '{{ role_name | basename }}'
     image: ghcr.io/containrrr/watchtower:latest
     restart_policy: always
     env:
