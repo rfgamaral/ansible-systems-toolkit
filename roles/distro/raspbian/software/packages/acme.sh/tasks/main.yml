@@ -70,11 +70,20 @@
       --key-file '/etc/ssl/private/{{ config_network_domain }}.pem'
   when: not (certificate_installed_status.results[0].stat.exists and certificate_installed_status.results[1].stat.exists)
 
+- name: Read ACME Shell script account configuration
+  slurp:
+    src: /opt/acme.sh/account.conf
+  register: acme_account_conf
+
 - name: Configure ACME Shell script to upgrade automatically
-  lineinfile:
-    path: /opt/acme.sh/account.conf
-    regexp: ^#AUTO_UPGRADE
-    line: AUTO_UPGRADE='1'
+  command:
+    chdir: /opt/acme.sh
+    cmd: >
+      ./acme.sh
+        --home /opt/acme.sh
+        --update-account
+        --auto-upgrade 1
+  when: not (acme_account_conf.content | b64decode | regex_search("AUTO_UPGRADE='1'"))
 
 - name: Add a cronjob to upgrade ACME Shell script and renew all certificates
   cron:
