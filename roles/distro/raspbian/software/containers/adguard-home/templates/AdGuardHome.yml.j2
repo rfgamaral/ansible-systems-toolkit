@@ -103,7 +103,7 @@ dns:
       answer: 127.0.0.1
   blocked_services: []
   upstream_timeout: 10s
-  local_domain_name: {{ config_network_domain }}
+  local_domain_name: '{{ config_network_domain }}'
   resolve_clients: true
   use_private_ptr_resolvers: true
   local_ptr_upstreams: []
