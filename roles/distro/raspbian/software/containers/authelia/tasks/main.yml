@@ -1,0 +1,46 @@
+- name: Ensure configuration directory for Authelia exists
+  file:
+    path: /opt/authelia
+    state: directory
+    mode: '0700'
+
+- name: Copy all configuration files for Authelia
+  template:
+    src: '{{ file.src }}'
+    dest: /opt/authelia/{{ file.path | regex_replace('\.j2$', '') }}
+  with_filetree: '../templates'
+  when: file.state == 'file'
+  register: config_status
+  loop_control:
+    loop_var: file
+
+- name: Create '{{ role_name | basename }}' container
+  docker_container:
+    name: '{{ role_name | basename }}'
+    image: ghcr.io/authelia/authelia:latest
+    networks_cli_compatible: true
+    restart_policy: always
+    env:
+      TZ: '{{ config_system_timezone }}'
+    networks:
+      - name: traefik
+    dns_servers:
+      - '172.16.10.254'
+    mounts:
+      - source: /opt/authelia
+        target: /config
+        read_only: false
+        type: bind
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.authelia.rule: 'Host(`authelia.{{ config_network_domain }}`)'
+      traefik.http.routers.authelia.middlewares: 'chain-authelia@file'
+      traefik.http.routers.authelia.tls: 'true'
+      traefik.http.services.authelia.loadbalancer.server.port: '80'
+  register: docker_status
+
+- name: Restart '{{ role_name | basename }}' container
+  docker_container:
+    name: '{{ role_name | basename }}'
+    restart: true
+  when: config_status.changed and not docker_status.changed

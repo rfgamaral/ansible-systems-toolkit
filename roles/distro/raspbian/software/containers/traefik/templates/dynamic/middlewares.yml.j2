@@ -3,8 +3,26 @@ http:
     chain-default:
       chain:
         middlewares:
-          - security-headers@file
           - rate-limiting@file
+          - security-headers@file
+    chain-authelia:
+      chain:
+        middlewares:
+          - rate-limiting@file
+          - security-headers@file
+          - authelia@file
+    authelia:
+      forwardAuth:
+        address: http://authelia/api/verify?rd=https://authelia.{{ config_network_domain }}
+        trustForwardHeader: true
+        authResponseHeaders:
+          - Remote-User
+          - Remote-Groups
+    rate-limiting:
+      rateLimit:
+        average: 100
+        burst: 50
+        period: 1s
     security-headers:
       headers:
         accessControlAllowCredentials: true
@@ -17,8 +35,3 @@ http:
         hostsProxyHeaders:
           - 'X-Forwarded-Host'
         referrerPolicy: 'strict-origin-when-cross-origin'
-    rate-limiting:
-      rateLimit:
-        average: 100
-        burst: 50
-        period: 1s

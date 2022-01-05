@@ -4,13 +4,13 @@ http:
       rule: Host(`bazarr.{{ config_network_domain }}`) && PathPrefix(`/en`)
       service: bazarr-en
       middlewares:
-        - chain-default
+        - chain-authelia
       tls: {}
     bazarr-pt:
       rule: Host(`bazarr.{{ config_network_domain }}`) && PathPrefix(`/pt`)
       service: bazarr-pt
       middlewares:
-        - chain-default
+        - chain-authelia
       tls: {}
     dsm:
       rule: Host(`dsm.{{ config_network_domain }}`)
@@ -28,7 +28,7 @@ http:
       rule: Host(`nzbhydra2.{{ config_network_domain }}`)
       service: nzbhydra2
       middlewares:
-        - chain-default
+        - chain-authelia
       tls: {}
     plex:
       rule: Host(`plex.{{ config_network_domain }}`)
@@ -46,19 +46,19 @@ http:
       rule: Host(`radarr.{{ config_network_domain }}`)
       service: radarr
       middlewares:
-        - chain-default
+        - chain-authelia
       tls: {}
     sabnzbd:
       rule: Host(`sabnzbd.{{ config_network_domain }}`)
       service: sabnzbd
       middlewares:
-        - chain-default
+        - chain-authelia
       tls: {}
     sonarr:
       rule: Host(`sonarr.{{ config_network_domain }}`)
       service: sonarr
       middlewares:
-        - chain-default
+        - chain-authelia
       tls: {}
     tautulli:
       rule: Host(`tautulli.{{ config_network_domain }}`)

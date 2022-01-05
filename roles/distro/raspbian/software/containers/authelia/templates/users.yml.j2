@@ -1,0 +1,8 @@
+users:
+  {{ config_admin_user_name }}:
+    displayname: Ricardo Amaral
+    password: $argon2id$v=19$m=131072,t=1,p=8$QXNEYVdSZnRJYVJDTmFzaA$lduBW/L/bRAuMRsfEvXALM9jaVGWQgm6so84vaDW0DY
+    email: '{{ config_primary_email }}'
+    groups:
+      - admins
+

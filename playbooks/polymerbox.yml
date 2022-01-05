@@ -93,6 +93,7 @@
           with_items:
             - distro/raspbian/software/containers/traefik
             - distro/raspbian/software/containers/adguard-home
+            - distro/raspbian/software/containers/authelia
             - distro/raspbian/software/containers/unifi-controller
             - distro/raspbian/software/containers/watchtower
 

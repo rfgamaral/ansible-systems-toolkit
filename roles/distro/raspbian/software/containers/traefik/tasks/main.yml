@@ -68,7 +68,7 @@
     labels:
       traefik.enable: 'true'
       traefik.http.routers.traefik.rule: 'Host(`traefik.{{ config_network_domain }}`)'
-      traefik.http.routers.traefik.middlewares: 'chain-default@file'
+      traefik.http.routers.traefik.middlewares: 'chain-authelia@file'
       traefik.http.routers.traefik.tls: 'true'
       traefik.http.routers.traefik.service: 'api@internal'
   register: docker_status

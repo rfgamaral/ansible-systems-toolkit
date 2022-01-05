@@ -1,0 +1,62 @@
+server:
+  host: 0.0.0.0
+  port: 80
+log:
+  level: warn
+  format: text
+jwt_secret: '{{ config_authelia_jwt_secret }}'
+default_redirection_url: https://authelia.{{ config_network_domain }}
+totp:
+  issuer: authelia.{{ config_network_domain }}
+  algorithm: sha1
+  digits: 6
+  period: 30
+  skew: 1
+authentication_backend:
+  disable_reset_password: true
+  file:
+    path: /config/users.yml
+    password:
+      algorithm: argon2id
+      salt_length: 16
+      iterations: 1
+      parallelism: 8
+      memory: 128
+access_control:
+  default_policy: deny
+  rules:
+    - domain: authelia.{{ config_network_domain }}
+      policy: bypass
+    - domain: '*.{{ config_network_domain }}'
+      policy: bypass
+      resources:
+        - "^/api([/?].*)?$"
+    - domain:
+        - '*.{{ config_network_domain }}'
+        - '{{ config_network_domain }}'
+      policy: two_factor
+session:
+  name: authelia_session
+  domain: '{{ config_network_domain }}'
+  same_site: lax
+  expiration: 1h
+  inactivity: 5m
+  remember_me_duration: 1M
+regulation:
+  max_retries: 3
+  find_time: 2m
+  ban_time: 5m
+storage:
+  encryption_key: '{{ config_authelia_storage_encryption_key }}'
+  local:
+    path: /config/db.sqlite3
+notifier:
+  disable_startup_check: false
+  smtp:
+    username: '{{ config_admin_user_name }}'
+    password: '{{ config_admin_user_pass }}'
+    host: polymerbox.{{ config_network_domain }}
+    port: 587
+    sender: Authelia <noreply-authelia@{{ config_network_domain }}>
+    subject: '{title}'
+

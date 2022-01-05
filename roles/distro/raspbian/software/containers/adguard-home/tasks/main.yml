@@ -63,7 +63,7 @@
     labels:
       traefik.enable: 'true'
       traefik.http.routers.adguard.rule: 'Host(`adguard.{{ config_network_domain }}`) || (Host(`adguard.{{ config_network_domain }}`) && Path(`/dns-query`))'
-      traefik.http.routers.adguard.middlewares: 'chain-default@file'
+      traefik.http.routers.adguard.middlewares: 'chain-authelia@file'
       traefik.http.routers.adguard.tls: 'true'
       traefik.http.services.adguard-home.loadbalancer.server.port: '80'
   register: docker_status

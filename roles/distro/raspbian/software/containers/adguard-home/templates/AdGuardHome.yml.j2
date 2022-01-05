@@ -69,6 +69,8 @@ dns:
   rewrites:
     - domain: adguard.{{ config_network_domain }}
       answer: polymerbox.{{ config_network_domain }}
+    - domain: authelia.{{ config_network_domain }}
+      answer: polymerbox.{{ config_network_domain }}
     - domain: bazarr.{{ config_network_domain }}
       answer: polymerbox.{{ config_network_domain }}
     - domain: dsm.{{ config_network_domain }}
