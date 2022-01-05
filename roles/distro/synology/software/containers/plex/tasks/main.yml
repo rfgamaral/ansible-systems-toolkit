@@ -1,4 +1,4 @@
-- name: Ensure directory structure for Plex configuration exists
+- name: Ensure directory structure for Plex exists
   file:
     path: /volume1/docker/plex/{{ directory }}
     state: directory

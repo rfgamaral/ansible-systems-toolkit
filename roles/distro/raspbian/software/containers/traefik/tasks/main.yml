@@ -1,4 +1,4 @@
-- name: Ensure directory structure for Traefik configuration exists
+- name: Ensure directory structure for Traefik exists
   file:
     path: /opt/traefik/{{ directory.path }}
     state: directory
