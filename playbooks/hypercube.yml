@@ -25,11 +25,11 @@
             - { name: 'Bazarr', key: 'en', ports: ['23080:6767'], memory: '512M' }
             - { name: 'Bazarr', key: 'pt', ports: ['23081:6767'], memory: '512M' }
             - { name: 'NZBHydra2', ports: ['22080:5076'], memory: '512M', media_volume: false }
-            - { name: 'Overseerr', ports: ['26080:5055'], memory: '512M', media_volume: false }
+            - { name: 'Overseerr', ports: ['36080:5055'], memory: '512M', media_volume: false }
             - { name: 'Radarr', ports: ['24080:7878'] }
             - { name: 'SABnzbd', ports: ['21080:8080'], memory: '2G' }
             - { name: 'Sonarr', ports: ['25080:8989'] }
-            - { name: 'Tautulli', ports: ['27080:8181'], memory: '512M', media_volume: false }
+            - { name: 'Tautulli', ports: ['37080:8181'], memory: '512M', media_volume: false }
           loop_control:
             loop_var: container
 
