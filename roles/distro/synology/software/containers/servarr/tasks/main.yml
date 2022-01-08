@@ -6,7 +6,7 @@
 - block:
     - name: Ensure configuration directory for {{ container.name }} exists
       file:
-        path: /volume1/docker/{{ container_name }}
+        path: /volume1/Docker/{{ container_name }}
         state: directory
         owner: docker
         group: users
@@ -29,5 +29,5 @@
 
   vars:
     container_name: "{{ container.name | lower }}{{ container.key is defined | ternary('-' + container.key | default(omit), '') }}"
-    container_volumes: "{{ (['/volume1/docker/' + container_name + ':/config:rw'] + [container.media_volume is defined | ternary('', '/volume1/Media:/media:rw')]) | select() | list() }}"
+    container_volumes: "{{ (['/volume1/Docker/' + container_name + ':/config:rw'] + [container.media_volume is defined | ternary('', '/volume1/Media:/media:rw')]) | select() | list() }}"
     image_name: '{{ container.name | lower }}'

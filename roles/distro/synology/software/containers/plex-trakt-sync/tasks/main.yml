@@ -1,6 +1,6 @@
 - name: Ensure configuration directory for Plex-Trakt-Sync exists
   file:
-    path: /volume1/docker/{{ role_name | basename }}
+    path: /volume1/Docker/{{ role_name | basename }}
     state: directory
     owner: docker
     group: users
@@ -8,28 +8,28 @@
 - name: Copy Plex credentials file to project configuration directory
   copy:
     src: .env
-    dest: /volume1/docker/{{ role_name | basename }}/.env
+    dest: /volume1/Docker/{{ role_name | basename }}/.env
     owner: docker
     group: users
 
 - name: Copy Trakt.tv credentials file to project configuration directory
   copy:
     src: .pytrakt.json
-    dest: /volume1/docker/{{ role_name | basename }}/.pytrakt.json
+    dest: /volume1/Docker/{{ role_name | basename }}/.pytrakt.json
     owner: docker
     group: users
 
 - name: Copy configuration file to project configuration directory
   copy:
     src: config.json
-    dest: /volume1/docker/{{ role_name | basename }}/config.json
+    dest: /volume1/Docker/{{ role_name | basename }}/config.json
     owner: docker
     group: users
 
 - name: Create default log file with correct permissions
   copy:
     content: ''
-    dest: /volume1/docker/{{ role_name | basename }}/last_update.log
+    dest: /volume1/Docker/{{ role_name | basename }}/last_update.log
     owner: docker
     group: users
 
@@ -41,5 +41,5 @@
     env:
       TZ: '{{ config_system_timezone }}'
     volumes:
-      - /volume1/docker/{{ role_name | basename }}:/app/config:rw
+      - /volume1/Docker/{{ role_name | basename }}:/app/config:rw
     entrypoint: python -m plextraktsync watch
