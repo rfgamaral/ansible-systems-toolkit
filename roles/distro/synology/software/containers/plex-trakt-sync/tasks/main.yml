@@ -26,13 +26,6 @@
     owner: docker
     group: users
 
-- name: Create default log file with correct permissions
-  copy:
-    content: ''
-    dest: /volume1/Docker/{{ role_name | basename }}/last_update.log
-    owner: docker
-    group: users
-
 - name: Create '{{ role_name | basename }}' container
   docker_container:
     name: '{{ role_name | basename }}'

@@ -1,7 +1,6 @@
 {
-  "log_debug_messages": false,
   "logging": {
-    "append": false
+    "append": true
   },
   "cache": {
     "path": "$PTS_CACHE_DIR/.cache/trakt"
@@ -16,10 +15,13 @@
     "plex_to_trakt": {
       "watched_status": true,
       "ratings": false,
-      "collection": false
+      "collection": true
     }
   },
   "watch": {
+    "scrobble_threshold": 80,
+    "add_collection": true,
+    "remove_collection": true,
     "username_filter": true
   },
   "xbmc-providers": {
