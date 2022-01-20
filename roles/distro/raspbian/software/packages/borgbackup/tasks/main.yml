@@ -28,14 +28,11 @@
         name: mnt-hypercube-backups.automount
         enabled: true
 
-    - name: Install 'borgbackup' package and dependencies
+    - name: Install 'borgbackup' package (testing)
       apt:
-        name:
-          - borgbackup
-          - gcc-8-base
-
-    - name: Remove dependencies that are no longer required
-      apt:
+        pkg: borgbackup
+        default_release: testing
+        autoclean: true
         autoremove: true
 
     - name: Create directory for the backups repository

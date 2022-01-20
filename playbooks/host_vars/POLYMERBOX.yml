@@ -86,6 +86,8 @@ config_tailscale_account_uid: !vault |
 
 config_system_hostname: '{{ inventory_hostname_short | upper }}'
 config_system_required_packages:
+  - apt-transport-https
+  - ca-certificates
   - colordiff
   - cronic
   - dnsutils

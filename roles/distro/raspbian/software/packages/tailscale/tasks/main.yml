@@ -1,18 +1,18 @@
 # Command used to connect this machine to Tailscale:
 #
 # > tailscale up \
-#     --advertise-routes=10.0.10.0/24,10.0.80.0/24,10.0.90.0/24 \
+#     --advertise-routes=10.0.10.0/24 \
 #     --advertise-exit-node \
 #     --accept-dns=false
 
 - name: Add a trusted key for the Tailscale repository
   apt_key:
-    url: https://pkgs.tailscale.com/stable/raspbian/buster.gpg
+    url: https://pkgs.tailscale.com/stable/raspbian/bullseye.noarmor.gpg
     state: present
 
-- name: Setup 'buster' repository for Tailscale
+- name: Setup 'bullseye' repository for Tailscale
   apt_repository:
-    repo: deb https://pkgs.tailscale.com/stable/raspbian buster main
+    repo: deb https://pkgs.tailscale.com/stable/raspbian bullseye main
     update_cache: true
     filename: tailscale
     mode: '0644'

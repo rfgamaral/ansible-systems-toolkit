@@ -1,12 +1,15 @@
-- name: Install 'aptitude' package required by Ansible
+- name: Update repositories cache
+  apt:
+    update_cache: true
+    cache_valid_time: 900
+
+- name: Install 'aptitude' package (required by Ansible)
   apt:
     pkg: aptitude
 
-- name: Update repositories cache and install required packages
+- name: Install required system packages
   apt:
     pkg: '{{ config_system_required_packages }}'
-    update_cache: true
-    cache_valid_time: 900
 
 - name: Install required packages for Python
   pip:

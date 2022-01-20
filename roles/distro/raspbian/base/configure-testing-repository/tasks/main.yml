@@ -6,8 +6,8 @@
     group: root
     mode: '0644'
   with_items:
-    - 10-buster.pref
-    - 12-bookworm.pref
+    - stable.pref
+    - testing.pref
   loop_control:
     loop_var: file
 

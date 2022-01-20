@@ -12,7 +12,7 @@
 - block:
     - name: Install 'cloudflared' binary to local system resources
       loop: '{{ cloudflared_latest_release.json.assets }}'
-      when: "'cloudflared-linux-armv6' in asset.name"
+      when: "'cloudflared-linux-arm' in asset.name"
       loop_control:
         loop_var: asset
       get_url:
@@ -37,7 +37,7 @@
     dest: /etc/cloudflared/cert.pem
     mode: '0600'
 
-- name: Clenaup '{{ config_system_hostname }}' tunnel connections
+- name: Clean up '{{ config_system_hostname }}' tunnel connections
   command: cloudflared tunnel cleanup {{ config_system_hostname }}
 
 - name: Delete existing '{{ config_system_hostname }}' tunnel
@@ -103,3 +103,11 @@
     name: cloudflared
     state: restarted
   when: cloudflared_service_status.rc == 0 and main_config_status.changed
+
+- name: Add a cronjob to update the 'cloudflared' binary
+  cron:
+    name: 'upgrade cloudflared binary'
+    minute: '0'
+    hour: '4'
+    weekday: '0'
+    job: 'cronic $(cloudflared update && service cloudflared restart)'

@@ -39,10 +39,10 @@
             name: '{{ item }}'
           with_items:
             - distro/raspbian/base/configure-system
+            - distro/raspbian/base/configure-testing-repository
+            - distro/raspbian/base/configure-unattended-upgrades
             - distro/debian/base/configure-localization
             - distro/debian/base/configure-sshd
-            - distro/raspbian/base/configure-unattended-upgrades
-            - distro/raspbian/base/configure-testing-repository
 
         - name: Upgrade distribution software and kernel
           include_role:
@@ -76,18 +76,17 @@
             config_role_user_name: '{{ config_admin_user_name }}'
             config_role_user_home: /home/{{ config_admin_user_name }}
 
-        - name: Install additional software
+        - name: Install core applications
           include_role:
             name: '{{ item }}'
           with_items:
             - distro/raspbian/software/packages/acme.sh
-            - distro/raspbian/software/packages/borgbackup
             - distro/raspbian/software/packages/cloudflared
             - distro/raspbian/software/packages/docker
             - distro/raspbian/software/packages/postfix
             - distro/raspbian/software/packages/tailscale
 
-        - name: Install Docker container applications
+        - name: Install Docker applications
           include_role:
             name: '{{ item }}'
           with_items:
@@ -96,6 +95,12 @@
             - distro/raspbian/software/containers/authelia
             - distro/raspbian/software/containers/unifi-controller
             - distro/raspbian/software/containers/watchtower
+
+        - name: Install additional applications
+          include_role:
+            name: '{{ item }}'
+          with_items:
+            - distro/raspbian/software/packages/borgbackup
 
       vars:
         ansible_user: '{{ config_admin_user_name }}'
@@ -108,26 +113,14 @@
         - name: Upgrade distribution and additional software
           include_role:
             name: '{{ item }}'
-            apply:
-              tags:
-                - upgrade
           with_items:
             - distro/debian/base/upgrade-system
-          tags:
-            - upgrade
-            - never
 
         - name: Upgrade Docker container applications
           include_role:
             name: '{{ item }}'
-            apply:
-              tags:
-                - never
           with_items:
             - distro/raspbian/software/containers/unifi-controller
-          tags:
-            - upgrade
-            - never
 
       vars:
         ansible_user: '{{ config_admin_user_name }}'

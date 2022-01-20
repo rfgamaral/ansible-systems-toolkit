@@ -50,5 +50,3 @@
       traefik.http.services.unifi-controller.loadbalancer.server.scheme: 'https'
       traefik.http.services.unifi-controller.loadbalancer.server.port: '8443'
       traefik.http.services.unifi-controller.loadbalancer.serverstransport: 'skip-verify-transport@file'
-  tags:
-    - upgrade

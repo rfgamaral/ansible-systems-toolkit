@@ -1,8 +1,6 @@
 - name: Install 'zsh' package
   apt:
     pkg: zsh
-    update_cache: true
-    cache_valid_time: 900
 
 - name: Check if Antibody is already installed
   stat:
