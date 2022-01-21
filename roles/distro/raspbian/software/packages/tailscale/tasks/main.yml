@@ -3,7 +3,8 @@
 # > tailscale up \
 #     --advertise-routes=10.0.10.0/24 \
 #     --advertise-exit-node \
-#     --accept-dns=false
+#     --accept-dns=false \
+#     --snat-subnet-routes=false
 
 - name: Add a trusted key for the Tailscale repository
   apt_key:
