@@ -110,4 +110,4 @@
     minute: '0'
     hour: '4'
     weekday: '0'
-    job: 'cronic $(cloudflared update && service cloudflared restart)'
+    job: 'cronic cloudflared update'
