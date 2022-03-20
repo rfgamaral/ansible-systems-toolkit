@@ -6,6 +6,23 @@
 #     --accept-dns=false \
 #     --snat-subnet-routes=false
 
+- name: Enable IP packet forwarding for IPv4/IPv6
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: '{{ file.regexp }}'
+    line: '{{ file.line }}'
+    backrefs: true
+  with_items:
+    - { regexp: ^#(net.ipv4.ip_forward=1), line: '\1' }
+    - { regexp: ^#(net.ipv6.conf.all.forwarding=1), line: '\1' }
+  loop_control:
+    loop_var: file
+  notify:
+    - Reboot system
+
+- name: Force all notified handlers to run at this point
+  meta: flush_handlers
+
 - name: Add a trusted key for the Tailscale repository
   apt_key:
     url: https://pkgs.tailscale.com/stable/raspbian/bullseye.noarmor.gpg
@@ -60,17 +77,3 @@
   systemd:
     name: tailscaled
     state: started
-
-- name: Enable IP packet forwarding for IPv4/IPv6
-  lineinfile:
-    path: /etc/sysctl.conf
-    regexp: '{{ file.regexp }}'
-    line: '{{ file.line }}'
-    backrefs: true
-  with_items:
-    - { regexp: ^#(net.ipv4.ip_forward=1), line: '\1' }
-    - { regexp: ^#(net.ipv6.conf.all.forwarding=1), line: '\1' }
-  loop_control:
-    loop_var: file
-  notify:
-    - Reboot system

@@ -1,3 +1,9 @@
+- name: Set the XKB configuration layout to '{{ config_localization_keyboard_layout }}'
+  lineinfile:
+    path: /etc/default/keyboard
+    regexp: ^XKBLAYOUT
+    line: XKBLAYOUT="{{ config_localization_keyboard_layout }}"
+
 - name: Ensure required localization files are available
   locale_gen:
     name: '{{ locale }}'

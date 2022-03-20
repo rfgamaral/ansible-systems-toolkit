@@ -1,5 +1,6 @@
 config_admin_user_groups: ['sudo']
 
+config_localization_keyboard_layout: 'pt'
 config_localization_locale_lang: 'en_US.UTF-8'
 config_localization_locale_lc_measurement: 'pt_PT.UTF-8'
 config_localization_locale_lc_monetary: 'pt_PT.UTF-8'

@@ -39,7 +39,7 @@
             name: '{{ item }}'
           with_items:
             - distro/raspbian/base/configure-system
-            - distro/raspbian/base/configure-testing-repository
+            - distro/debian/base/configure-testing-repository
             - distro/raspbian/base/configure-unattended-upgrades
             - distro/debian/base/configure-localization
             - distro/debian/base/configure-sshd

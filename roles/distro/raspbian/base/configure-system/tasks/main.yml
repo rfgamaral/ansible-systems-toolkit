@@ -2,7 +2,12 @@
   include_role:
     name: distro/debian/base/configure-system
 
-- name: Set cron 'MAILTO' to '{{ config_primary_email}}'
+- name: Set system crontab 'MAILTO' to '{{ config_primary_email}}'
   cronvar:
     name: MAILTO
     value: '{{ config_primary_email}}'
+
+- name: Set system crontab 'MAILTO' to include '/usr/local/bin'
+  cronvar:
+    name: PATH
+    value: '/usr/local/bin:/usr/bin:/bin'

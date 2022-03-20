@@ -12,7 +12,7 @@
 - block:
     - name: Install 'cloudflared' binary to local system resources
       loop: '{{ cloudflared_latest_release.json.assets }}'
-      when: "'cloudflared-linux-arm' in asset.name"
+      when: "'cloudflared-linux-arm64' in asset.name"
       loop_control:
         loop_var: asset
       get_url:
@@ -102,7 +102,7 @@
   systemd:
     name: cloudflared
     state: restarted
-  when: cloudflared_service_status.rc == 0 and main_config_status.changed
+  when: main_config_status.changed
 
 - name: Add a cronjob to update the 'cloudflared' binary
   cron:
