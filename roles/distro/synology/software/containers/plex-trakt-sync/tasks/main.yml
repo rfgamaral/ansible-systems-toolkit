@@ -21,8 +21,8 @@
 
 - name: Copy configuration file to project configuration directory
   copy:
-    src: config.json
-    dest: /volume1/Docker/{{ role_name | basename }}/config.json
+    src: config.yml
+    dest: /volume1/Docker/{{ role_name | basename }}/config.yml
     owner: docker
     group: users
 
