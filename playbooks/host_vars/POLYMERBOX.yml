@@ -102,3 +102,4 @@ config_system_required_packages:
 config_system_required_packages_python:
   - docker
   - docker-compose
+  - thefuck
