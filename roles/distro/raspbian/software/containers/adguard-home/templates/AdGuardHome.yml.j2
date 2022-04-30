@@ -149,6 +149,10 @@ filters:
     id: 6
     name: Perflyst Smart-TV Blocklist
     url: https://raw.githubusercontent.com/Perflyst/PiHoleBlocklist/master/SmartTV.txt
+  - enabled: true
+    id: 7
+    name: WindowsSpyBlocker
+    url: https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
 whitelist_filters: []
 user_rules:
   - '@@||analytic.rollout.io^$client=''RFA-DellLaptop,RFA-DesktopPC,RFA-OnePlus7Pro'''
@@ -322,6 +326,21 @@ clients:
     safesearch_enabled: false
     safebrowsing_enabled: false
     use_global_blocked_services: true
+  - name: PLG-TapoP110-1
+    tags:
+      - device_other
+      - os_other
+      - user_regular
+    ids:
+      - 10.0.80.52
+    blocked_services: []
+    upstreams: []
+    use_global_settings: true
+    filtering_enabled: false
+    parental_enabled: false
+    safesearch_enabled: false
+    safebrowsing_enabled: false
+    use_global_blocked_services: true
   - name: RBT-Roombai7
     tags:
       - device_other
@@ -421,6 +440,21 @@ clients:
       - user_regular
     ids:
       - 10.0.80.31
+    blocked_services: []
+    upstreams: []
+    use_global_settings: true
+    filtering_enabled: false
+    parental_enabled: false
+    safesearch_enabled: false
+    safebrowsing_enabled: false
+    use_global_blocked_services: true
+  - name: SNR-WithingsBodyPlus
+    tags:
+      - device_other
+      - os_other
+      - user_regular
+    ids:
+      - 10.0.80.32
     blocked_services: []
     upstreams: []
     use_global_settings: true
