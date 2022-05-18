@@ -31,7 +31,7 @@ http:
         browserXssFilter: true
         contentTypeNosniff: true
         customFrameOptionsValue: 'SAMEORIGIN'
-        featurePolicy: "vibrate 'none'; geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment 'none'"
+        permissionsPolicy: "vibrate(), geolocation(), midi(), notifications(), push(), sync-xhr(), microphone(), camera(), magnetometer(), gyroscope(), speaker(), vibrate(), fullscreen(), payment()"
         hostsProxyHeaders:
           - 'X-Forwarded-Host'
         referrerPolicy: 'strict-origin-when-cross-origin'
