@@ -11,6 +11,12 @@ http:
           - rate-limiting@file
           - security-headers@file
           - authelia@file
+    chain-synology-webdav:
+      chain:
+        middlewares:
+          - rate-limiting@file
+          - security-headers@file
+          - synology-webdav@file
     authelia:
       forwardAuth:
         address: http://authelia/api/verify?rd=https://authelia.{{ config_network_domain }}
@@ -35,3 +41,12 @@ http:
         hostsProxyHeaders:
           - 'X-Forwarded-Host'
         referrerPolicy: strict-origin-when-cross-origin
+    synology-webdav:
+      plugin:
+        headerTransformation:
+          Rules:
+            - Rule:
+              Header: Destination
+              Value: https://webdav.{{ config_network_domain }}(?::443)?/(.*)
+              ValueReplace: http://webdav.{{ config_network_domain }}/$1
+              Type: RewriteValueRule

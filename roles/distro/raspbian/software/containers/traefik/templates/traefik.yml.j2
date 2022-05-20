@@ -1,5 +1,14 @@
+pilot:
+    token: '{{ config_traefik_pilot_token }}'
+
 api:
   dashboard: true
+
+experimental:
+  plugins:
+    headerTransformation:
+      moduleName: github.com/tomMoulard/htransformation
+      version: v0.2.5
 
 providers:
   docker:
