@@ -105,8 +105,7 @@ dns:
       answer: 127.0.0.1
   blocked_services: []
   upstream_timeout: 10s
-  local_domain_name: '{{ config_network_domain }}'
-  resolve_clients: true
+  private_networks: []
   use_private_ptr_resolvers: true
   local_ptr_upstreams: []
 tls:
@@ -155,10 +154,12 @@ filters:
     url: https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
 whitelist_filters: []
 user_rules:
-  - '@@||analytic.rollout.io^$client=''RFA-DellLaptop,RFA-DesktopPC,RFA-OnePlus7Pro'''
+  - '# Windows Insider Program (https://insider.windows.com/)'
+  - '@@||insideruser.microsoft.com^$important'
 dhcp:
   enabled: false
   interface_name: ''
+  local_domain_name: '{{ config_network_domain }}'
   dhcpv4:
     gateway_ip: ''
     subnet_mask: ''
@@ -173,6 +174,13 @@ dhcp:
     ra_slaac_only: false
     ra_allow_slaac: false
 clients:
+  runtime_sources:
+    whois: true
+    arp: true
+    rdns: true
+    dhcp: true
+    hosts: true
+  persistent:
   - name: DMP-BraviaA90J
     tags:
       - device_tv
@@ -402,7 +410,7 @@ clients:
     safesearch_enabled: false
     safebrowsing_enabled: false
     use_global_blocked_services: true
-  - name: RFA-OnePlus7Pro
+  - name: RFA-GooglePixel6
     tags:
       - device_phone
       - os_android
@@ -504,4 +512,4 @@ os:
   group: ''
   user: ''
   rlimit_nofile: 0
-schema_version: 12
+schema_version: 14
