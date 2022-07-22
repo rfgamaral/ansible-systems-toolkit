@@ -1,0 +1,22 @@
+- name: Create '{{ role_name | basename }}' container
+  docker_container:
+    name: '{{ role_name | basename }}'
+    image: lscr.io/linuxserver/syncthing:latest
+    restart_policy: unless-stopped
+    env:
+      TZ: '{{ config_system_timezone }}'
+      PUID: '{{ config_docker_user_id | string }}'
+      PGID: '{{ config_docker_group_id | string }}'
+    ports:
+      # Application WebUI
+      - 20080:8384
+      # Listening port (TCP)
+      - 22000:22000/tcp
+      # Listening port (UDP)
+      - 22000:22000/udp
+      # Protocol discovery
+      - 21027:21027/udp
+    volumes:
+      - /volume1/Docker/{{ role_name | basename }}:/config:rw
+      - /volume1/Peace of Cake:/Peace of Cake:rw
+      - /volume1/Workspace:/Workspace:rw
