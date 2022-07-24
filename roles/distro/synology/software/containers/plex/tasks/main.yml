@@ -13,7 +13,7 @@
 - name: Create '{{ role_name | basename }}' container
   docker_container:
     name: '{{ role_name | basename }}'
-    image: hotio/plex:latest
+    image: cr.hotio.dev/hotio/plex:latest
     networks_cli_compatible: true
     restart_policy: always
     env:
