@@ -1,19 +1,33 @@
 cache:
   path: $PTS_CACHE_DIR/.cache/trakt
+
 excluded-libraries:
   - Samples
+
+config:
+  dotenv_override: true
+
+plex:
+  timeout: 30
+
 logging:
   append: true
+  debug: false
+  filename: plextraktsync.log
+
 sync:
   plex_to_trakt:
     collection: false
     ratings: false
     watched_status: true
+    watchlist: true
   trakt_to_plex:
     liked_lists: false
     ratings: true
     watched_status: true
-    watchlist: false
+    watchlist: true
+    watchlist_as_playlist: false
+
 watch:
   add_collection: true
   remove_collection: true
