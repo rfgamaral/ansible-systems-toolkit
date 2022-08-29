@@ -1,38 +1,42 @@
-- name: Ensure configuration directory for Plex-Trakt-Sync exists
-  file:
-    path: /volume1/Docker/{{ role_name | basename }}
-    state: directory
-    owner: docker
-    group: users
+- block:
+    - name: Ensure configuration directory for Plex Trakt Sync exists
+      file:
+        path: /volume1/Docker/{{ container_name }}
+        state: directory
+        owner: docker
+        group: users
 
-- name: Copy Plex credentials file to project configuration directory
-  copy:
-    src: .env
-    dest: /volume1/Docker/{{ role_name | basename }}/.env
-    owner: docker
-    group: users
+    - name: Copy Plex credentials file to project configuration directory
+      copy:
+        src: .env
+        dest: /volume1/Docker/{{ container_name }}/.env
+        owner: docker
+        group: users
 
-- name: Copy Trakt.tv credentials file to project configuration directory
-  copy:
-    src: .pytrakt.json
-    dest: /volume1/Docker/{{ role_name | basename }}/.pytrakt.json
-    owner: docker
-    group: users
+    - name: Copy Trakt.tv credentials file to project configuration directory
+      copy:
+        src: .pytrakt.json
+        dest: /volume1/Docker/{{ container_name }}/.pytrakt.json
+        owner: docker
+        group: users
 
-- name: Copy configuration file to project configuration directory
-  copy:
-    src: config.yml
-    dest: /volume1/Docker/{{ role_name | basename }}/config.yml
-    owner: docker
-    group: users
+    - name: Copy configuration file to project configuration directory
+      copy:
+        src: config.yml
+        dest: /volume1/Docker/{{ container_name }}/config.yml
+        owner: docker
+        group: users
 
-- name: Create '{{ role_name | basename }}' container
-  docker_container:
-    name: '{{ role_name | basename }}'
-    image: ghcr.io/taxel/plextraktsync:latest
-    restart_policy: always
-    env:
-      TZ: '{{ config_system_timezone }}'
-    volumes:
-      - /volume1/Docker/{{ role_name | basename }}:/app/config:rw
-    entrypoint: python -m plextraktsync watch
+    - name: Create '{{ container_name }}' container
+      docker_container:
+        name: '{{ container_name }}'
+        image: ghcr.io/taxel/plextraktsync:latest
+        restart_policy: always
+        env:
+          TZ: '{{ config_system_timezone }}'
+        volumes:
+          - /volume1/Docker/{{ container_name }}:/app/config:rw
+        entrypoint: python -m plextraktsync watch
+
+  vars:
+    container_name: '{{ role_name | basename }}'

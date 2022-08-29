@@ -1,33 +1,37 @@
-- name: Ensure directory structure for Plex exists
-  file:
-    path: /volume1/Docker/plex/{{ directory }}
-    state: directory
-    owner: docker
-    group: users
-  loop:
-    - config
-    - transcode
-  loop_control:
-    loop_var: directory
+- block:
+    - name: Ensure directory structure for Plex exists
+      file:
+        path: /volume1/Docker/plex/{{ directory }}
+        state: directory
+        owner: docker
+        group: users
+      loop:
+        - config
+        - transcode
+      loop_control:
+        loop_var: directory
 
-- name: Create '{{ role_name | basename }}' container
-  docker_container:
-    name: '{{ role_name | basename }}'
-    image: cr.hotio.dev/hotio/plex:latest
-    networks_cli_compatible: true
-    restart_policy: always
-    env:
-      TZ: '{{ config_system_timezone }}'
-      PUID: '{{ config_docker_user_id | string }}'
-      PGID: '{{ config_docker_group_id | string }}'
-      ADVERTISE_IP: 'https://plex.{{ config_network_domain }}:443'
-      ALLOWED_NETWORKS: '10.0.10.0/255.255.255.0,10.0.80.0/255.255.255.0'
-      PLEX_PASS: 'yes'
-    network_mode: host
-    memory: 2G
-    devices:
-      - /dev/dri:/dev/dri:rwm
-    volumes:
-      - /volume1/Docker/plex/config:/config:rw
-      - /volume1/Docker/plex/transcode:/transcode:rw
-      - /volume1/Media:/media:ro
+    - name: Create '{{ container_name }}' container
+      docker_container:
+        name: '{{ container_name }}'
+        image: cr.hotio.dev/hotio/plex:latest
+        networks_cli_compatible: true
+        restart_policy: always
+        env:
+          TZ: '{{ config_system_timezone }}'
+          PUID: '{{ config_docker_user_id | string }}'
+          PGID: '{{ config_docker_group_id | string }}'
+          ADVERTISE_IP: 'https://plex.{{ config_network_domain }}:443'
+          ALLOWED_NETWORKS: '10.0.10.0/255.255.255.0,10.0.80.0/255.255.255.0'
+          PLEX_PASS: 'yes'
+        network_mode: host
+        memory: 2G
+        devices:
+          - /dev/dri:/dev/dri:rwm
+        volumes:
+          - /volume1/Docker/plex/config:/config:rw
+          - /volume1/Docker/plex/transcode:/transcode:rw
+          - /volume1/Media:/media:ro
+
+  vars:
+    container_name: '{{ role_name | basename }}'

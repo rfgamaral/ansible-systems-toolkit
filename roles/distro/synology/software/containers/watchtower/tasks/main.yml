@@ -1,14 +1,18 @@
-- name: Create '{{ role_name | basename }}' container
-  docker_container:
-    name: '{{ role_name | basename }}'
-    image: ghcr.io/containrrr/watchtower:latest
-    restart_policy: always
-    env:
-      TZ: '{{ config_system_timezone }}'
-      WATCHTOWER_CLEANUP: 'true'
-      WATCHTOWER_NOTIFICATIONS: 'shoutrrr'
-      WATCHTOWER_NOTIFICATION_URL: 'telegram://{{ config_telegram_bot_token }}@telegram?channels={{ config_telegram_chat_id }}'
-      WATCHTOWER_POLL_INTERVAL: '28800'
-      WATCHTOWER_ROLLING_RESTART: 'true'
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+- block:
+    - name: Create '{{ container_name }}' container
+      docker_container:
+        name: '{{ container_name }}'
+        image: ghcr.io/containrrr/watchtower:latest
+        restart_policy: always
+        env:
+          TZ: '{{ config_system_timezone }}'
+          WATCHTOWER_CLEANUP: 'true'
+          WATCHTOWER_NOTIFICATIONS: 'shoutrrr'
+          WATCHTOWER_NOTIFICATION_URL: 'telegram://{{ config_telegram_bot_token }}@telegram?channels={{ config_telegram_chat_id }}'
+          WATCHTOWER_POLL_INTERVAL: '28800'
+          WATCHTOWER_ROLLING_RESTART: 'true'
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  vars:
+    container_name: '{{ role_name | basename }}'
