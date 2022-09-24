@@ -13,7 +13,6 @@ totp:
   period: 30
   skew: 1
 authentication_backend:
-  disable_reset_password: true
   file:
     path: /config/users.yml
     password:
@@ -22,6 +21,8 @@ authentication_backend:
       iterations: 1
       parallelism: 8
       memory: 128
+  password_reset:
+    disable: false
 access_control:
   default_policy: deny
   rules:
