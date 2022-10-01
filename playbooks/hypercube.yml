@@ -6,6 +6,7 @@
           include_role:
             name: '{{ item }}'
           with_items:
+            - distro/synology/base/configure-system
             - distro/synology/base/setup-ansible-dependencies
 
         - name: Install Docker container applications (Common)

@@ -1,0 +1,4 @@
+- name: Set welcome message for all login sessions
+  copy:
+    src: '{{ inventory_hostname }}/etc/motd'
+    dest: /etc/motd
