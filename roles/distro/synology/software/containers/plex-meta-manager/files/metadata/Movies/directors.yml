@@ -1,0 +1,60 @@
+templates:
+  TMDb Director:
+    tmdb_director: <<director>>
+    tmdb_director_details: <<director>>
+    url_poster: <<poster>>
+    collection_order: release
+    sort_title: +80.<<collection_name>>
+    sync_mode: sync
+
+collections:
+  Christopher Nolan:
+    template:
+      name: TMDb Director
+      director: 525
+      poster: https://theposterdb.com/api/assets/48642
+  Clint Eastwood:
+    template:
+      name: TMDb Director
+      director: 190
+      poster: https://theposterdb.com/api/assets/48852
+  Denis Villeneuve:
+    template:
+      name: TMDb Director
+      director: 137427
+      poster: https://theposterdb.com/api/assets/83922
+  Guy Ritchie:
+    template:
+      name: TMDb Director
+      director: 956
+      poster: https://theposterdb.com/api/assets/85510
+  Kevin Smith:
+    template:
+      name: TMDb Director
+      director: 19303
+      poster: https://theposterdb.com/api/assets/87926
+  Martin Scorsese:
+    template:
+      name: TMDb Director
+      director: 1032
+      poster: https://theposterdb.com/api/assets/48641
+  Quentin Tarantino:
+    template:
+      name: TMDb Director
+      director: 138
+      poster: https://theposterdb.com/api/assets/50030
+  Ridley Scott:
+    template:
+      name: TMDb Director
+      director: 578
+      poster: https://theposterdb.com/api/assets/83965
+  Stanley Kubrick:
+    template:
+      name: TMDb Director
+      director: 240
+      poster: https://theposterdb.com/api/assets/50138
+  Steven Spielberg:
+    template:
+      name: TMDb Director
+      director: 488
+      poster: https://theposterdb.com/api/assets/48640

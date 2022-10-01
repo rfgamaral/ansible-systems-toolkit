@@ -1,0 +1,366 @@
+templates:
+  MdbList List:
+    mdblist_list: <<list>>
+    summary: <<summary>>
+    url_poster: <<poster>>
+    collection_order: release
+    sort_title: +50.<<collection_name>>
+    sync_mode: sync
+  TMDb Collection:
+    tmdb_collection: <<collection>>
+    tmdb_summary: <<collection>>
+    url_poster: <<poster>>
+    collection_order: release
+    sort_title: +50.<<collection_name>>
+    sync_mode: sync
+  TMDb Movie:
+    tmdb_movie: <<movie>>
+    summary: <<summary>>
+    url_poster: <<poster>>
+    collection_order: release
+    sort_title: +50.<<collection_name>>
+    sync_mode: sync
+
+collections:
+  28... Later:
+    template:
+      name: TMDb Collection
+      collection: 1565
+      poster: https://theposterdb.com/api/assets/4963
+  '300':
+    template:
+      name: TMDb Collection
+      collection: 125570
+      poster: https://theposterdb.com/api/assets/117971
+  Alien:
+    template:
+      name: TMDb Collection
+      collection: 8091
+      poster: https://theposterdb.com/api/assets/27381
+  Avatar:
+    template:
+      name: TMDb Collection
+      collection: 87096
+      poster: https://theposterdb.com/api/assets/233958
+  Back to the Future:
+    template:
+      name: TMDb Collection
+      collection: 264
+      poster: https://theposterdb.com/api/assets/87588
+  Bad Boys:
+    template:
+      name: TMDb Collection
+      collection: 14890
+      poster: https://theposterdb.com/api/assets/38003
+  Blade:
+    template:
+      name: TMDb Collection
+      collection: 735
+      poster: https://theposterdb.com/api/assets/62368
+  Blade Runner:
+    template:
+      name: TMDb Collection
+      collection: 422837
+      poster: https://theposterdb.com/api/assets/102313
+  "Clint Eastwood's Iwo Jima":
+    template:
+      name: TMDb Collection
+      collection: 261382
+      poster: https://theposterdb.com/api/assets/162320
+  Cornetto Trilogy:
+    template:
+      name: TMDb Movie
+      movie:
+        - 747
+        - 4638
+        - 107985
+      summary: >-
+        The Cornetto trilogy is an anthology series of British comedic genre films directed by Edgar
+        Wright, written by Wright and Simon Pegg, produced by Nira Park, and starring Pegg and Nick
+        Frost. The trilogy consists of Shaun of the Dead, Hot Fuzz, and The World's End.
+      poster: https://theposterdb.com/api/assets/233
+  Creed:
+    template:
+      name: TMDb Collection
+      collection: 553717
+      poster: https://theposterdb.com/api/assets/35114
+  Crouching Tiger, Hidden Dragon:
+    template:
+      name: TMDb Collection
+      collection: 290973
+      poster: https://theposterdb.com/api/assets/37896
+  Deadpool:
+    template:
+      name: TMDb Collection
+      collection: 448150
+      poster: https://theposterdb.com/api/assets/32318
+  Dune:
+    template:
+      name: TMDb Collection
+      collection: 726871
+      poster: https://theposterdb.com/api/assets/261164
+  Fantastic Beasts:
+    template:
+      name: TMDb Collection
+      collection: 435259
+      poster: https://theposterdb.com/api/assets/169
+  Final Destination:
+    template:
+      name: TMDb Collection
+      collection: 8864
+      poster: https://theposterdb.com/api/assets/881
+  Ghostbusters:
+    template:
+      name: TMDb Collection
+      collection: 2980
+      poster: https://theposterdb.com/api/assets/98495
+  Harry Potter:
+    template:
+      name: TMDb Collection
+      collection: 1241
+      poster: https://theposterdb.com/api/assets/21213
+  Independence Day:
+    template:
+      name: TMDb Collection
+      collection: 304378
+      poster: https://theposterdb.com/api/assets/68261
+  Indiana Jones:
+    template:
+      name: TMDb Collection
+      collection: 84
+      poster: https://theposterdb.com/api/assets/10361
+  James Bond (Daniel Craig):
+    template:
+      name: TMDb Movie
+      movie:
+        - 36557
+        - 10764
+        - 37724
+        - 206647
+        - 370172
+      summary: >-
+        The James Bond film series is a British series of spy films based on the fictional character
+        of MI6 agent James Bond, code name “007”. This is a subset of the film series only including
+        movies starring Daniel Craig as James Bond.
+      poster: https://theposterdb.com/api/assets/66068
+  Jason Bourne:
+    template:
+      name: TMDb Collection
+      collection: 31562
+      poster: https://theposterdb.com/api/assets/5420
+  John Wick:
+    template:
+      name: TMDb Collection
+      collection: 404609
+      poster: https://theposterdb.com/api/assets/20710
+  Jurassic Park:
+    template:
+      name: TMDb Collection
+      collection: 328
+      poster: https://theposterdb.com/api/assets/7002
+  Kick-Ass:
+    template:
+      name: TMDb Collection
+      collection: 179892
+      poster: https://theposterdb.com/api/assets/63390
+  Kill Bill:
+    template:
+      name: TMDb Collection
+      collection: 2883
+      poster: https://theposterdb.com/api/assets/38559
+  Kingsman:
+    template:
+      name: TMDb Collection
+      collection: 391860
+      poster: https://theposterdb.com/api/assets/31912
+  Mad Max:
+    template:
+      name: TMDb Collection
+      collection: 8945
+      poster: https://theposterdb.com/api/assets/8317
+  Marvel Cinematic Universe:
+    template:
+      name: MdbList List
+      list: https://mdblist.com/lists/rfgamaral/marvel-cinematic-universe
+      summary: >-
+        The Marvel Cinematic Universe (MCU) is an American media franchise and shared universe
+        centered on a series of superhero films produced by Marvel Studios. The films are based on
+        characters that appear in American comic books published by Marvel Comics.
+      poster: https://theposterdb.com/api/assets/118030
+  'Mission: Impossible':
+    template:
+      name: TMDb Collection
+      collection: 87359
+      poster: https://theposterdb.com/api/assets/12118
+  MonsterVerse:
+    template:
+      name: TMDb Movie
+      movie:
+        - 124905
+        - 293167
+        - 373571
+        - 399566
+      summary: >-
+        The MonsterVerse is an American multimedia franchise and shared fictional universe featuring
+        Godzilla, King Kong, and other Toho monster characters.
+      poster: https://theposterdb.com/api/assets/116534
+  Pirates of the Caribbean:
+    template:
+      name: TMDb Collection
+      collection: 295
+      poster: https://theposterdb.com/api/assets/9840
+  Pixar:
+    template:
+      name: MdbList List
+      list: https://mdblist.com/lists/rfgamaral/pixar
+      summary: >-
+        Pixar Animation Studios (Pixar) is an American computer animation film studio based in
+        Emeryville, California. Pixar is a subsidiary of The Walt Disney Company.
+      poster: https://theposterdb.com/api/assets/18894
+  Planet of the Apes (Original):
+    template:
+      name: TMDb Collection
+      collection: 1709
+      poster: https://theposterdb.com/api/assets/332
+  Planet of the Apes (Reboot):
+    template:
+      name: TMDb Collection
+      collection: 173710
+      poster: https://theposterdb.com/api/assets/97354
+  Predator:
+    template:
+      name: TMDb Collection
+      collection: 399
+      poster: https://theposterdb.com/api/assets/56806
+  Prometheus:
+    template:
+      name: TMDb Collection
+      collection: 135416
+      poster: https://theposterdb.com/api/assets/31009
+  Resident Evil:
+    template:
+      name: TMDb Collection
+      collection: 17255
+      poster: https://theposterdb.com/api/assets/83685
+  Rocky:
+    template:
+      name: TMDb Collection
+      collection: 1575
+      poster: https://theposterdb.com/api/assets/103777
+  Rurouni Kenshin (Live-Action):
+    template:
+      name: TMDb Collection
+      collection: 247028
+      poster: https://theposterdb.com/api/assets/158607
+  Scream:
+    template:
+      name: TMDb Collection
+      collection: 2602
+      poster: https://theposterdb.com/api/assets/188586
+  Sin City:
+    template:
+      name: TMDb Collection
+      collection: 135179
+      poster: https://theposterdb.com/api/assets/261172
+  Star Wars:
+    template:
+      name: TMDb Collection
+      collection: 10
+      poster: https://theposterdb.com/api/assets/261178
+  Teenage Mutant Ninja Turtles:
+    template:
+      name: TMDb Collection
+      collection: 1582
+      poster: https://theposterdb.com/api/assets/25746
+  TRON:
+    template:
+      name: TMDb Collection
+      collection: 63043
+      poster: https://theposterdb.com/api/assets/81417
+  The Chronicles of Riddick:
+    template:
+      name: TMDb Collection
+      collection: 2794
+      poster: https://theposterdb.com/api/assets/1011
+  The Dark Knight:
+    template:
+      name: TMDb Collection
+      collection: 263
+      poster: https://theposterdb.com/api/assets/261179
+  The Expendables:
+    template:
+      name: TMDb Collection
+      collection: 126125
+      poster: https://theposterdb.com/api/assets/87137
+  The Fast and the Furious:
+    template:
+      name: TMDb Collection
+      collection: 9485
+      poster: https://theposterdb.com/api/assets/10036
+  The Godfather:
+    template:
+      name: TMDb Collection
+      collection: 230
+      poster: https://theposterdb.com/api/assets/8934
+  The Hobbit:
+    template:
+      name: TMDb Collection
+      collection: 121938
+      poster: https://theposterdb.com/api/assets/261229
+  The Hunger Games:
+    template:
+      name: TMDb Collection
+      collection: 131635
+      poster: https://theposterdb.com/api/assets/57821
+  The Karate Kid:
+    template:
+      name: TMDb Collection
+      collection: 8580
+      poster: https://theposterdb.com/api/assets/83843
+  The Lord of the Rings:
+    template:
+      name: TMDb Collection
+      collection: 119
+      poster: https://theposterdb.com/api/assets/33509
+  The Matrix:
+    template:
+      name: TMDb Collection
+      collection: 2344
+      poster: https://theposterdb.com/api/assets/12041
+  Top Gun:
+    template:
+      name: TMDb Collection
+      collection: 531330
+      poster: https://theposterdb.com/api/assets/102322
+  Trainspotting:
+    template:
+      name: TMDb Collection
+      collection: 424202
+      poster: https://theposterdb.com/api/assets/157702
+  View Askewniverse:
+    template:
+      name: TMDb Movie
+      movie:
+        - 2292
+        - 2293
+        - 2255
+        - 1832
+        - 2294
+        - 2295
+        - 440762
+        - 635891
+      summary: >-
+        The View Askewniverse is a fictional universe created by writer/director Kevin Smith,
+        featured in several films, comics and a television series; it is named for Smith's
+        production company, View Askew Productions.
+      poster: https://theposterdb.com/api/assets/61802
+  Wolverine:
+    template:
+      name: TMDb Collection
+      collection: 453993
+      poster: https://theposterdb.com/api/assets/32350
+  X-Men:
+    template:
+      name: TMDb Collection
+      collection: 748
+      poster: https://theposterdb.com/api/assets/6486

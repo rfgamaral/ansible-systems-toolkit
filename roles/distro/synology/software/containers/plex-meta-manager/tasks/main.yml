@@ -1,0 +1,53 @@
+- block:
+    - name: Ensure directory structure for Plex Meta Manager exists
+      file:
+        path: /volume1/Docker/{{ container_name }}/{{ directory }}
+        state: directory
+        owner: docker
+        group: users
+      with_items:
+        - assets
+        - assets/Movies
+        - assets/Movies/Collections
+        - assets/Movies/Directors
+        - assets/Movies/Metadata
+        - metadata
+      loop_control:
+        loop_var: directory
+
+    - name: Create directory structure for configuration files
+      file:
+        path: /volume1/Docker/{{ container_name }}/{{ directory.path }}
+        state: directory
+      with_filetree: '../files'
+      when: directory.state == 'directory'
+      loop_control:
+        loop_var: directory
+
+    - name: Copy configuration files to container base directory
+      template:
+        src: '{{ file.src }}'
+        dest: /volume1/Docker/{{ container_name }}/{{ file.path }}
+      with_filetree: '../files'
+      when: file.state == 'file'
+      loop_control:
+        loop_var: file
+
+    - name: Copy configuration file to container base directory
+      template:
+        src: config.yml.j2
+        dest: /volume1/Docker/{{ container_name }}/config.yml
+
+    - name: Create '{{ container_name }}' container
+      docker_container:
+        name: '{{ container_name }}'
+        image: meisnate12/plex-meta-manager:develop
+        restart_policy: always
+        env:
+          TZ: '{{ config_system_timezone }}'
+          PMM_TIME: 00:00,08:00,16:00
+        volumes:
+          - /volume1/Docker/{{ container_name }}:/config:rw
+
+  vars:
+    container_name: '{{ role_name | basename }}'

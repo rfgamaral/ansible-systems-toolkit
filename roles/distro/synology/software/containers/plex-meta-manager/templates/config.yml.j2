@@ -1,0 +1,63 @@
+libraries:
+  Movies:
+    metadata_path:
+      - file: config/metadata/Movies/metadata.yml
+      - file: config/metadata/Movies/collections.yml
+        asset_directory: config/assets/Movies/Collections
+      - file: config/metadata/Movies/directors.yml
+        asset_directory: config/assets/Movies/Directors
+    settings:
+      asset_directory: config/assets/Movies/Metadata
+    operations:
+      delete_unmanaged_collections: true
+
+settings:
+  asset_depth: 1
+  asset_directory:
+  asset_folders: true
+  cache: true
+  cache_expiration: 60
+  check_nightly: false
+  create_asset_folders: true
+  custom_repo:
+  default_collection_order: release
+  delete_below_minimum: true
+  delete_not_scheduled: false
+  dimensional_asset_rename: false
+  download_url_assets: true
+  ignore_ids:
+  ignore_imdb_ids:
+  item_refresh_delay: 0
+  minimum_items: 1
+  missing_only_released: true
+  only_filter_missing: false
+  playlist_report: false
+  playlist_sync_to_user: all
+  prioritize_assets: true
+  run_again_delay: 2
+  save_report: false
+  show_asset_not_needed: true
+  show_filtered: true
+  show_missing: true
+  show_missing_assets: true
+  show_missing_episode_assets: false
+  show_missing_season_assets: false
+  show_options: false
+  show_unmanaged: true
+  sync_mode: sync
+  tvdb_language: eng
+  verify_ssl: true
+
+plex:
+  url: https://plex.{{ config_network_domain }}:443
+  token: '{{ config_plex_token }}'
+  clean_bundles: true
+  empty_trash: true
+  optimize: false
+  timeout: 60
+
+tmdb:
+  apikey: '{{ config_tmdb_api_key }}'
+  cache_expiration: 60
+  language: en
+  region:
