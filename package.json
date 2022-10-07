@@ -8,15 +8,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "play:hypercube": "run-s play:hypercube:configure",
     "play:hypercube:configure": "ansible-playbook ./playbooks/hypercube.yml",
     "play:hypercube:upgrade": "ansible-playbook ./playbooks/hypercube.yml --tags upgrade",
-    "play:polymerbox": "run-s play:polymerbox:bootstrap play:polymerbox:configure",
     "play:polymerbox:bootstrap": "ansible-playbook ./playbooks/polymerbox.yml --tags bootstrap",
     "play:polymerbox:configure": "ansible-playbook ./playbooks/polymerbox.yml",
     "play:polymerbox:upgrade": "ansible-playbook ./playbooks/polymerbox.yml --tags upgrade"
-  },
-  "devDependencies": {
-    "npm-run-all": "4.1.5"
   }
 }
