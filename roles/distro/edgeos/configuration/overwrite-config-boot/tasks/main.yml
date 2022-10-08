@@ -1,0 +1,10 @@
+- name: Read configuration file contents to a variable
+  set_fact:
+    config_boot_file: "{{ lookup('template', 'config.boot.j2') }}"
+
+- name: Write the configuration to the default 'config.boot' file
+  cli_command:
+    command: |
+      cat << EOF > /config/config.boot
+      {{ config_boot_file }}
+      EOF

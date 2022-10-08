@@ -1,0 +1,32 @@
+- hosts: UBNTER12
+
+  pre_tasks:
+    - block:
+        - name: Upload system configuration and user scripts
+          include_role:
+            name: '{{ item }}'
+          with_items:
+            - distro/edgeos/configuration/prepare-directories
+            - distro/edgeos/configuration/copy-scheduler-scripts
+            - distro/edgeos/configuration/overwrite-config-boot
+
+        - name: Reboot system to load new configuration
+          cli_command:
+            command: reboot now
+
+      vars:
+        ansible_user: '{{ config_default_user_name }}'
+        ansible_ssh_pass: '{{ config_default_user_pass }}'
+
+      tags:
+        - bootstrap
+        - never
+
+  tasks:
+    - block:
+        - debug:
+            msg: Updating live configuration is not yet supported!
+
+      vars:
+        ansible_user: '{{ config_admin_user_name }}'
+        ansible_ssh_private_key_file: '{{ config_admin_user_private_key_file }}'

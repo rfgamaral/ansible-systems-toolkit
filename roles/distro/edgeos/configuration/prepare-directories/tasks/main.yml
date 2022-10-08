@@ -1,0 +1,7 @@
+- name: Ensure directory structure for user data exists
+  cli_command:
+    command: sudo mkdir --parents {{ directory_path }}
+  loop:
+    - /config/user-data/dnsmasq
+  loop_control:
+    loop_var: directory_path

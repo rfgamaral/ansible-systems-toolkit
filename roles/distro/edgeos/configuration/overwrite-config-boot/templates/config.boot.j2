@@ -1,0 +1,646 @@
+firewall {
+    all-ping enable
+    broadcast-ping disable
+    group {
+        address-group PLEX_CLIENTS {
+            address 10.0.80.200
+            address 10.0.80.205
+            description "Plex client addresses"
+        }
+        network-group PRIVATE_NETWORKS {
+            description "RFC1918 private ranges"
+            network 192.168.0.0/16
+            network 172.16.0.0/12
+            network 10.0.0.0/8
+        }
+    }
+    ipv6-receive-redirects disable
+    ipv6-src-route disable
+    ip-src-route disable
+    log-martians enable
+    name GUESTS_IN {
+        default-action accept
+        description "GUESTS to internal"
+        rule 10 {
+            action accept
+            description "Allow established/related"
+            destination {
+                group {
+                    network-group PRIVATE_NETWORKS
+                }
+            }
+            log disable
+            protocol all
+            state {
+                established enable
+                invalid disable
+                new disable
+                related enable
+            }
+        }
+        rule 20 {
+            action accept
+            description "Allow AdGuard Home DNS server"
+            destination {
+                address 10.0.10.200
+                port 53
+            }
+            log disable
+            protocol tcp_udp
+        }
+        rule 30 {
+            action drop
+            description "Drop all LAN traffic"
+            destination {
+                group {
+                    network-group PRIVATE_NETWORKS
+                }
+            }
+            log disable
+            protocol all
+        }
+    }
+    name GUESTS_LOCAL {
+        default-action drop
+        description "GUESTS to router"
+        rule 10 {
+            action accept
+            description "Allow DHCP server"
+            destination {
+                port 67
+            }
+            log disable
+            protocol udp
+            source {
+                port 68
+            }
+        }
+    }
+    name IOT_IN {
+        default-action accept
+        description "IOT to internal"
+        rule 10 {
+            action accept
+            description "Allow established/related"
+            destination {
+                group {
+                    network-group PRIVATE_NETWORKS
+                }
+            }
+            log disable
+            protocol all
+            state {
+                established enable
+                invalid disable
+                new disable
+                related enable
+            }
+        }
+        rule 20 {
+            action accept
+            description "Allow AdGuard Home DNS server"
+            destination {
+                address 10.0.10.200
+                port 53
+            }
+            log disable
+            protocol tcp_udp
+        }
+        rule 30 {
+            action accept
+            description "Allow Plex Media Player"
+            destination {
+                address 10.0.10.205
+                port 32400
+            }
+            log disable
+            protocol tcp_udp
+            source {
+                group {
+                    address-group PLEX_CLIENTS
+                }
+            }
+        }
+        rule 40 {
+            action drop
+            description "Drop all LAN traffic"
+            destination {
+                group {
+                    network-group PRIVATE_NETWORKS
+                }
+            }
+            log disable
+            protocol all
+        }
+    }
+    name IOT_LOCAL {
+        default-action drop
+        description "IOT to router"
+        rule 10 {
+            action accept
+            description "Allow DHCP server"
+            destination {
+                port 67
+            }
+            log disable
+            protocol udp
+            source {
+                port 68
+            }
+        }
+        rule 20 {
+            action accept
+            description "Allow mDNS repeater"
+            destination {
+                port 5353
+            }
+            log disable
+            protocol udp
+        }
+    }
+    name WAN_INTERNET_IN {
+        default-action drop
+        description "WAN to internal"
+        rule 10 {
+            action accept
+            description "Allow established/related"
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action drop
+            description "Drop invalid state"
+            state {
+                invalid enable
+            }
+        }
+    }
+    name WAN_INTERNET_LOCAL {
+        default-action drop
+        description "WAN to router"
+        rule 10 {
+            action accept
+            description "Allow established/related"
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action drop
+            description "Drop invalid state"
+            state {
+                invalid enable
+            }
+        }
+    }
+    receive-redirects disable
+    send-redirects enable
+    source-validation disable
+    syn-cookies enable
+}
+interfaces {
+    bridge br105 {
+        aging 300
+        bridged-conntrack disable
+        description "Vodafone IPTV"
+        hello-time 2
+        max-age 20
+        priority 32768
+        promiscuous disable
+        stp false
+    }
+    ethernet eth0 {
+        description "Client: RFA-DesktopPC"
+        duplex auto
+        speed auto
+    }
+    ethernet eth1 {
+        description "Client: LAB-RaspberryPi"
+        duplex auto
+        speed auto
+    }
+    ethernet eth2 {
+        description "Client: LAB-DiskStation"
+        duplex auto
+        speed auto
+    }
+    ethernet eth3 {
+        description "Client: USW-FlexMini-1"
+        duplex auto
+        speed auto
+    }
+    ethernet eth4 {
+        description "Client: UAP-nanoHD-1"
+        duplex auto
+        speed auto
+    }
+    ethernet eth5 {
+        disable
+        duplex auto
+        speed auto
+    }
+    ethernet eth6 {
+        disable
+        duplex auto
+        speed auto
+    }
+    ethernet eth7 {
+        disable
+        duplex auto
+        speed auto
+    }
+    ethernet eth8 {
+        bridge-group {
+            bridge br105
+        }
+        description "STB: Vodafone"
+        duplex auto
+        speed auto
+    }
+    ethernet eth9 {
+        description WAN
+        duplex auto
+        poe {
+            output off
+        }
+        speed auto
+        vif 100 {
+            address dhcp
+            description "WAN: Internet"
+            dhcp-options {
+                default-route update
+                default-route-distance 210
+                name-server no-update
+            }
+            firewall {
+                in {
+                    name WAN_INTERNET_IN
+                }
+                local {
+                    name WAN_INTERNET_LOCAL
+                }
+            }
+        }
+        vif 105 {
+            bridge-group {
+                bridge br105
+            }
+            description "WAN: IPTV"
+        }
+    }
+    ethernet eth10 {
+        disable
+        duplex auto
+        speed auto
+    }
+    ethernet eth11 {
+        disable
+        duplex auto
+        speed auto
+    }
+    loopback lo {
+    }
+    switch switch0 {
+        description VLAN
+        mtu 1500
+        switch-port {
+            interface eth0 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth1 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth2 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth3 {
+                vlan {
+                    pvid 10
+                    vid 80
+                    vid 90
+                }
+            }
+            interface eth4 {
+                vlan {
+                    pvid 10
+                    vid 80
+                    vid 90
+                }
+            }
+            interface eth5 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth6 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth7 {
+                vlan {
+                    pvid 10
+                }
+            }
+            vlan-aware enable
+        }
+        vif 10 {
+            address 10.0.10.254/24
+            description "VLAN: Personal"
+        }
+        vif 80 {
+            address 10.0.80.254/24
+            description "VLAN: IoT"
+            firewall {
+                in {
+                    name IOT_IN
+                }
+                local {
+                    name IOT_LOCAL
+                }
+            }
+        }
+        vif 90 {
+            address 10.0.90.254/24
+            description "VLAN: Guests"
+            firewall {
+                in {
+                    name GUESTS_IN
+                }
+                local {
+                    name GUESTS_LOCAL
+                }
+            }
+        }
+    }
+}
+protocols {
+    static {
+        route 100.64.0.0/10 {
+            next-hop 10.0.10.200 {
+                description "Tailscale subnet routing"
+            }
+        }
+    }
+}
+service {
+    dhcp-server {
+        hostfile-update disable
+        shared-network-name Guests {
+            authoritative enable
+            subnet 10.0.90.0/24 {
+                default-router 10.0.90.254
+                lease 28800
+                start 10.0.90.200 {
+                    stop 10.0.90.249
+                }
+            }
+        }
+        shared-network-name IoT {
+            authoritative enable
+            subnet 10.0.80.0/24 {
+                default-router 10.0.80.254
+                domain-name {{ config_network_domain }}
+                lease 86400
+                start 10.0.80.230 {
+                    stop 10.0.80.239
+                }
+                static-mapping DMP-BraviaA90J {
+                    ip-address 10.0.80.200
+                    mac-address 7C:C2:C6:10:86:51
+                }
+                static-mapping DMP-ShieldTV2015 {
+                    ip-address 10.0.80.205
+                    mac-address 00:04:4B:48:45:77
+                }
+                static-mapping PLG-TapoP100-1 {
+                    ip-address 10.0.80.51
+                    mac-address D8:47:32:44:92:94
+                }
+                static-mapping PLG-TapoP110-1 {
+                    ip-address 10.0.80.52
+                    mac-address 6C:5A:B0:EF:2A:39
+                }
+                static-mapping RBT-Roombai7 {
+                    ip-address 10.0.80.11
+                    mac-address 50:14:79:1C:3C:8E
+                }
+                static-mapping SNR-AwairElement {
+                    ip-address 10.0.80.31
+                    mac-address 70:88:6B:14:4F:F9
+                }
+                static-mapping SNR-WithingsBodyPlus {
+                    ip-address 10.0.80.32
+                    mac-address 00:24:E4:D9:B0:A4
+                }
+            }
+        }
+        shared-network-name Personal {
+            authoritative enable
+            subnet 10.0.10.0/24 {
+                default-router 10.0.10.254
+                domain-name {{ config_network_domain }}
+                lease 86400
+                start 10.0.10.230 {
+                    stop 10.0.10.239
+                }
+                static-mapping LAB-DiskStation {
+                    ip-address 10.0.10.205
+                    mac-address 00:11:32:7B:9A:85
+                }
+                static-mapping LAB-RaspberryPi {
+                    ip-address 10.0.10.200
+                    mac-address DC:A6:32:09:D7:60
+                }
+                static-mapping MMC-MacBookPro {
+                    ip-address 10.0.10.22
+                    mac-address F0:18:98:93:23:EE
+                }
+                static-mapping MMC-NintendoSwitch {
+                    ip-address 10.0.10.25
+                    mac-address 7C:BB:8A:AC:9F:E9
+                }
+                static-mapping MMC-WatchSeries5 {
+                    ip-address 10.0.10.24
+                    mac-address 90:81:2A:D0:16:70
+                }
+                static-mapping MMC-iPad4 {
+                    ip-address 10.0.10.23
+                    mac-address 04:E5:36:24:F6:FE
+                }
+                static-mapping MMC-iPhone8Plus {
+                    ip-address 10.0.10.21
+                    mac-address 6C:4D:73:96:F7:39
+                }
+                static-mapping RFA-DellLaptop {
+                    ip-address 10.0.10.13
+                    mac-address F8:94:C2:08:D4:1E
+                }
+                static-mapping RFA-DesktopPC {
+                    ip-address 10.0.10.12
+                    mac-address B4:2E:99:99:81:A0
+                }
+                static-mapping RFA-GooglePixel6 {
+                    ip-address 10.0.10.11
+                    mac-address DC:E5:5B:25:BC:FE
+                }
+                static-mapping RFA-NintendoSwitchLite {
+                    ip-address 10.0.10.14
+                    mac-address 98:41:5C:71:96:99
+                }
+                static-mapping RFA-PlayStation5 {
+                    ip-address 10.0.10.15
+                    mac-address 78:C8:81:BB:B6:66
+                }
+                static-mapping UAP-InWallHD-1 {
+                    ip-address 10.0.10.240
+                    mac-address 24:5A:4C:62:29:37
+                }
+                static-mapping USW-FlexMini-1 {
+                    ip-address 10.0.10.245
+                    mac-address 24:5A:4C:10:71:97
+                }
+            }
+        }
+        static-arp disable
+        use-dnsmasq enable
+    }
+    dns {
+        forwarding {
+            cache-size 1500
+            listen-on switch0.10
+            listen-on switch0.80
+            listen-on switch0.90
+            name-server 1.1.1.1
+            name-server 1.0.0.1
+            options all-servers
+            options bogus-priv
+            options domain-needed
+            options expand-hosts
+            options addn-hosts=/config/user-data/dnsmasq/hosts
+            options dhcp-option=tag:Personal,option:dns-server,10.0.10.200,10.0.10.200
+            options dhcp-option=tag:IoT,option:dns-server,10.0.10.200,10.0.10.200
+            options dhcp-option=tag:Guests,option:dns-server,10.0.10.200,10.0.10.200
+        }
+    }
+    gui {
+        http-port 80
+        https-port 443
+        older-ciphers disable
+    }
+    mdns {
+        repeater {
+            interface switch0.10
+            interface switch0.80
+        }
+    }
+    nat {
+        rule 5010 {
+            description "Masquerade for WAN: Internet"
+            log disable
+            outbound-interface eth9.100
+            protocol all
+            type masquerade
+        }
+    }
+    ssh {
+        disable-password-authentication
+        port 22
+        protocol-version v2
+    }
+    ubnt-discover {
+        disable
+    }
+    unms {
+        disable
+    }
+}
+system {
+    analytics-handler {
+        send-analytics-report false
+    }
+    crash-handler {
+        send-crash-report false
+    }
+    host-name UBNTER12
+    ip {
+        override-hostname-ip 10.0.10.254
+    }
+    ipv6 {
+        disable
+    }
+    login {
+        user {{ config_admin_user_name }} {
+            authentication {
+                encrypted-password {{ config_admin_user_encrypted_pass }}
+                public-keys BLACKBOX {
+                    key {{ config_admin_user_public_key }}
+                    type ssh-rsa
+                }
+            }
+            full-name "Ricardo Amaral"
+            level admin
+        }
+    }
+    name-server 127.0.0.1
+    ntp {
+        server 0.europe.pool.ntp.org {
+        }
+        server 1.europe.pool.ntp.org {
+        }
+        server 2.europe.pool.ntp.org {
+        }
+        server 3.europe.pool.ntp.org {
+        }
+    }
+    offload {
+        hwnat disable
+        ipsec enable
+        ipv4 {
+            forwarding enable
+            vlan enable
+        }
+        ipv6 {
+            forwarding enable
+            vlan enable
+        }
+    }
+    syslog {
+        global {
+            facility all {
+                level notice
+            }
+            facility protocols {
+                level debug
+            }
+        }
+    }
+    task-scheduler {
+        task mirror-static-mappings-to-hosts {
+            crontab-spec "* * * * *"
+            executable {
+                arguments /config/user-data/dnsmasq/hosts
+                path /config/scripts/mirror-static-mappings-to-hosts.py
+            }
+        }
+    }
+    time-zone Europe/Lisbon
+    traffic-analysis {
+        dpi enable
+        export enable
+    }
+}
+
+
+/* Warning: Do not remove the following line. */
+/* === vyatta-config-version: "config-management@1:conntrack@1:cron@1:dhcp-relay@1:dhcp-server@4:firewall@5:ipsec@5:nat@3:qos@1:quagga@2:suspend@1:system@5:ubnt-l2tp@1:ubnt-pptp@1:ubnt-udapi-server@1:ubnt-unms@2:ubnt-util@1:vrrp@1:vyatta-netflow@1:webgui@1:webproxy@1:zone-policy@1" === */
+/* Release version: v2.0.9-hotfix.4.5521907.220630.0658 */

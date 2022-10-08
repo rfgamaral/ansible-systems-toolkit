@@ -1,0 +1,31 @@
+- name: Read Python script file contents to a dictionary
+  set_fact:
+    python_scripts: "{{ python_scripts | default({}) | combine({item | basename: lookup('file', item)}) }}"
+  with_fileglob: '*.py'
+
+- name: Read Shell script file contents to a dictionary
+  set_fact:
+    shell_scripts: "{{ shell_scripts | default({}) | combine({item | basename: lookup('file', item)}) }}"
+  with_fileglob: '*.sh'
+
+- block:
+    - name: Write user script files to EdgeOS scripts location
+      cli_command:
+        command: |
+          sudo tee /config/scripts/{{ script_item.key }} > /dev/null <<EOF
+          {{ script_item.value }}
+          EOF
+      loop: '{{ user_scripts | dict2items }}'
+      loop_control:
+        loop_var: script_item
+
+    - name: Add executable permissions to user script files
+      cli_command:
+        command: sudo chmod +x /config/scripts/{{ script_filename }}
+      loop: '{{ user_scripts.keys() }}'
+      loop_control:
+        loop_var: script_filename
+
+  vars:
+    user_scripts: '{{ python_scripts | default({}) | combine(shell_scripts|default({})) }}'
+  when: user_scripts.keys() | length > 0

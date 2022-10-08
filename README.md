@@ -39,6 +39,30 @@ This playbook configures my Raspberry Pi, which handles my home network core ser
 
     This will configure the base system settings and services, upgrade the distribution software and kernel, set up the administrator and root accounts dotfiles, and install and configure additional software (check the [`playbook.yml`](playbooks/polymerbox.yml) file for more details).
 
+### UBNTER12
+
+This playbook configures my EdgeRouter-12, which handles my home network traffic between my LAN and my Internet service provider services (including their IPTV platform).
+
+#### How to provision from zero?
+
+1. Make sure the EdgeRouter is booted and running with the factory defaults:
+   * > With the EdgeRouter booted up, press and hold the **Reset** button for about 10 seconds until the LED for port _eth9_ starts flashing and then becomes solidly lit. After a few seconds, the LED will turn off, and the EdgeRouter will automatically reboot.
+2. Connect an Ethernet cable from the Ethernet port on your computer to the port labeled _eth0_ on the EdgeRouter.
+   - Configure the Ethernet adapter on your host system with a static IP address on the `192.168.1.1/24` subnet.
+3. Uncomment `# ansible_host=192.168.1.1` in the `inventory.cfg` file (please refer to the **Inventory Hosts** section below for more details on why this is needed);
+4. Open your favorite terminal and run the following command to perform the initial configuration:
+
+    ```
+    ansible-playbook ./playbooks/ubnter12.yml --tags bootstrap
+    ```
+
+    Essentially what this does is, uploads all user scripts and updates the default configuration file by overriding `/config/config.boot` (this was the only way I found to actually replace the configuration, instead of merging it with the active one).
+
+    **Note:** This command is meant to be executed **once** after resetting the EdgeRouter to the factor defaults. The playbook will fail if you attempt to run it a second time because the LAN configuration is different.
+
+5. Wait a couple of minutes for the EdgeRouter to cycle-boot at least once;
+   - While you wait for the EdgeRouter to boot, revert all changes performed in step 2 and step 3.
+
 #### How to upgrade the distribution software and kernel?
 
 Some tasks in the playbook are tagged so that one can easily use Ansible to keep the system up to date with the latest software releases, patches, and fixes. To perform a full upgrade just run the following command on your terminal:
