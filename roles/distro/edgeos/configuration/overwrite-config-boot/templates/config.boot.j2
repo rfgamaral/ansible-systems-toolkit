@@ -2,45 +2,63 @@ firewall {
     all-ping enable
     broadcast-ping disable
     group {
+        address-group HOME_NETWORKS {
+            address 10.0.10.0/24
+            address 10.0.80.0/24
+            address 10.0.90.0/24
+            description "Home private networks"
+        }
+        address-group IPTV_NETWORK {
+            address 192.168.1.0/24
+            description "IPTV private network"
+        }
         address-group PLEX_CLIENTS {
             address 10.0.80.200
             address 10.0.80.205
-            description "Plex client addresses"
+            description "Plex clients addresses"
         }
-        network-group PRIVATE_NETWORKS {
-            description "RFC1918 private ranges"
-            network 192.168.0.0/16
-            network 172.16.0.0/12
-            network 10.0.0.0/8
+        address-group RFC1918_NETWORKS {
+            address 192.168.0.0/16
+            address 172.16.0.0/12
+            address 10.0.0.0/8
+            description "RFC1918 private networks"
         }
     }
     ipv6-receive-redirects disable
     ipv6-src-route disable
     ip-src-route disable
     log-martians enable
-    name GUESTS_IN {
+    modify LAN_IPTV_IN {
+        description "IPTV clients to LANs/Internet"
+        rule 10 {
+            action modify
+            description "Forward IPTV traffic to the IPTV network"
+            modify {
+                table 105
+            }
+            source {
+                group {
+                    address-group IPTV_NETWORK
+                }
+            }
+        }
+    }
+    name LAN_GUESTS_IN {
         default-action accept
-        description "GUESTS to internal"
+        description "Guest clients to LANs/Internet"
         rule 10 {
             action accept
             description "Allow established/related"
-            destination {
-                group {
-                    network-group PRIVATE_NETWORKS
-                }
-            }
             log disable
             protocol all
             state {
                 established enable
-                invalid disable
-                new disable
                 related enable
             }
         }
         rule 20 {
             action accept
-            description "Allow AdGuard Home DNS server"
+            description "Allow access to the DNS server"
             destination {
                 address 10.0.10.200
                 port 53
@@ -50,55 +68,45 @@ firewall {
         }
         rule 30 {
             action drop
-            description "Drop all LAN traffic"
+            description "Deny access to all internal LANs"
             destination {
                 group {
-                    network-group PRIVATE_NETWORKS
+                    address-group RFC1918_NETWORKS
                 }
             }
             log disable
             protocol all
         }
     }
-    name GUESTS_LOCAL {
+    name LAN_GUESTS_LOCAL {
         default-action drop
-        description "GUESTS to router"
+        description "Guest clients to EdgeRouter"
         rule 10 {
             action accept
-            description "Allow DHCP server"
+            description "Allow access to the DHCP server"
             destination {
                 port 67
             }
             log disable
             protocol udp
-            source {
-                port 68
-            }
         }
     }
-    name IOT_IN {
+    name LAN_IOT_IN {
         default-action accept
-        description "IOT to internal"
+        description "IoT clients to LANs/Internet"
         rule 10 {
             action accept
             description "Allow established/related"
-            destination {
-                group {
-                    network-group PRIVATE_NETWORKS
-                }
-            }
             log disable
             protocol all
             state {
                 established enable
-                invalid disable
-                new disable
                 related enable
             }
         }
         rule 20 {
             action accept
-            description "Allow AdGuard Home DNS server"
+            description "Allow access to the DNS server"
             destination {
                 address 10.0.10.200
                 port 53
@@ -108,7 +116,7 @@ firewall {
         }
         rule 30 {
             action accept
-            description "Allow Plex Media Player"
+            description "Allow access to the Plex Media Server"
             destination {
                 address 10.0.10.205
                 port 32400
@@ -123,34 +131,31 @@ firewall {
         }
         rule 40 {
             action drop
-            description "Drop all LAN traffic"
+            description "Deny access to all internal LANs"
             destination {
                 group {
-                    network-group PRIVATE_NETWORKS
+                    address-group RFC1918_NETWORKS
                 }
             }
             log disable
             protocol all
         }
     }
-    name IOT_LOCAL {
+    name LAN_IOT_LOCAL {
         default-action drop
-        description "IOT to router"
+        description "IoT clients to EdgeRouter"
         rule 10 {
             action accept
-            description "Allow DHCP server"
+            description "Allow access to the DHCP server"
             destination {
                 port 67
             }
             log disable
             protocol udp
-            source {
-                port 68
-            }
         }
         rule 20 {
             action accept
-            description "Allow mDNS repeater"
+            description "Allow access to the mDNS repeater"
             destination {
                 port 5353
             }
@@ -160,10 +165,12 @@ firewall {
     }
     name WAN_INTERNET_IN {
         default-action drop
-        description "WAN to internal"
+        description "Internet to LANs"
         rule 10 {
             action accept
             description "Allow established/related"
+            log disable
+            protocol all
             state {
                 established enable
                 related enable
@@ -171,7 +178,9 @@ firewall {
         }
         rule 20 {
             action drop
-            description "Drop invalid state"
+            description "Deny invalid state"
+            log disable
+            protocol all
             state {
                 invalid enable
             }
@@ -179,10 +188,12 @@ firewall {
     }
     name WAN_INTERNET_LOCAL {
         default-action drop
-        description "WAN to router"
+        description "Internet to EdgeRouter"
         rule 10 {
             action accept
             description "Allow established/related"
+            log disable
+            protocol all
             state {
                 established enable
                 related enable
@@ -190,7 +201,9 @@ firewall {
         }
         rule 20 {
             action drop
-            description "Drop invalid state"
+            description "Deny invalid state"
+            log disable
+            protocol all
             state {
                 invalid enable
             }
@@ -202,38 +215,28 @@ firewall {
     syn-cookies enable
 }
 interfaces {
-    bridge br105 {
-        aging 300
-        bridged-conntrack disable
-        description "Vodafone IPTV"
-        hello-time 2
-        max-age 20
-        priority 32768
-        promiscuous disable
-        stp false
-    }
     ethernet eth0 {
-        description "Client: RFA-DesktopPC"
+        description "RFA-DesktopPC"
         duplex auto
         speed auto
     }
     ethernet eth1 {
-        description "Client: LAB-RaspberryPi"
+        description "LAB-RaspberryPi"
         duplex auto
         speed auto
     }
     ethernet eth2 {
-        description "Client: LAB-DiskStation"
+        description "LAB-DiskStation"
         duplex auto
         speed auto
     }
     ethernet eth3 {
-        description "Client: USW-FlexMini-1"
+        description "USW-FlexMini-1"
         duplex auto
         speed auto
     }
     ethernet eth4 {
-        description "Client: UAP-nanoHD-1"
+        description "UAP-nanoHD-1"
         duplex auto
         speed auto
     }
@@ -253,18 +256,21 @@ interfaces {
         speed auto
     }
     ethernet eth8 {
-        bridge-group {
-            bridge br105
-        }
-        description "STB: Vodafone"
+        description "TV-boxHD"
+        address 192.168.1.254/24
         duplex auto
+        firewall {
+            in {
+                modify LAN_IPTV_IN
+            }
+        }
         speed auto
     }
     ethernet eth9 {
-        description WAN
+        description "WAN"
         duplex auto
         poe {
-            output off
+            output 24v
         }
         speed auto
         vif 100 {
@@ -285,10 +291,13 @@ interfaces {
             }
         }
         vif 105 {
-            bridge-group {
-                bridge br105
-            }
+            address dhcp
             description "WAN: IPTV"
+            dhcp-options {
+                default-route no-update
+                default-route-distance 210
+                name-server no-update
+            }
         }
     }
     ethernet eth10 {
@@ -304,8 +313,7 @@ interfaces {
     loopback lo {
     }
     switch switch0 {
-        description VLAN
-        mtu 1500
+        description "VLAN"
         switch-port {
             interface eth0 {
                 vlan {
@@ -362,10 +370,10 @@ interfaces {
             description "VLAN: IoT"
             firewall {
                 in {
-                    name IOT_IN
+                    name LAN_IOT_IN
                 }
                 local {
-                    name IOT_LOCAL
+                    name LAN_IOT_LOCAL
                 }
             }
         }
@@ -374,28 +382,49 @@ interfaces {
             description "VLAN: Guests"
             firewall {
                 in {
-                    name GUESTS_IN
+                    name LAN_GUESTS_IN
                 }
                 local {
-                    name GUESTS_LOCAL
+                    name LAN_GUESTS_LOCAL
                 }
             }
         }
     }
 }
 protocols {
+    igmp-proxy {
+        interface eth8 {
+            alt-subnet 192.168.1.0/24
+            role downstream
+            threshold 1
+        }
+        interface eth9.105 {
+            alt-subnet 10.0.0.0/8
+            alt-subnet 224.0.0.0/4
+            role upstream
+            threshold 1
+        }
+    }
     static {
         route 100.64.0.0/10 {
             next-hop 10.0.10.200 {
                 description "Tailscale subnet routing"
             }
         }
+        table 105 {
+            route 0.0.0.0/0 {
+                next-hop 10.65.0.1 {
+                    description "IPTV subnet routing"
+                }
+            }
+        }
     }
 }
 service {
     dhcp-server {
+        disabled false
         hostfile-update disable
-        shared-network-name Guests {
+        shared-network-name LAN_GUESTS {
             authoritative enable
             subnet 10.0.90.0/24 {
                 default-router 10.0.90.254
@@ -405,7 +434,7 @@ service {
                 }
             }
         }
-        shared-network-name IoT {
+        shared-network-name LAN_IOT {
             authoritative enable
             subnet 10.0.80.0/24 {
                 default-router 10.0.80.254
@@ -444,7 +473,19 @@ service {
                 }
             }
         }
-        shared-network-name Personal {
+        shared-network-name LAN_IPTV {
+            authoritative disable
+            subnet 192.168.1.254/24 {
+                default-router 192.168.1.254
+                dns-server 87.103.119.196
+                dns-server 213.30.36.212
+                lease 86400
+                start 192.168.1.65 {
+                    stop 192.168.1.100
+                }
+            }
+        }
+        shared-network-name LAN_PERSONAL {
             authoritative enable
             subnet 10.0.10.0/24 {
                 default-router 10.0.10.254
@@ -527,9 +568,9 @@ service {
             options domain-needed
             options expand-hosts
             options addn-hosts=/config/user-data/dnsmasq/hosts
-            options dhcp-option=tag:Personal,option:dns-server,10.0.10.200,10.0.10.200
-            options dhcp-option=tag:IoT,option:dns-server,10.0.10.200,10.0.10.200
-            options dhcp-option=tag:Guests,option:dns-server,10.0.10.200,10.0.10.200
+            options dhcp-option=tag:LANGUESTS,option:dns-server,10.0.10.200,10.0.10.200
+            options dhcp-option=tag:LANIOT,option:dns-server,10.0.10.200,10.0.10.200
+            options dhcp-option=tag:LANPERSONAL,option:dns-server,10.0.10.200,10.0.10.200
         }
     }
     gui {
@@ -549,6 +590,23 @@ service {
             log disable
             outbound-interface eth9.100
             protocol all
+            source {
+                group {
+                    address-group HOME_NETWORKS
+                }
+            }
+            type masquerade
+        }
+        rule 5020 {
+            description "Masquerade for WAN: IPTV"
+            log disable
+            outbound-interface eth9.105
+            protocol all
+            source {
+                group {
+                    address-group IPTV_NETWORK
+                }
+            }
             type masquerade
         }
     }
@@ -630,6 +688,12 @@ system {
             executable {
                 arguments /config/user-data/dnsmasq/hosts
                 path /config/scripts/mirror-static-mappings-to-hosts.py
+            }
+        }
+        task update-iptv-routing-table {
+            crontab-spec "*/5 * * * *"
+            executable {
+                path /config/scripts/update-iptv-routing-table.sh
             }
         }
     }
