@@ -14,6 +14,7 @@
             name: '{{ role }}'
           loop:
             - distro/synology/software/containers/plex
+            - distro/synology/software/containers/plex-meta-manager
             - distro/synology/software/containers/plex-trakt-sync
             - distro/synology/software/containers/watchtower
           loop_control:
