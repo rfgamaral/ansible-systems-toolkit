@@ -2,12 +2,11 @@ libraries:
   Movies:
     metadata_path:
       - file: config/metadata/Movies/metadata.yml
+        asset_directory: config/assets/Movies/Metadata
       - file: config/metadata/Movies/collections.yml
         asset_directory: config/assets/Movies/Collections
       - file: config/metadata/Movies/directors.yml
         asset_directory: config/assets/Movies/Directors
-    settings:
-      asset_directory: config/assets/Movies/Metadata
     operations:
       delete_unmanaged_collections: true
 
