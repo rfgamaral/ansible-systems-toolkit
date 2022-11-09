@@ -41,7 +41,7 @@
     - name: Create '{{ container_name }}' container
       docker_container:
         name: '{{ container_name }}'
-        image: meisnate12/plex-meta-manager:develop
+        image: meisnate12/plex-meta-manager:latest
         restart_policy: always
         env:
           TZ: '{{ config_system_timezone }}'
