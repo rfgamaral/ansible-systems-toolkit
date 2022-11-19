@@ -12,10 +12,10 @@ dns:
   bind_hosts:
     - 0.0.0.0
   port: 53
-  statistics_interval: 7
+  statistics_interval: 30
   querylog_enabled: true
   querylog_file_enabled: true
-  querylog_interval: 24h
+  querylog_interval: 168h
   querylog_size_memory: 1000
   anonymize_client_ip: false
   protection_enabled: true
@@ -29,8 +29,12 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
+    - '# [main] Cloudflare DNS server (DNS-over-TLS)'
     - tls://1dot1dot1dot1.cloudflare-dns.com
-    - '[/{{ config_network_domain }}//]10.0.10.254:53'
+    - '# [specific] Router DNS for `{{ config_network_domain }}` domain'
+    - '[/{{ config_network_domain }}/]10.0.10.254:53'
+    - '# [specific] Router DNS for unqualified names only'
+    - '[//]10.0.10.254:53'
   upstream_dns_file: ''
   bootstrap_dns:
     - 1.1.1.1
@@ -56,7 +60,9 @@ dns:
   enable_dnssec: true
   edns_client_subnet: false
   max_goroutines: 300
+  handle_ddr: true
   ipset: []
+  ipset_file: ''
   filtering_enabled: true
   filters_update_interval: 24
   parental_enabled: true
@@ -108,6 +114,8 @@ dns:
   private_networks: []
   use_private_ptr_resolvers: true
   local_ptr_upstreams: []
+  serve_http3: false
+  use_http3_upstreams: false
 tls:
   enabled: false
   server_name: adguard.{{ config_network_domain }}
@@ -118,44 +126,47 @@ tls:
   port_dnscrypt: 0
   dnscrypt_config_file: ''
   allow_unencrypted_doh: true
-  strict_sni_check: false
   certificate_chain: ''
   private_key: ''
   certificate_path: /etc/ssl/certs/{{ config_network_domain }}.pem
   private_key_path: /etc/ssl/private/{{ config_network_domain }}.pem
+  strict_sni_check: false
 filters:
   - enabled: true
-    id: 1
-    name: AdGuard DNS Filter List
     url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+    name: AdGuard DNS Filter List
+    id: 1
   - enabled: true
-    id: 2
-    name: Game Console AdBlock List
     url: https://raw.githubusercontent.com/DandelionSprout/adfilt/master/GameConsoleAdblockList.txt
+    name: Game Console AdBlock List
+    id: 2
   - enabled: true
-    id: 3
-    name: I don't care about cookies
     url: https://www.i-dont-care-about-cookies.eu/abp/
+    name: I don't care about cookies
+    id: 3
   - enabled: true
-    id: 4
-    name: NoCoin Filter List
     url: https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/hosts.txt
+    name: NoCoin Filter List
+    id: 4
   - enabled: true
-    id: 5
-    name: OISD Blocklist
     url: https://raw.githubusercontent.com/ookangzheng/dbl-oisd-nl/master/dbl.txt
+    name: OISD Blocklist
+    id: 5
   - enabled: true
-    id: 6
-    name: Perflyst Smart-TV Blocklist
     url: https://raw.githubusercontent.com/Perflyst/PiHoleBlocklist/master/SmartTV.txt
+    name: Perflyst Smart-TV Blocklist
+    id: 6
   - enabled: true
-    id: 7
-    name: WindowsSpyBlocker
     url: https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
+    name: WindowsSpyBlocker
+    id: 7
 whitelist_filters: []
 user_rules:
   - '# Windows Insider Program (https://insider.windows.com/)'
   - '@@||insideruser.microsoft.com^$important'
+  - '# Tailscale Machine IPs (https://tailscale.com/)'
+  - '|hypercube.{{ config_network_domain }}^$client=100.64.0.0/10,dnsrewrite=NOERROR;A;100.92.108.77'
+  - '|polymerbox.{{ config_network_domain }}^$client=100.64.0.0/10,dnsrewrite=NOERROR;A;100.78.45.65'
 dhcp:
   enabled: false
   interface_name: ''
@@ -181,332 +192,333 @@ clients:
     dhcp: true
     hosts: true
   persistent:
-  - name: DMP-BraviaA90J
-    tags:
-      - device_tv
-      - os_android
-      - user_regular
-    ids:
-      - 10.0.80.200
-    blocked_services: []
-    upstreams: []
-    use_global_settings: false
-    filtering_enabled: true
-    parental_enabled: false
-    safesearch_enabled: true
-    safebrowsing_enabled: true
-    use_global_blocked_services: true
-  - name: DMP-ShieldTV2015
-    tags:
-      - device_other
-      - os_android
-      - user_regular
-    ids:
-      - 10.0.80.205
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: LAB-DiskStation
-    tags:
-      - device_nas
-      - os_linux
-      - user_regular
-    ids:
-      - 10.0.10.205
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: LAB-RaspberryPi
-    tags:
-      - device_other
-      - os_linux
-      - user_admin
-    ids:
-      - 10.0.10.200
-      - 100.78.45.65
-      - 172.16.10.254
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: MMC-MacBookPro
-    tags:
-      - device_laptop
-      - os_macos
-      - user_regular
-    ids:
-      - 10.0.10.22
-      - 100.76.39.78
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: MMC-NintendoSwitch
-    tags:
-      - device_gameconsole
-      - os_other
-      - user_regular
-    ids:
-      - 10.0.10.25
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: MMC-WatchSeries5
-    tags:
-      - device_other
-      - os_ios
-      - user_regular
-    ids:
-      - 10.0.10.24
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: MMC-iPad4
-    tags:
-      - device_tablet
-      - os_ios
-      - user_regular
-    ids:
-      - 10.0.10.23
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: MMC-iPhone8Plus
-    tags:
-      - device_phone
-      - os_ios
-      - user_regular
-    ids:
-      - 10.0.10.21
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: PLG-TapoP100-1
-    tags:
-      - device_other
-      - os_other
-      - user_regular
-    ids:
-      - 10.0.80.51
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: PLG-TapoP110-1
-    tags:
-      - device_other
-      - os_other
-      - user_regular
-    ids:
-      - 10.0.80.52
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: RBT-Roombai7
-    tags:
-      - device_other
-      - os_other
-      - user_regular
-    ids:
-      - 10.0.80.11
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: RFA-DellLaptop
-    tags:
-      - device_laptop
-      - os_windows
-      - user_admin
-    ids:
-      - 10.0.10.13
-      - 100.126.247.121
-    blocked_services: []
-    upstreams: []
-    use_global_settings: false
-    filtering_enabled: true
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: RFA-DesktopPC
-    tags:
-      - device_pc
-      - os_windows
-      - user_admin
-    ids:
-      - 10.0.10.12
-    blocked_services: []
-    upstreams: []
-    use_global_settings: false
-    filtering_enabled: true
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: RFA-NintendoSwitchLite
-    tags:
-      - device_gameconsole
-      - os_other
-      - user_regular
-    ids:
-      - 10.0.10.14
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: RFA-GooglePixel6
-    tags:
-      - device_phone
-      - os_android
-      - user_admin
-    ids:
-      - 10.0.10.11
-      - 100.109.64.36
-    blocked_services: []
-    upstreams: []
-    use_global_settings: false
-    filtering_enabled: true
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: RFA-PlayStation5
-    tags:
-      - device_gameconsole
-      - os_other
-      - user_regular
-    ids:
-      - 10.0.10.15
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: SNR-AwairElement
-    tags:
-      - device_other
-      - os_other
-      - user_regular
-    ids:
-      - 10.0.80.31
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: SNR-WithingsBodyPlus
-    tags:
-      - device_other
-      - os_other
-      - user_regular
-    ids:
-      - 10.0.80.32
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: UAP-InWallHD-1
-    tags:
-      - device_other
-      - os_linux
-      - user_admin
-    ids:
-      - 10.0.10.240
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-  - name: USW-FlexMini-1
-    tags:
-      - device_other
-      - os_linux
-      - user_admin
-    ids:
-      - 10.0.10.245
-    blocked_services: []
-    upstreams: []
-    use_global_settings: true
-    filtering_enabled: false
-    parental_enabled: false
-    safesearch_enabled: false
-    safebrowsing_enabled: false
-    use_global_blocked_services: true
-log_compress: false
-log_localtime: false
+    - name: DMP-BraviaA90J
+      tags:
+        - device_tv
+        - os_android
+        - user_regular
+      ids:
+        - 10.0.80.200
+      blocked_services: []
+      upstreams: []
+      use_global_settings: false
+      filtering_enabled: true
+      parental_enabled: false
+      safesearch_enabled: true
+      safebrowsing_enabled: true
+      use_global_blocked_services: true
+    - name: DMP-ShieldTV2015
+      tags:
+        - device_other
+        - os_android
+        - user_regular
+      ids:
+        - 10.0.80.205
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: LAB-DiskStation
+      tags:
+        - device_nas
+        - os_linux
+        - user_regular
+      ids:
+        - 10.0.10.205
+        - 100.92.108.77
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: LAB-RaspberryPi
+      tags:
+        - device_other
+        - os_linux
+        - user_admin
+      ids:
+        - 10.0.10.200
+        - 100.78.45.65
+        - 172.16.10.254
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: MMC-MacBookPro
+      tags:
+        - device_laptop
+        - os_macos
+        - user_regular
+      ids:
+        - 10.0.10.22
+        - 100.108.10.116
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: MMC-NintendoSwitch
+      tags:
+        - device_gameconsole
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.10.25
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: MMC-WatchSeries5
+      tags:
+        - device_other
+        - os_ios
+        - user_regular
+      ids:
+        - 10.0.10.24
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: MMC-iPad4
+      tags:
+        - device_tablet
+        - os_ios
+        - user_regular
+      ids:
+        - 10.0.10.23
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: MMC-iPhone8Plus
+      tags:
+        - device_phone
+        - os_ios
+        - user_regular
+      ids:
+        - 10.0.10.21
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: PLG-TapoP100-1
+      tags:
+        - device_other
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.80.51
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: PLG-TapoP110-1
+      tags:
+        - device_other
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.80.52
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: RBT-Roombai7
+      tags:
+        - device_other
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.80.11
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: RFA-DellLaptop
+      tags:
+        - device_laptop
+        - os_windows
+        - user_admin
+      ids:
+        - 10.0.10.13
+        - 100.126.247.121
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: true
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: RFA-DesktopPC
+      tags:
+        - device_pc
+        - os_windows
+        - user_admin
+      ids:
+        - 10.0.10.12
+      blocked_services: []
+      upstreams: []
+      use_global_settings: false
+      filtering_enabled: true
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: RFA-GooglePixel6
+      tags:
+        - device_phone
+        - os_android
+        - user_admin
+      ids:
+        - 10.0.10.11
+        - 100.69.159.6
+      blocked_services: []
+      upstreams: []
+      use_global_settings: false
+      filtering_enabled: true
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: RFA-NintendoSwitchLite
+      tags:
+        - device_gameconsole
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.10.14
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: RFA-PlayStation5
+      tags:
+        - device_gameconsole
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.10.15
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: SNR-AwairElement
+      tags:
+        - device_other
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.80.31
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: SNR-WithingsBodyPlus
+      tags:
+        - device_other
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.80.32
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: UAP-InWallHD-1
+      tags:
+        - device_other
+        - os_linux
+        - user_admin
+      ids:
+        - 10.0.10.240
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: USW-FlexMini-1
+      tags:
+        - device_other
+        - os_linux
+        - user_admin
+      ids:
+        - 10.0.10.245
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+log_file: ''
 log_max_backups: 0
 log_max_size: 100
 log_max_age: 3
-log_file: ''
+log_compress: false
+log_localtime: false
 verbose: false
 os:
   group: ''
