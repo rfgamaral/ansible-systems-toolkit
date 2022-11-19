@@ -1,9 +1,9 @@
 # Command used to connect this machine to Tailscale:
 #
 # > tailscale up \
-#     --advertise-routes=10.0.10.0/24 \
-#     --advertise-exit-node \
 #     --accept-dns=false \
+#     --advertise-exit-node \
+#     --advertise-routes=10.0.10.0/24 \
 #     --snat-subnet-routes=false
 
 - name: Enable IP packet forwarding for IPv4/IPv6
