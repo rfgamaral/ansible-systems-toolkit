@@ -12,6 +12,7 @@ plex:
 
 logging:
   append: true
+  console_time: true
   debug: false
   filename: plextraktsync.log
 
@@ -33,6 +34,7 @@ watch:
   remove_collection: true
   scrobble_threshold: 80
   username_filter: true
+
 xbmc-providers:
   movies: imdb
   shows: tvdb
