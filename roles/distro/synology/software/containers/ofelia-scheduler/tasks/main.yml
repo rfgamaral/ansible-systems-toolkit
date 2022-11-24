@@ -1,0 +1,18 @@
+- block:
+    - name: Create '{{ container_name }}' container
+      docker_container:
+        name: '{{ container_name }}'
+        image: mcuadros/ofelia:latest
+        restart_policy: always
+        env:
+          TZ: '{{ config_system_timezone }}'
+        labels:
+          ofelia.job-exec.plex-trakt-sync.schedule: '@every 2h'
+          ofelia.job-exec.plex-trakt-sync.container: 'plex-trakt-sync'
+          ofelia.job-exec.plex-trakt-sync.command: 'python -m plextraktsync sync'
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro
+        command: daemon --docker
+
+  vars:
+    container_name: '{{ role_name | basename }}'
