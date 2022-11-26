@@ -23,6 +23,13 @@ firewall {
             address 10.0.0.0/8
             description "RFC1918 private networks"
         }
+        address-group TRUSTED_CLIENTS {
+            address 10.0.10.11
+            address 10.0.10.12
+            address 10.0.10.13
+            address 10.0.10.200
+            description "Trusted clients addresses"
+        }
     }
     ipv6-receive-redirects disable
     ipv6-src-route disable
@@ -161,6 +168,108 @@ firewall {
             }
             log disable
             protocol udp
+        }
+    }
+    name LAN_PERSONAL_IN {
+        default-action accept
+        description "Personal clients to LANs/Internet"
+    }
+    name LAN_PERSONAL_LOCAL {
+        default-action accept
+        description "Personal clients to EdgeRouter"
+        rule 10 {
+            action accept
+            description "Allow established/related"
+            log disable
+            protocol all
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action accept
+            description "Allow access to the DNS server"
+            destination {
+                port 53
+            }
+            log disable
+            protocol tcp_udp
+            source {
+                group {
+                    address-group TRUSTED_CLIENTS
+                }
+            }
+        }
+        rule 30 {
+            action accept
+            description "Allow access to the SSH server"
+            destination {
+                port 22
+            }
+            log disable
+            protocol tcp
+            source {
+                group {
+                    address-group TRUSTED_CLIENTS
+                }
+            }
+        }
+        rule 40 {
+            action accept
+            description "Allow access to the Web UI"
+            destination {
+                port 80,443
+            }
+            log disable
+            protocol tcp
+            source {
+                group {
+                    address-group TRUSTED_CLIENTS
+                }
+            }
+        }
+        rule 50 {
+            action drop
+            description "Deny access to the DNS server"
+            destination {
+                port 53
+            }
+            log disable
+            protocol tcp_udp
+            source {
+                group {
+                    address-group RFC1918_NETWORKS
+                }
+            }
+        }
+        rule 60 {
+            action drop
+            description "Deny access to the SSH server"
+            destination {
+                port 22
+            }
+            log disable
+            protocol tcp
+            source {
+                group {
+                    address-group RFC1918_NETWORKS
+                }
+            }
+        }
+        rule 70 {
+            action drop
+            description "Deny access to the Web UI"
+            destination {
+                port 80,443
+            }
+            log disable
+            protocol tcp
+            source {
+                group {
+                    address-group RFC1918_NETWORKS
+                }
+            }
         }
     }
     name WAN_INTERNET_IN {
@@ -364,6 +473,14 @@ interfaces {
         vif 10 {
             address 10.0.10.254/24
             description "VLAN: Personal"
+            firewall {
+                in {
+                    name LAN_PERSONAL_IN
+                }
+                local {
+                    name LAN_PERSONAL_LOCAL
+                }
+            }
         }
         vif 80 {
             address 10.0.80.254/24
