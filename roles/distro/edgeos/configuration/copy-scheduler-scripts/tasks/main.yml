@@ -1,12 +1,16 @@
 - name: Read Python script file contents to a dictionary
   set_fact:
-    python_scripts: "{{ python_scripts | default({}) | combine({item | basename: lookup('file', item)}) }}"
+    python_scripts: "{{ python_scripts | default({}) | combine({py_script_item | basename: lookup('file', py_script_item)}) }}"
   with_fileglob: '*.py'
+  loop_control:
+    loop_var: py_script_item
 
 - name: Read Shell script file contents to a dictionary
   set_fact:
-    shell_scripts: "{{ shell_scripts | default({}) | combine({item | basename: lookup('file', item)}) }}"
+    shell_scripts: "{{ shell_scripts | default({}) | combine({sh_script_item | basename: lookup('file', sh_script_item)}) }}"
   with_fileglob: '*.sh'
+  loop_control:
+    loop_var: sh_script_item
 
 - block:
     - name: Write user script files to EdgeOS scripts location
