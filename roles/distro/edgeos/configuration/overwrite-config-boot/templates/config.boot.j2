@@ -643,7 +643,7 @@ system {
     login {
         user {{ config_admin_user_name }} {
             authentication {
-                encrypted-password {{ config_admin_user_encrypted_pass }}
+                plaintext-password {{ config_admin_user_pass }}
                 public-keys BLACKBOX {
                     key {{ config_admin_user_public_key }}
                     type ssh-rsa
