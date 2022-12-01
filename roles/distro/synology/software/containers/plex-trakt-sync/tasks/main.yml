@@ -6,6 +6,13 @@
         owner: docker
         group: users
 
+    - name: Copy Plex servers file to project configuration directory
+      copy:
+        src: servers.yml
+        dest: /volume1/Docker/{{ container_name }}/servers.yml
+        owner: docker
+        group: users
+
     - name: Copy Plex credentials file to project configuration directory
       copy:
         src: .env
@@ -30,7 +37,7 @@
     - name: Create '{{ container_name }}' container
       docker_container:
         name: '{{ container_name }}'
-        image: ghcr.io/taxel/plextraktsync:0.23
+        image: ghcr.io/taxel/plextraktsync:latest
         restart_policy: always
         env:
           TZ: '{{ config_system_timezone }}'
