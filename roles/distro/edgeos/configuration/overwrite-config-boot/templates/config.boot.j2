@@ -2,33 +2,33 @@ firewall {
     all-ping enable
     broadcast-ping disable
     group {
-        address-group HOME_NETWORKS {
-            address 10.0.10.0/24
-            address 10.0.80.0/24
-            address 10.0.90.0/24
-            description "Home private networks"
-        }
-        address-group IPTV_NETWORK {
-            address 192.168.1.0/24
-            description "IPTV private network"
-        }
-        address-group PLEX_CLIENTS {
+        address-group CLIENTS_PLEX {
             address 10.0.80.200
             address 10.0.80.205
             description "Plex clients addresses"
         }
-        address-group RFC1918_NETWORKS {
-            address 192.168.0.0/16
-            address 172.16.0.0/12
-            address 10.0.0.0/8
-            description "RFC1918 private networks"
-        }
-        address-group TRUSTED_CLIENTS {
+        address-group CLIENTS_TRUSTED {
             address 10.0.10.11
             address 10.0.10.12
             address 10.0.10.13
             address 10.0.10.200
             description "Trusted clients addresses"
+        }
+        address-group NETWORKS_HOME {
+            address 10.0.10.0/24
+            address 10.0.80.0/24
+            address 10.0.90.0/24
+            description "Home private networks"
+        }
+        address-group NETWORKS_RFC1918 {
+            address 192.168.0.0/16
+            address 172.16.0.0/12
+            address 10.0.0.0/8
+            description "RFC1918 private networks"
+        }
+        address-group NETWORK_IPTV {
+            address 192.168.1.0/24
+            description "IPTV private network"
         }
     }
     ipv6-receive-redirects disable
@@ -45,7 +45,7 @@ firewall {
             }
             source {
                 group {
-                    address-group IPTV_NETWORK
+                    address-group NETWORK_IPTV
                 }
             }
         }
@@ -78,7 +78,7 @@ firewall {
             description "Deny access to all internal LANs"
             destination {
                 group {
-                    address-group RFC1918_NETWORKS
+                    address-group NETWORKS_RFC1918
                 }
             }
             log disable
@@ -132,7 +132,7 @@ firewall {
             protocol tcp_udp
             source {
                 group {
-                    address-group PLEX_CLIENTS
+                    address-group CLIENTS_PLEX
                 }
             }
         }
@@ -141,7 +141,7 @@ firewall {
             description "Deny access to all internal LANs"
             destination {
                 group {
-                    address-group RFC1918_NETWORKS
+                    address-group NETWORKS_RFC1918
                 }
             }
             log disable
@@ -197,7 +197,7 @@ firewall {
             protocol tcp_udp
             source {
                 group {
-                    address-group TRUSTED_CLIENTS
+                    address-group CLIENTS_TRUSTED
                 }
             }
         }
@@ -211,7 +211,7 @@ firewall {
             protocol tcp
             source {
                 group {
-                    address-group TRUSTED_CLIENTS
+                    address-group CLIENTS_TRUSTED
                 }
             }
         }
@@ -225,7 +225,7 @@ firewall {
             protocol tcp
             source {
                 group {
-                    address-group TRUSTED_CLIENTS
+                    address-group CLIENTS_TRUSTED
                 }
             }
         }
@@ -239,7 +239,7 @@ firewall {
             protocol tcp_udp
             source {
                 group {
-                    address-group RFC1918_NETWORKS
+                    address-group NETWORKS_RFC1918
                 }
             }
         }
@@ -253,7 +253,7 @@ firewall {
             protocol tcp
             source {
                 group {
-                    address-group RFC1918_NETWORKS
+                    address-group NETWORKS_RFC1918
                 }
             }
         }
@@ -267,7 +267,7 @@ firewall {
             protocol tcp
             source {
                 group {
-                    address-group RFC1918_NETWORKS
+                    address-group NETWORKS_RFC1918
                 }
             }
         }
@@ -721,7 +721,7 @@ service {
             protocol all
             source {
                 group {
-                    address-group HOME_NETWORKS
+                    address-group NETWORKS_HOME
                 }
             }
             type masquerade
@@ -733,7 +733,7 @@ service {
             protocol all
             source {
                 group {
-                    address-group IPTV_NETWORK
+                    address-group NETWORK_IPTV
                 }
             }
             type masquerade
