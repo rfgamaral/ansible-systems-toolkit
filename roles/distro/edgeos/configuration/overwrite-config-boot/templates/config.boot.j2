@@ -687,12 +687,11 @@ service {
     }
     dns {
         forwarding {
-            cache-size 1500
+            cache-size 150
             listen-on switch0.10
             listen-on switch0.80
             listen-on switch0.90
-            name-server 1.1.1.1
-            name-server 1.0.0.1
+            name-server 10.0.10.200
             options all-servers
             options bogus-priv
             options domain-needed
