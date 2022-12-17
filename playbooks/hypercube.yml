@@ -25,7 +25,7 @@
           include_role:
             name: distro/synology/software/containers/servarr
           loop:
-            - { name: 'Bazarr', key: 'en', ports: ['23080:6767'], memory: '512M' }
+            - { name: 'Bazarr', ports: ['23080:6767'], memory: '512M' }
             - { name: 'Bazarr', key: 'pt', ports: ['23081:6767'], memory: '512M' }
             - { name: 'NZBHydra2', ports: ['22080:5076'], memory: '512M', media_volume: false }
             - { name: 'Overseerr', ports: ['36080:5055'], memory: '512M', media_volume: false }

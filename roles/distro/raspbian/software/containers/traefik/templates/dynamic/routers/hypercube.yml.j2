@@ -1,8 +1,8 @@
 http:
   routers:
-    bazarr-en:
-      rule: Host(`bazarr.{{ config_network_domain }}`) && PathPrefix(`/en`)
-      service: bazarr-en
+    bazarr:
+      rule: Host(`bazarr.{{ config_network_domain }}`)
+      service: bazarr
       middlewares:
         - chain-authelia
       tls: {}

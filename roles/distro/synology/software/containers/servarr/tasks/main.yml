@@ -28,6 +28,6 @@
         volumes: '{{ container_volumes }}'
 
   vars:
-    container_name: "{{ container.name | lower }}{{ container.key is defined | ternary('-' + container.key | default(omit), '') }}"
+    container_name: "{{ container.name | lower }}{{ container.key is defined | ternary('-' + container.key | default(omit), '') | lower }}"
     container_volumes: "{{ (['/volume1/Docker/' + container_name + ':/config:rw'] + [container.media_volume is defined | ternary('', '/volume1/Media:/media:rw')]) | select() | list() }}"
     image_name: '{{ container.name | lower }}'
