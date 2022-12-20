@@ -30,8 +30,8 @@ sync:
     watchlist_as_playlist: false
 
 watch:
-  add_collection: true
-  remove_collection: true
+  add_collection: false
+  remove_collection: false
   scrobble_threshold: 80
   username_filter: true
 
