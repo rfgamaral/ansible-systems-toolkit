@@ -462,6 +462,65 @@ firewall {
             }
         }
     }
+    name WAN_INTERNET_OUT {
+        default-action accept
+        description "LANs to Internet"
+        rule 10 {
+            action accept
+            description "Allow established/related"
+            log disable
+            protocol all
+            state {
+                established enable
+                invalid disable
+                new disable
+                related enable
+            }
+        }
+        rule 20 {
+            action drop
+            description "Deny invalid state"
+            log disable
+            protocol all
+            state {
+                established disable
+                invalid enable
+                new disable
+                related disable
+            }
+        }
+        rule 30 {
+            action accept
+            description "Allow access to external DNS Servers by internal DNS servers"
+            destination {
+                group {
+                    port-group PORTS_DNS
+                }
+            }
+            log disable
+            protocol tcp_udp
+            source {
+                group {
+                    address-group SERVERS_DNS
+                }
+            }
+        }
+        rule 40 {
+            action drop
+            description "Deny access to external DNS servers"
+            destination {
+                group {
+                    port-group PORTS_DNS
+                }
+            }
+            log disable
+            protocol tcp_udp
+            source {
+                group {
+                }
+            }
+        }
+    }
     receive-redirects disable
     send-redirects enable
     source-validation disable
@@ -540,6 +599,9 @@ interfaces {
                 }
                 local {
                     name WAN_INTERNET_LOCAL
+                }
+                out {
+                    name WAN_INTERNET_OUT
                 }
             }
         }
@@ -831,6 +893,51 @@ service {
         }
     }
     nat {
+        rule 4010 {
+            description "Captive DNS: Personal"
+            destination {
+                address !10.0.1.1
+                port 53
+            }
+            inbound-interface eth11.10
+            inside-address {
+                address 10.0.1.1
+                port 53
+            }
+            log enable
+            protocol tcp_udp
+            type destination
+        }
+        rule 4020 {
+            description "Captive DNS: IoT"
+            destination {
+                address !10.0.1.1
+                port 53
+            }
+            inbound-interface eth11.80
+            inside-address {
+                address 10.0.1.1
+                port 53
+            }
+            log disable
+            protocol tcp_udp
+            type destination
+        }
+        rule 4030 {
+            description "Captive DNS: Guests"
+            destination {
+                address !10.0.1.1
+                port 53
+            }
+            inbound-interface eth11.90
+            inside-address {
+                address 10.0.1.1
+                port 53
+            }
+            log disable
+            protocol tcp_udp
+            type destination
+        }
         rule 5010 {
             description "Masquerade for WAN: Internet"
             log disable
