@@ -2,33 +2,95 @@ firewall {
     all-ping enable
     broadcast-ping disable
     group {
-        address-group CLIENTS_PLEX {
-            address 10.0.80.200
-            address 10.0.80.205
-            description "Plex clients addresses"
-        }
-        address-group CLIENTS_TRUSTED {
+        address-group CLIENTS_ADMIN {
             address 10.0.10.11
             address 10.0.10.12
             address 10.0.10.13
-            address 10.0.10.200
-            description "Trusted clients addresses"
+            description "Clients: Administrator"
+        }
+        address-group CLIENTS_PERSONAL {
+            address 10.0.10.0/24
+            description "Clients: Personal"
+        }
+        address-group CLIENTS_PLEX {
+            address 10.0.10.0/24
+            address 10.0.80.200
+            address 10.0.80.205
+            description "Clients: Plex"
         }
         address-group NETWORKS_HOME {
+            address 10.0.1.0/24
             address 10.0.10.0/24
             address 10.0.80.0/24
             address 10.0.90.0/24
-            description "Home private networks"
+            description "Networks: Home"
+        }
+        address-group NETWORKS_IPTV {
+            address 192.168.1.0/24
+            description "Networks: IPTV"
         }
         address-group NETWORKS_RFC1918 {
             address 192.168.0.0/16
             address 172.16.0.0/12
             address 10.0.0.0/8
-            description "RFC1918 private networks"
+            description "Networks: RFC1918"
         }
-        address-group NETWORK_IPTV {
-            address 192.168.1.0/24
-            description "IPTV private network"
+        address-group SERVERS_CIFS {
+            address 10.0.1.25
+            description "Servers: CIFS/SMB"
+        }
+        address-group SERVERS_DNS {
+            address 10.0.1.1
+            description "Servers: DNS"
+        }
+        address-group SERVERS_PLEX {
+            address 10.0.1.25
+            description "Servers: Plex"
+        }
+        address-group SERVERS_PROXY {
+            address 10.0.1.1
+            description "Servers: Reverse Proxy"
+        }
+        port-group PORTS_AIRPLAY {
+            description "AirPlay"
+            port 6002
+            port 7000
+            port 49152-65535
+        }
+        port-group PORTS_CHROMECAST {
+            description "Chromecast"
+            port 6466
+            port 8008-8009
+            port 8443
+            port 32768-61000
+        }
+        port-group PORTS_CIFS {
+            description "CIFS/SMB"
+            port 139
+            port 445
+        }
+        port-group PORTS_DHCP {
+            description "DHCP"
+            port 67
+        }
+        port-group PORTS_DNS {
+            description "DNS"
+            port 53
+            port 784
+            port 853
+        }
+        port-group PORTS_MDNS {
+            description "mDNS"
+            port 5353
+        }
+        port-group PORTS_PLEX {
+            description "Plex Media Server"
+            port 32400
+        }
+        port-group PORTS_PROXY {
+            description "Reverse Proxy"
+            port 80
+            port 443
         }
     }
     ipv6-receive-redirects disable
@@ -45,7 +107,7 @@ firewall {
             }
             source {
                 group {
-                    address-group NETWORK_IPTV
+                    address-group NETWORKS_IPTV
                 }
             }
         }
@@ -65,17 +127,19 @@ firewall {
         }
         rule 20 {
             action accept
-            description "Allow access to the DNS server"
+            description "Allow access to the DNS servers"
             destination {
-                address 10.0.10.200
-                port 53
+                group {
+                    address-group SERVERS_DNS
+                    port-group PORTS_DNS
+                }
             }
             log disable
             protocol tcp_udp
         }
         rule 30 {
             action drop
-            description "Deny access to all internal LANs"
+            description "Deny access to the internal LANs"
             destination {
                 group {
                     address-group NETWORKS_RFC1918
@@ -92,7 +156,9 @@ firewall {
             action accept
             description "Allow access to the DHCP server"
             destination {
-                port 67
+                group {
+                    port-group PORTS_DHCP
+                }
             }
             log disable
             protocol udp
@@ -113,10 +179,12 @@ firewall {
         }
         rule 20 {
             action accept
-            description "Allow access to the DNS server"
+            description "Allow access to the DNS servers"
             destination {
-                address 10.0.10.200
-                port 53
+                group {
+                    address-group SERVERS_DNS
+                    port-group PORTS_DNS
+                }
             }
             log disable
             protocol tcp_udp
@@ -125,11 +193,13 @@ firewall {
             action accept
             description "Allow access to the Plex Media Server"
             destination {
-                address 10.0.10.205
-                port 32400
+                group {
+                    address-group SERVERS_PLEX
+                    port-group PORTS_PLEX
+                }
             }
             log disable
-            protocol tcp_udp
+            protocol tcp
             source {
                 group {
                     address-group CLIENTS_PLEX
@@ -137,8 +207,24 @@ firewall {
             }
         }
         rule 40 {
+            action accept
+            description "Allow access to Apple clients (AirPlay)"
+            destination {
+                group {
+                    address-group CLIENTS_PERSONAL
+                }
+            }
+            log disable
+            protocol tcp_udp
+            source {
+                group {
+                    port-group PORTS_AIRPLAY
+                }
+            }
+        }
+        rule 50 {
             action drop
-            description "Deny access to all internal LANs"
+            description "Deny access to the internal LANs"
             destination {
                 group {
                     address-group NETWORKS_RFC1918
@@ -155,7 +241,9 @@ firewall {
             action accept
             description "Allow access to the DHCP server"
             destination {
-                port 67
+                group {
+                    port-group PORTS_DHCP
+                }
             }
             log disable
             protocol udp
@@ -164,7 +252,9 @@ firewall {
             action accept
             description "Allow access to the mDNS repeater"
             destination {
-                port 5353
+                group {
+                    port-group PORTS_MDNS
+                }
             }
             log disable
             protocol udp
@@ -173,10 +263,6 @@ firewall {
     name LAN_PERSONAL_IN {
         default-action accept
         description "Personal clients to LANs/Internet"
-    }
-    name LAN_PERSONAL_LOCAL {
-        default-action accept
-        description "Personal clients to EdgeRouter"
         rule 10 {
             action accept
             description "Allow established/related"
@@ -184,90 +270,148 @@ firewall {
             protocol all
             state {
                 established enable
+                invalid disable
+                new disable
                 related enable
             }
         }
         rule 20 {
             action accept
-            description "Allow access to the DNS server"
+            description "Allow access to the DNS servers"
             destination {
-                port 53
+                group {
+                    address-group SERVERS_DNS
+                    port-group PORTS_DNS
+                }
             }
             log disable
             protocol tcp_udp
-            source {
-                group {
-                    address-group CLIENTS_TRUSTED
-                }
-            }
         }
         rule 30 {
             action accept
-            description "Allow access to the SSH server"
+            description "Allow access to the Plex Media Server"
             destination {
-                port 22
+                group {
+                    address-group SERVERS_PLEX
+                    port-group PORTS_PLEX
+                }
             }
             log disable
             protocol tcp
             source {
                 group {
-                    address-group CLIENTS_TRUSTED
+                    address-group CLIENTS_PLEX
                 }
             }
         }
         rule 40 {
             action accept
-            description "Allow access to the Web UI"
+            description "Allow access to the CIF/SMB servers"
             destination {
-                port 80,443
+                group {
+                    address-group SERVERS_CIFS
+                    port-group PORTS_CIFS
+                }
             }
             log disable
             protocol tcp
             source {
                 group {
-                    address-group CLIENTS_TRUSTED
+                    address-group CLIENTS_PERSONAL
                 }
             }
         }
         rule 50 {
-            action drop
-            description "Deny access to the DNS server"
+            action accept
+            description "Allow access to the reverse proxy"
             destination {
-                port 53
+                group {
+                    address-group SERVERS_PROXY
+                    port-group PORTS_PROXY
+                }
+            }
+            log disable
+            protocol tcp
+            source {
+                group {
+                    address-group CLIENTS_PERSONAL
+                }
+            }
+        }
+        rule 60 {
+            action accept
+            description "Allow access to Chromecast devices"
+            destination {
+                group {
+                    port-group PORTS_CHROMECAST
+                }
             }
             log disable
             protocol tcp_udp
             source {
                 group {
-                    address-group NETWORKS_RFC1918
-                }
-            }
-        }
-        rule 60 {
-            action drop
-            description "Deny access to the SSH server"
-            destination {
-                port 22
-            }
-            log disable
-            protocol tcp
-            source {
-                group {
-                    address-group NETWORKS_RFC1918
+                    address-group CLIENTS_PERSONAL
                 }
             }
         }
         rule 70 {
-            action drop
-            description "Deny access to the Web UI"
+            action accept
+            description "Allow access to the internal LANs (Admins)"
             destination {
-                port 80,443
             }
             log disable
-            protocol tcp
+            protocol all
             source {
                 group {
+                    address-group CLIENTS_ADMIN
+                }
+            }
+        }
+        rule 80 {
+            action drop
+            description "Deny access to the internal LANs"
+            destination {
+                group {
                     address-group NETWORKS_RFC1918
+                }
+            }
+            log disable
+            protocol all
+        }
+    }
+    name LAN_PERSONAL_LOCAL {
+        default-action drop
+        description "Personal clients to EdgeRouter"
+        rule 10 {
+            action accept
+            description "Allow access to the DHCP server"
+            destination {
+                group {
+                    port-group PORTS_DHCP
+                }
+            }
+            log disable
+            protocol udp
+        }
+        rule 20 {
+            action accept
+            description "Allow access to the mDNS repeater"
+            destination {
+                group {
+                    port-group PORTS_MDNS
+                }
+            }
+            log disable
+            protocol udp
+        }
+        rule 30 {
+            action accept
+            description "Allow access to the EdgeRouter (Admins)"
+            log disable
+            protocol all
+            source {
+                group {
+                    address-group CLIENTS_ADMIN
                 }
             }
         }
@@ -325,27 +469,27 @@ firewall {
 }
 interfaces {
     ethernet eth0 {
-        description "RFA-DesktopPC"
+        disable
         duplex auto
         speed auto
     }
     ethernet eth1 {
-        description "LAB-RaspberryPi"
+        disable
         duplex auto
         speed auto
     }
     ethernet eth2 {
-        description "LAB-DiskStation"
+        disable
         duplex auto
         speed auto
     }
     ethernet eth3 {
-        description "USW-FlexMini-1"
+        disable
         duplex auto
         speed auto
     }
     ethernet eth4 {
-        description "UAP-InWallHD-1"
+        disable
         duplex auto
         speed auto
     }
@@ -366,7 +510,7 @@ interfaces {
     }
     ethernet eth8 {
         address 192.168.1.254/24
-        description "TV-boxHD"
+        description "TV-BoxHD"
         duplex auto
         firewall {
             in {
@@ -376,7 +520,7 @@ interfaces {
         speed auto
     }
     ethernet eth9 {
-        description "WAN"
+        description "UF-Loco"
         duplex auto
         poe {
             output 24v
@@ -415,62 +559,10 @@ interfaces {
         speed auto
     }
     ethernet eth11 {
-        disable
+        address 10.0.1.254/24
+        description "USW-16-PoE"
         duplex auto
         speed auto
-    }
-    loopback lo {
-    }
-    switch switch0 {
-        description "VLAN"
-        mtu 1500
-        switch-port {
-            interface eth0 {
-                vlan {
-                    pvid 10
-                }
-            }
-            interface eth1 {
-                vlan {
-                    pvid 10
-                }
-            }
-            interface eth2 {
-                vlan {
-                    pvid 10
-                }
-            }
-            interface eth3 {
-                vlan {
-                    pvid 10
-                    vid 80
-                    vid 90
-                }
-            }
-            interface eth4 {
-                vlan {
-                    pvid 10
-                    vid 80
-                    vid 90
-                }
-            }
-            interface eth5 {
-                vlan {
-                    pvid 10
-                }
-            }
-            interface eth6 {
-                vlan {
-                    pvid 10
-                }
-            }
-            interface eth7 {
-                vlan {
-                    pvid 10
-                }
-            }
-            vlan-aware enable
-        }
         vif 10 {
             address 10.0.10.254/24
             description "VLAN: Personal"
@@ -482,6 +574,7 @@ interfaces {
                     name LAN_PERSONAL_LOCAL
                 }
             }
+            mtu 1500
         }
         vif 80 {
             address 10.0.80.254/24
@@ -494,6 +587,7 @@ interfaces {
                     name LAN_IOT_LOCAL
                 }
             }
+            mtu 1500
         }
         vif 90 {
             address 10.0.90.254/24
@@ -506,7 +600,12 @@ interfaces {
                     name LAN_GUESTS_LOCAL
                 }
             }
+            mtu 1500
         }
+    }
+    loopback lo {
+    }
+    switch switch0 {
     }
 }
 protocols {
@@ -525,7 +624,7 @@ protocols {
     }
     static {
         route 100.64.0.0/10 {
-            next-hop 10.0.10.200 {
+            next-hop 10.0.1.1 {
                 description "Tailscale subnet routing"
             }
         }
@@ -607,6 +706,42 @@ service {
                 }
             }
         }
+        shared-network-name LAN_MANAGEMENT {
+            authoritative disable
+            subnet 10.0.1.254/24 {
+                default-router 10.0.1.254
+                domain-name {{ config_network_domain }}
+                lease 86400
+                start 10.0.1.230 {
+                    stop 10.0.1.239
+                }
+                static-mapping SYN-DiskStation {
+                    ip-address 10.0.1.25
+                    mac-address 00:11:32:7b:9a:85
+                }
+                static-mapping SYS-RaspberryPi-1 {
+                    ip-address 10.0.1.1
+                    mac-address dc:a6:32:09:d7:60
+                }
+                static-mapping UAP-InWallHD-1 {
+                    ip-address 10.0.1.221
+                    mac-address 24:5a:4c:62:29:37
+                }
+                static-mapping UAP-U6InWall-1 {
+                    ip-address 10.0.1.201
+                    mac-address 70:a7:41:ec:72:83
+                }
+                static-mapping USW-16-PoE {
+                    ip-address 10.0.1.100
+                    mac-address 70:a7:41:a3:f8:26
+                }
+                static-mapping USW-FlexMini-1 {
+                    ip-address 10.0.1.121
+                    mac-address 24:5a:4c:10:71:97
+                }
+                unifi-controller 10.0.1.1
+            }
+        }
         shared-network-name LAN_PERSONAL {
             authoritative enable
             subnet 10.0.10.0/24 {
@@ -615,14 +750,6 @@ service {
                 lease 86400
                 start 10.0.10.230 {
                     stop 10.0.10.239
-                }
-                static-mapping LAB-DiskStation {
-                    ip-address 10.0.10.205
-                    mac-address 00:11:32:7b:9a:85
-                }
-                static-mapping LAB-RaspberryPi {
-                    ip-address 10.0.10.200
-                    mac-address dc:a6:32:09:d7:60
                 }
                 static-mapping MMC-MacBookPro {
                     ip-address 10.0.10.22
@@ -652,6 +779,10 @@ service {
                     ip-address 10.0.10.12
                     mac-address b4:2e:99:99:81:a0
                 }
+                static-mapping RFA-GarminVenu2S {
+                    ip-address 10.0.10.16
+                    mac-address 90:f1:57:8b:4c:a6
+                }
                 static-mapping RFA-GooglePixel6 {
                     ip-address 10.0.10.11
                     mac-address dc:e5:5b:25:bc:fe
@@ -664,22 +795,6 @@ service {
                     ip-address 10.0.10.15
                     mac-address 78:c8:81:bb:b6:66
                 }
-                static-mapping UAP-InWallHD-1 {
-                    ip-address 10.0.10.240
-                    mac-address 24:5a:4c:62:29:37
-                }
-                static-mapping UAP-U6InWall-1 {
-                    ip-address 10.0.10.235
-                    mac-address 70:a7:41:ec:72:83
-                }
-                static-mapping USW-16-PoE {
-                    ip-address 10.0.10.250
-                    mac-address 70:a7:41:a3:f8:26
-                }
-                static-mapping USW-FlexMini-1 {
-                    ip-address 10.0.10.245
-                    mac-address 24:5a:4c:10:71:97
-                }
             }
         }
         static-arp disable
@@ -688,18 +803,20 @@ service {
     dns {
         forwarding {
             cache-size 150
-            listen-on switch0.10
-            listen-on switch0.80
-            listen-on switch0.90
-            name-server 10.0.10.200
+            listen-on eth11
+            listen-on eth11.10
+            listen-on eth11.80
+            listen-on eth11.90
+            name-server 10.0.1.1
             options all-servers
             options bogus-priv
             options domain-needed
             options expand-hosts
             options addn-hosts=/config/user-data/dnsmasq/hosts
-            options dhcp-option=tag:LANGUESTS,option:dns-server,10.0.10.200,10.0.10.200
-            options dhcp-option=tag:LANIOT,option:dns-server,10.0.10.200,10.0.10.200
-            options dhcp-option=tag:LANPERSONAL,option:dns-server,10.0.10.200,10.0.10.200
+            options dhcp-option=tag:LANGUESTS,option:dns-server,10.0.1.1,10.0.1.1
+            options dhcp-option=tag:LANIOT,option:dns-server,10.0.1.1,10.0.1.1
+            options dhcp-option=tag:LANMANAGEMENT,option:dns-server,10.0.1.1,10.0.1.1
+            options dhcp-option=tag:LANPERSONAL,option:dns-server,10.0.1.1,10.0.1.1
         }
     }
     gui {
@@ -709,8 +826,8 @@ service {
     }
     mdns {
         repeater {
-            interface switch0.10
-            interface switch0.80
+            interface eth11.10
+            interface eth11.80
         }
     }
     nat {
@@ -760,7 +877,7 @@ system {
     }
     host-name UBNTER12
     ip {
-        override-hostname-ip 10.0.10.254
+        override-hostname-ip 10.0.1.254
     }
     ipv6 {
         disable
@@ -836,4 +953,4 @@ system {
 
 /* Warning: Do not remove the following line. */
 /* === vyatta-config-version: "config-management@1:conntrack@1:cron@1:dhcp-relay@1:dhcp-server@4:firewall@5:ipsec@5:nat@3:qos@1:quagga@2:suspend@1:system@5:ubnt-l2tp@1:ubnt-pptp@1:ubnt-udapi-server@1:ubnt-unms@2:ubnt-util@1:vrrp@1:vyatta-netflow@1:webgui@1:webproxy@1:zone-policy@1" === */
-/* Release version: v2.0.9-hotfix.4.5521907.220630.0658 */
+/* Release version: v2.0.9-hotfix.5.5554172.221020.0743 */

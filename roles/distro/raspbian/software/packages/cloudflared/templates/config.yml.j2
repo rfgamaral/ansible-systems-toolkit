@@ -4,15 +4,15 @@ credentials-file: /etc/cloudflared/{{ tunnel_uuid }}.json
 
 ingress:
  - hostname: files.{{ config_network_domain }}
-   service: http://10.0.10.205:17080
+   service: http://10.0.1.25:17080
 
  - hostname: plex.{{ config_network_domain }}
-   service: http://10.0.10.205:32400
+   service: http://10.0.1.25:32400
 
  - hostname: overseerr.{{ config_network_domain }}
-   service: http://10.0.10.205:26080
+   service: http://10.0.1.25:26080
 
  - hostname: webdav.{{ config_network_domain }}
-   service: http://10.0.10.205:16080
+   service: http://10.0.1.25:16080
 
  - service: http_status:404

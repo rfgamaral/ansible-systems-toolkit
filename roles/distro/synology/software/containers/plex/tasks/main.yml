@@ -21,8 +21,8 @@
           TZ: '{{ config_system_timezone }}'
           PUID: '{{ config_docker_user_id | string }}'
           PGID: '{{ config_docker_group_id | string }}'
-          ADVERTISE_IP: 'https://plex.{{ config_network_domain }}:443'
-          ALLOWED_NETWORKS: '10.0.10.0/255.255.255.0,10.0.80.0/255.255.255.0'
+          ADVERTISE_IP: 'http://10.0.1.25:32400,https://plex.{{ config_network_domain }}:443'
+          ALLOWED_NETWORKS: '10.0.1.0/255.255.255.0,10.0.10.0/255.255.255.0,10.0.80.0/255.255.255.0'
           PLEX_PASS: 'yes'
         network_mode: host
         memory: 2G

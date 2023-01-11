@@ -18,10 +18,10 @@ config = subprocess.check_output(['cat', '/config/config.boot'])
 static_mappings = re.findall('static-mapping ([^ ]+) \{\s+ip-address ([0-9.]+)[^\}]+\}', config, re.S)
 
 static_mappings_aliases = {
-    "LAB-DiskStation": "HYPERCUBE",
-    "LAB-RaspberryPi": "POLYMERBOX",
     "RFA-DellLaptop": "BLACKDELL",
     "RFA-DesktopPC": "BLACKBOX",
+    "SYN-DiskStation": "HYPERCUBE",
+    "SYS-RaspberryPi-1": "POLYMERBOX",
 }
 
 hasher  = hashlib.md5('\n'.join([h + i for h, i in static_mappings]))

@@ -3,7 +3,7 @@
 # > tailscale up \
 #     --accept-dns=false \
 #     --advertise-exit-node \
-#     --advertise-routes=10.0.10.0/24 \
+#     --advertise-routes=10.0.1.0/24 \
 #     --snat-subnet-routes=false
 
 - name: Enable IP packet forwarding for IPv4/IPv6

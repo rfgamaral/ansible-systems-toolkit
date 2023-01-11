@@ -66,4 +66,4 @@
 
   vars:
     hypercube_backups_path: /mnt/hypercube/backups
-    borgbackup_repository_path: '{{ hypercube_backups_path }}/LAB-RaspberryPi/BorgBackup'
+    borgbackup_repository_path: '{{ hypercube_backups_path }}/SYS-RaspberryPi-1/BorgBackup'

@@ -32,9 +32,9 @@ dns:
     - '# [main] Cloudflare DNS server (DNS-over-TLS)'
     - tls://1dot1dot1dot1.cloudflare-dns.com
     - '# [specific] Router DNS for `{{ config_network_domain }}` domain'
-    - '[/{{ config_network_domain }}/]10.0.10.254:53'
+    - '[/{{ config_network_domain }}/]10.0.1.254:53'
     - '# [specific] Router DNS for unqualified names only'
-    - '[//]10.0.10.254:53'
+    - '[//]10.0.1.254:53'
   upstream_dns_file: ''
   bootstrap_dns:
     - 1.1.1.1
@@ -45,9 +45,10 @@ dns:
   allowed_clients: []
   disallowed_clients: []
   blocked_hosts:
-    - version.bind
-    - id.server
     - hostname.bind
+    - id.server
+    - local
+    - version.bind
   trusted_proxies:
     - 127.0.0.0/8
     - ::1/128
@@ -214,39 +215,6 @@ clients:
         - user_regular
       ids:
         - 10.0.80.205
-      blocked_services: []
-      upstreams: []
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safesearch_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-    - name: LAB-DiskStation
-      tags:
-        - device_nas
-        - os_linux
-        - user_regular
-      ids:
-        - 10.0.10.205
-        - 100.92.108.77
-      blocked_services: []
-      upstreams: []
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safesearch_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-    - name: LAB-RaspberryPi
-      tags:
-        - device_other
-        - os_linux
-        - user_admin
-      ids:
-        - 10.0.10.200
-        - 100.78.45.65
-        - 172.16.10.254
       blocked_services: []
       upstreams: []
       use_global_settings: true
@@ -437,6 +405,21 @@ clients:
       safesearch_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
+    - name: RFA-GarminVenu2S
+      tags:
+        - device_other
+        - os_other
+        - user_regular
+      ids:
+        - 10.0.10.16
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
     - name: RFA-GooglePixel6
       tags:
         - device_phone
@@ -513,13 +496,46 @@ clients:
       safesearch_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
+    - name: SYN-DiskStation
+      tags:
+        - device_nas
+        - os_linux
+        - user_regular
+      ids:
+        - 10.0.1.25
+        - 100.92.108.77
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+    - name: SYS-RaspberryPi-1
+      tags:
+        - device_other
+        - os_linux
+        - user_admin
+      ids:
+        - 10.0.1.1
+        - 100.78.45.65
+        - 172.16.10.254
+      blocked_services: []
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safesearch_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
     - name: UAP-InWallHD-1
       tags:
         - device_other
         - os_linux
         - user_admin
       ids:
-        - 10.0.10.240
+        - 10.0.1.221
       blocked_services: []
       upstreams: []
       use_global_settings: true
@@ -534,7 +550,7 @@ clients:
         - os_linux
         - user_admin
       ids:
-        - 10.0.10.235
+        - 10.0.1.201
       blocked_services: []
       upstreams: []
       use_global_settings: true
@@ -549,7 +565,7 @@ clients:
         - os_linux
         - user_admin
       ids:
-        - 10.0.10.254
+        - 10.0.1.254
       blocked_services: []
       upstreams: []
       use_global_settings: true
@@ -564,7 +580,7 @@ clients:
         - os_linux
         - user_admin
       ids:
-        - 10.0.10.250
+        - 10.0.1.100
       blocked_services: []
       upstreams: []
       use_global_settings: true
@@ -579,7 +595,7 @@ clients:
         - os_linux
         - user_admin
       ids:
-        - 10.0.10.245
+        - 10.0.1.121
       blocked_services: []
       upstreams: []
       use_global_settings: true
