@@ -9,7 +9,7 @@
         labels:
           ofelia.job-exec.plex-trakt-sync.schedule: '@every 2h'
           ofelia.job-exec.plex-trakt-sync.container: 'plex-trakt-sync'
-          ofelia.job-exec.plex-trakt-sync.command: 'python -m plextraktsync sync'
+          ofelia.job-exec.plex-trakt-sync.command: 'sh -c "plextraktsync clear-collections --confirm && plextraktsync sync"'
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock:ro
         command: daemon --docker

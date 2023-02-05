@@ -18,7 +18,7 @@ logging:
 
 sync:
   plex_to_trakt:
-    collection: false
+    collection: true
     ratings: false
     watched_status: true
     watchlist: false
@@ -30,8 +30,8 @@ sync:
     watchlist_as_playlist: false
 
 watch:
-  add_collection: false
-  remove_collection: false
+  add_collection: true
+  remove_collection: true
   scrobble_threshold: 80
   username_filter: true
 
