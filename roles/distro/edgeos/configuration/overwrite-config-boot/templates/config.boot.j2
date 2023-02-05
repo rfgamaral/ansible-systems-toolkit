@@ -306,7 +306,7 @@ firewall {
         }
         rule 40 {
             action accept
-            description "Allow access to the CIF/SMB servers"
+            description "Allow access to the CIFS/SMB servers"
             destination {
                 group {
                     address-group SERVERS_CIFS
@@ -668,6 +668,7 @@ interfaces {
     loopback lo {
     }
     switch switch0 {
+        mtu 1500
     }
 }
 protocols {
@@ -904,7 +905,7 @@ service {
                 address 10.0.1.1
                 port 53
             }
-            log enable
+            log disable
             protocol tcp_udp
             type destination
         }
@@ -957,7 +958,7 @@ service {
             protocol all
             source {
                 group {
-                    address-group NETWORK_IPTV
+                    address-group NETWORKS_IPTV
                 }
             }
             type masquerade
@@ -1060,4 +1061,4 @@ system {
 
 /* Warning: Do not remove the following line. */
 /* === vyatta-config-version: "config-management@1:conntrack@1:cron@1:dhcp-relay@1:dhcp-server@4:firewall@5:ipsec@5:nat@3:qos@1:quagga@2:suspend@1:system@5:ubnt-l2tp@1:ubnt-pptp@1:ubnt-udapi-server@1:ubnt-unms@2:ubnt-util@1:vrrp@1:vyatta-netflow@1:webgui@1:webproxy@1:zone-policy@1" === */
-/* Release version: v2.0.9-hotfix.5.5554172.221020.0743 */
+/* Release version: v2.0.9-hotfix.6.5574652.221230.1020 */

@@ -7,7 +7,7 @@ OLD_ROUTER_IP=\$(cat /config/config.boot | grep 'table 105' -A2 | grep 'next-hop
 
 NEW_ROUTER_IP=\$(cat /var/run/dhclient_eth9.105_lease | grep 'new_routers' | awk -F= '{print \$2}' | tr -d \')
 
-if [ "\$OLD_ROUTER_IP" = "\$NEW_ROUTER_IP" ]; then
+if [ -z "\$NEW_ROUTER_IP" ] || [ "\$OLD_ROUTER_IP" = "\$NEW_ROUTER_IP" ]; then
    exit 0
 fi
 
