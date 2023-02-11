@@ -21,7 +21,7 @@ static_mappings_aliases = {
     "RFA-DellLaptop": "BLACKDELL",
     "RFA-DesktopPC": "BLACKBOX",
     "SYN-DiskStation": "HYPERCUBE",
-    "SYS-RaspberryPi-1": "POLYMERBOX",
+    "SYS-RaspberryPi-Alpha": "POLYMERBOX",
 }
 
 hasher  = hashlib.md5('\n'.join([h + i for h, i in static_mappings]))

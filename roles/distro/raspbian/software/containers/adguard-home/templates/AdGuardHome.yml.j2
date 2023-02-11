@@ -1,11 +1,11 @@
 bind_host: 0.0.0.0
 bind_port: 80
-beta_bind_port: 0
 users: []
 auth_attempts: 5
 block_auth_min: 15
 http_proxy: ''
 language: en
+theme: auto
 debug_pprof: false
 web_session_ttl: 720
 dns:
@@ -115,6 +115,8 @@ dns:
   private_networks: []
   use_private_ptr_resolvers: true
   local_ptr_upstreams: []
+  use_dns64: false
+  dns64_prefixes: []
   serve_http3: false
   use_http3_upstreams: false
 tls:
@@ -223,7 +225,7 @@ clients:
       safesearch_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
-    - name: LED-TapoL530E-1
+    - name: LED-TapoL530E-Couch
       tags:
         - device_other
         - os_other
@@ -329,13 +331,13 @@ clients:
       safesearch_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
-    - name: PLG-TapoP100-1
+    - name: PWR-ShellyPlugS-PS5
       tags:
         - device_other
         - os_other
         - user_regular
       ids:
-        - 10.0.80.51
+        - 10.0.80.52
       blocked_services: []
       upstreams: []
       use_global_settings: true
@@ -344,13 +346,13 @@ clients:
       safesearch_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
-    - name: PLG-TapoP110-1
+    - name: PWR-ShellyPlugS-TV
       tags:
         - device_other
         - os_other
         - user_regular
       ids:
-        - 10.0.80.52
+        - 10.0.80.51
       blocked_services: []
       upstreams: []
       use_global_settings: true
@@ -512,7 +514,7 @@ clients:
       safesearch_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
-    - name: SYS-RaspberryPi-1
+    - name: SYS-RaspberryPi-Alpha
       tags:
         - device_other
         - os_linux
@@ -529,22 +531,7 @@ clients:
       safesearch_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
-    - name: UAP-InWallHD-1
-      tags:
-        - device_other
-        - os_linux
-        - user_admin
-      ids:
-        - 10.0.1.221
-      blocked_services: []
-      upstreams: []
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safesearch_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-    - name: UAP-U6InWall-1
+    - name: UAP-U6InWall
       tags:
         - device_other
         - os_linux
@@ -581,21 +568,6 @@ clients:
         - user_admin
       ids:
         - 10.0.1.100
-      blocked_services: []
-      upstreams: []
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safesearch_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-    - name: USW-FlexMini-1
-      tags:
-        - device_other
-        - os_linux
-        - user_admin
-      ids:
-        - 10.0.1.121
       blocked_services: []
       upstreams: []
       use_global_settings: true
