@@ -25,10 +25,6 @@ firewall {
             address 10.0.90.0/24
             description "Networks: Home"
         }
-        address-group NETWORKS_IPTV {
-            address 192.168.1.0/24
-            description "Networks: IPTV"
-        }
         address-group NETWORKS_RFC1918 {
             address 192.168.0.0/16
             address 172.16.0.0/12
@@ -97,21 +93,6 @@ firewall {
     ipv6-src-route disable
     ip-src-route disable
     log-martians enable
-    modify LAN_IPTV_IN {
-        description "IPTV clients to LANs/Internet"
-        rule 10 {
-            action modify
-            description "Forward IPTV traffic to the IPTV network"
-            modify {
-                table 105
-            }
-            source {
-                group {
-                    address-group NETWORKS_IPTV
-                }
-            }
-        }
-    }
     name LAN_GUESTS_IN {
         default-action accept
         description "Guest clients to LANs/Internet"
@@ -568,52 +549,17 @@ interfaces {
         speed auto
     }
     ethernet eth8 {
-        address 192.168.1.254/24
-        description "TV-BoxHD"
+        disable
         duplex auto
-        firewall {
-            in {
-                modify LAN_IPTV_IN
-            }
-        }
         speed auto
     }
     ethernet eth9 {
-        description "UF-Loco"
+        description "Internet"
         duplex auto
         poe {
-            output 24v
+            output off
         }
         speed auto
-        vif 100 {
-            address dhcp
-            description "WAN: Internet"
-            dhcp-options {
-                default-route update
-                default-route-distance 210
-                name-server no-update
-            }
-            firewall {
-                in {
-                    name WAN_INTERNET_IN
-                }
-                local {
-                    name WAN_INTERNET_LOCAL
-                }
-                out {
-                    name WAN_INTERNET_OUT
-                }
-            }
-        }
-        vif 105 {
-            address dhcp
-            description "WAN: IPTV"
-            dhcp-options {
-                default-route no-update
-                default-route-distance 210
-                name-server no-update
-            }
-        }
     }
     ethernet eth10 {
         disable
@@ -672,30 +618,10 @@ interfaces {
     }
 }
 protocols {
-    igmp-proxy {
-        interface eth8 {
-            alt-subnet 192.168.1.0/24
-            role downstream
-            threshold 1
-        }
-        interface eth9.105 {
-            alt-subnet 10.0.0.0/8
-            alt-subnet 224.0.0.0/4
-            role upstream
-            threshold 1
-        }
-    }
     static {
         route 100.64.0.0/10 {
             next-hop 10.0.1.1 {
                 description "Tailscale subnet routing"
-            }
-        }
-        table 105 {
-            route 0.0.0.0/0 {
-                next-hop 10.65.0.1 {
-                    description "IPTV subnet routing"
-                }
             }
         }
     }
@@ -754,18 +680,6 @@ service {
                 static-mapping SNR-WithingsBodyPlus {
                     ip-address 10.0.80.32
                     mac-address 00:24:e4:d9:b0:a4
-                }
-            }
-        }
-        shared-network-name LAN_IPTV {
-            authoritative disable
-            subnet 192.168.1.254/24 {
-                default-router 192.168.1.254
-                dns-server 87.103.119.196
-                dns-server 213.30.36.212
-                lease 86400
-                start 192.168.1.65 {
-                    stop 192.168.1.100
                 }
             }
         }
@@ -934,23 +848,11 @@ service {
         rule 5010 {
             description "Masquerade for WAN: Internet"
             log disable
-            outbound-interface eth9.100
+            outbound-interface eth9
             protocol all
             source {
                 group {
                     address-group NETWORKS_HOME
-                }
-            }
-            type masquerade
-        }
-        rule 5020 {
-            description "Masquerade for WAN: IPTV"
-            log disable
-            outbound-interface eth9.105
-            protocol all
-            source {
-                group {
-                    address-group NETWORKS_IPTV
                 }
             }
             type masquerade
@@ -1034,12 +936,6 @@ system {
             executable {
                 arguments /config/user-data/dnsmasq/hosts
                 path /config/scripts/mirror-static-mappings-to-hosts.py
-            }
-        }
-        task update-iptv-routing-table {
-            crontab-spec "*/5 * * * *"
-            executable {
-                path /config/scripts/update-iptv-routing-table.sh
             }
         }
     }
