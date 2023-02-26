@@ -1,0 +1,49 @@
+collections:
+  'Add apostrophe to `Directors Cut`':
+    build_collection: false
+    plex_search:
+      all:
+        edition: Directors Cut
+    item_edition: Director's Cut
+  'Add apostrophe to `Ultimate Directors Cut`':
+    build_collection: false
+    plex_search:
+      all:
+        edition: Ultimate Directors Cut
+    item_edition: Ultimate Director's Cut
+  'Add apostrophe to `Collectors Edition`':
+    build_collection: false
+    plex_search:
+      all:
+        edition: Collectors Edition
+    item_edition: Collector's Edition
+  'Convert `Imax` edition attribute to uppercase':
+    build_collection: false
+    plex_search:
+      all:
+        edition: Imax
+    item_edition: IMAX
+  'Rename `Extended` edition attribute to `Extended Edition':
+    build_collection: false
+    plex_search:
+      all:
+        edition: Extended
+    item_edition: Extended Edition
+  'Rename `Extended Cut` edition attribute to `Extended Edition':
+    build_collection: false
+    plex_search:
+      all:
+        edition: Extended Cut
+    item_edition: Extended Edition
+  'Remove `Theatrical` from edition attribute':
+    build_collection: false
+    plex_search:
+      all:
+        edition: Theatrical
+    item_edition:
+  'Remove `Theatrical Cut` from edition attribute':
+    build_collection: false
+    plex_search:
+      all:
+        edition: Theatrical Cut
+    item_edition:

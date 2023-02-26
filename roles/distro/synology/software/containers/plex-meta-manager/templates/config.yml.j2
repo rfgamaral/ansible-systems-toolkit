@@ -7,6 +7,8 @@ libraries:
         asset_directory: config/assets/Movies/Collections
       - file: config/metadata/Movies/directors.yml
         asset_directory: config/assets/Movies/Directors
+      # Metadata normalization should be the last thing to run
+      - file: config/metadata/Movies/normalization.yml
     operations:
       delete_unmanaged_collections: true
 
