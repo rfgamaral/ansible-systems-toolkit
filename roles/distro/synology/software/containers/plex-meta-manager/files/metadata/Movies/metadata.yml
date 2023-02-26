@@ -5,7 +5,7 @@ metadata:
     url_poster: https://theposterdb.com/api/assets/27817
   '2001: A Space Odyssey':
     url_poster: https://theposterdb.com/api/assets/63118
-  28 Days Later...:
+  28 Days Later:
     url_poster: https://theposterdb.com/api/assets/4964
   28 Weeks Later:
     url_poster: https://theposterdb.com/api/assets/4965
@@ -22,13 +22,10 @@ metadata:
   'Alien: Covenant':
     url_poster: https://theposterdb.com/api/assets/40353
   'Alien: Resurrection':
-    edition: Director's Cut
     url_poster: https://theposterdb.com/api/assets/40349
   Aliens:
-    edition: Director's Cut
     url_poster: https://theposterdb.com/api/assets/40347
   Alien³:
-    edition: Director's Cut
     url_poster: https://theposterdb.com/api/assets/40348
   American History X:
     url_poster: https://theposterdb.com/api/assets/92406
@@ -37,23 +34,18 @@ metadata:
   Ant-Man:
     url_poster: https://theposterdb.com/api/assets/169482
   Ant-Man and the Wasp:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169541
   Apocalypse Now:
-    edition: Final Cut
     url_poster: https://theposterdb.com/api/assets/20055
   Armageddon:
     url_poster: https://www.themoviedb.org/t/p/original/eTM3qtGhDU8cvjpoa6KEt5E2auU.jpg
   Avatar:
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/260467
   'Avengers: Age of Ultron':
     url_poster: https://theposterdb.com/api/assets/169481
   'Avengers: Endgame':
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169492
   'Avengers: Infinity War':
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169489
   Back to the Future:
     url_poster: https://theposterdb.com/api/assets/87589
@@ -74,30 +66,24 @@ metadata:
   Beneath the Planet of the Apes:
     url_poster: https://theposterdb.com/api/assets/334
   Black Hawk Down:
-    edition: Extended
     url_poster: https://www.themoviedb.org/t/p/original/7fU5dSqKRL4XHeEUz62rCKBfYok.jpg
   Black Panther:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169488
   Black Widow:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169494
   Blade:
     url_poster: https://theposterdb.com/api/assets/62369
   Blade II:
     url_poster: https://theposterdb.com/api/assets/62370
   Blade Runner:
-    edition: Final Cut
     url_poster: https://theposterdb.com/api/assets/33976
   Blade Runner 2049:
     url_poster: https://theposterdb.com/api/assets/33977
   'Blade: Trinity':
-    edition: Unrated
     url_poster: https://theposterdb.com/api/assets/62371
   Brave:
     url_poster: https://theposterdb.com/api/assets/506
   'Captain America: Civil War':
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169483
   'Captain America: The First Avenger':
     url_poster: https://theposterdb.com/api/assets/169517
@@ -118,7 +104,6 @@ metadata:
   Citizen Kane:
     url_poster: https://www.themoviedb.org/t/p/original/sav0jxhqiH0bPr2vZFU0Kjt2nZL.jpg
   Clerks:
-    edition: Theatrical
     url_poster: https://www.themoviedb.org/t/p/original/zeFhNF0SXlYIvWXpaOLuXVQ3jB4.jpg
   Clerks II:
     url_poster: https://www.themoviedb.org/t/p/original/cLSW0nW94XT0DmBS69ublcLfQ9c.jpg
@@ -147,7 +132,6 @@ metadata:
   Django Unchained:
     url_poster: https://theposterdb.com/api/assets/8609
   Doctor Strange:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169484
   Doctor Strange in the Multiverse of Madness:
     url_poster: https://theposterdb.com/api/assets/226287
@@ -172,7 +156,6 @@ metadata:
   Escape from the Planet of the Apes:
     url_poster: https://theposterdb.com/api/assets/335
   Eternals:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/204220
   Eyes Wide Shut:
     url_poster: https://theposterdb.com/api/assets/63123
@@ -190,13 +173,10 @@ metadata:
   Fast & Furious:
     url_poster: https://theposterdb.com/api/assets/27819
   Fast & Furious 6:
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/27821
   Fast Five:
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/27820
   Fight Club:
-    edition: 10th Anniversary
     url_poster: https://www.themoviedb.org/t/p/original/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
   Final Destination:
     url_poster: https://theposterdb.com/api/assets/883
@@ -215,17 +195,14 @@ metadata:
   Following:
     url_poster: https://theposterdb.com/api/assets/109336
   Forrest Gump:
-    edition: Remastered
     url_poster: https://theposterdb.com/api/assets/83870
   From Dusk Till Dawn:
     url_poster: https://www.themoviedb.org/t/p/original/sV3kIAmvJ9tPz4Lq5fuf9LLMxte.jpg
   Full Metal Jacket:
     url_poster: https://www.themoviedb.org/t/p/original/oTDSLgzAlFHZeyOJdGrtSLv1cSQ.jpg
   Furious 7:
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/27822
   Gangs of New York:
-    edition: Remastered
     url_poster: https://www.themoviedb.org/t/p/original/lemqKtcCuAano5aqrzxYiKC8kkn.jpg
   Ghostbusters:
     url_poster: https://theposterdb.com/api/assets/75476
@@ -234,7 +211,6 @@ metadata:
   'Ghostbusters: Afterlife':
     url_poster: https://theposterdb.com/api/assets/75479
   Gladiator:
-    edition: Extended
     url_poster: https://www.themoviedb.org/t/p/original/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg
   Godzilla:
     url_poster: https://theposterdb.com/api/assets/8259
@@ -247,13 +223,10 @@ metadata:
   Gran Torino:
     url_poster: https://theposterdb.com/api/assets/20373
   Guardians of the Galaxy:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169480
   Guardians of the Galaxy Vol. 2:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169485
   Harry Potter and the Chamber of Secrets:
-    edition: Theatrical
     url_poster: https://theposterdb.com/api/assets/1869
   'Harry Potter and the Deathly Hallows: Part 1':
     url_poster: https://theposterdb.com/api/assets/1874
@@ -279,7 +252,6 @@ metadata:
   Incredibles 2:
     url_poster: https://theposterdb.com/api/assets/513
   Independence Day:
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/15118
   'Independence Day: Resurgence':
     url_poster: https://theposterdb.com/api/assets/15119
@@ -304,7 +276,6 @@ metadata:
   Invictus:
     url_poster: https://www.themoviedb.org/t/p/original/cNUoXM8dtg5mRt90GLrAHBP9IGE.jpg
   Iron Man:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169471
   Iron Man 2:
     url_poster: https://theposterdb.com/api/assets/169473
@@ -351,7 +322,6 @@ metadata:
   Lawrence of Arabia:
     url_poster: https://www.themoviedb.org/t/p/original/AiAm0EtDvyGqNpVoieRw4u65vD1.jpg
   Leaving Las Vegas:
-    edition: Unrated
     url_poster: https://theposterdb.com/api/assets/63473
   Letters from Iwo Jima:
     url_poster: https://theposterdb.com/api/assets/162322
@@ -376,17 +346,14 @@ metadata:
     alt_title: The Road Warrior
     url_poster: https://theposterdb.com/api/assets/8319
   Mallrats:
-    edition: Extended
     url_poster: https://www.themoviedb.org/t/p/original/kNm0AQFIc4nlzCd8Nqvbb5gccAV.jpg
   Matchstick Men:
     url_poster: https://www.themoviedb.org/t/p/original/mW6HZe1aoipzH8U7ucjma6E3LLx.jpg
   Meet Joe Black:
     url_poster: https://theposterdb.com/api/assets/183856
   Memento:
-    edition: Remastered
     url_poster: https://www.themoviedb.org/t/p/original/yuNs09hvpHVU1cBTCAk9zxsL2oW.jpg
   Midnight Cowboy:
-    edition: Remastered
     url_poster: https://theposterdb.com/api/assets/241160
   Million Dollar Baby:
     url_poster: https://www.themoviedb.org/t/p/original/mVqE0CaURUkiIXzHPOLVbTjAXFy.jpg
@@ -409,7 +376,6 @@ metadata:
   Mystic River:
     url_poster: https://www.themoviedb.org/t/p/original/e2VNohx5jb7I6HUamCuGhKvzXDR.jpg
   Natural Born Killers:
-    edition: Director's Cut
     url_poster: https://www.themoviedb.org/t/p/original/fEKZwT91gxvkAoyPgpNXo8W5fu0.jpg
   No Country for Old Men:
     url_poster: https://www.themoviedb.org/t/p/original/bj1v6YKF8yHqA489VFfnQvOJpnc.jpg
@@ -434,7 +400,6 @@ metadata:
   'Pirates of the Caribbean: The Curse of the Black Pearl':
     url_poster: https://theposterdb.com/api/assets/12793
   Pitch Black:
-    edition: Theatrical
     url_poster: https://theposterdb.com/api/assets/26842
   Planet of the Apes:
     url_poster: https://theposterdb.com/api/assets/333
@@ -463,7 +428,6 @@ metadata:
   'Resident Evil: Afterlife':
     url_poster: https://theposterdb.com/api/assets/83689
   'Resident Evil: Apocalypse':
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/83687
   'Resident Evil: Extinction':
     url_poster: https://theposterdb.com/api/assets/83688
@@ -472,7 +436,6 @@ metadata:
   'Resident Evil: The Final Chapter':
     url_poster: https://theposterdb.com/api/assets/83691
   Riddick:
-    edition: Theatrical
     url_poster: https://theposterdb.com/api/assets/26844
   Rise of the Planet of the Apes:
     url_poster: https://theposterdb.com/api/assets/79858
@@ -521,15 +484,12 @@ metadata:
   Scream 4:
     url_poster: https://theposterdb.com/api/assets/808
   Se7en:
-    edition: Remastered
     url_poster: https://theposterdb.com/api/assets/108334
   Shang-Chi and the Legend of the Ten Rings:
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/171697
   Shaun of the Dead:
     url_poster: https://theposterdb.com/api/assets/192541
   Sin City:
-    edition: Unrated
     url_poster: https://theposterdb.com/api/assets/32538
   'Sin City: A Dame to Kill For':
     url_poster: https://theposterdb.com/api/assets/32539
@@ -598,7 +558,6 @@ metadata:
   The Bourne Ultimatum:
     url_poster: https://theposterdb.com/api/assets/5423
   The Chronicles of Riddick:
-    edition: Theatrical
     url_poster: https://theposterdb.com/api/assets/26843
   The Dark Knight:
     url_poster: https://theposterdb.com/api/assets/21708
@@ -621,7 +580,6 @@ metadata:
   The Final Destination:
     url_poster: https://theposterdb.com/api/assets/889
   The Game:
-    edition: Remastered
     url_poster: https://theposterdb.com/api/assets/164519
   The Godfather:
     url_poster: https://theposterdb.com/api/assets/161
@@ -640,13 +598,10 @@ metadata:
   The Hateful Eight:
     url_poster: https://www.themoviedb.org/t/p/original/jIywvdPjia2t3eKYbjVTcwBQlG8.jpg
   'The Hobbit: An Unexpected Journey':
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/1723
   'The Hobbit: The Battle of the Five Armies':
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/1725
   'The Hobbit: The Desolation of Smaug':
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/1724
   The Hunger Games:
     url_poster: https://theposterdb.com/api/assets/6978
@@ -671,18 +626,14 @@ metadata:
   The King's Man:
     url_poster: https://theposterdb.com/api/assets/31915
   'The Lord of the Rings: The Fellowship of the Ring':
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/1719
   'The Lord of the Rings: The Return of the King':
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/1722
   'The Lord of the Rings: The Two Towers':
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/1721
   'The Lost World: Jurassic Park':
     url_poster: https://theposterdb.com/api/assets/248691
   The Man from Earth:
-    edition: Remastered
     url_poster: https://www.themoviedb.org/t/p/original/V086R82gNgWrotaXZFO4JhdgB1.jpg
   The Matrix:
     url_poster: https://theposterdb.com/api/assets/192547
@@ -711,7 +662,6 @@ metadata:
   The Wolf of Wall Street:
     url_poster: https://theposterdb.com/api/assets/24534
   The Wolverine:
-    edition: Extended
     url_poster: https://theposterdb.com/api/assets/32352
   The World's End:
     url_poster: https://theposterdb.com/api/assets/192543
@@ -722,7 +672,6 @@ metadata:
   'Thor: Love and Thunder':
     url_poster: https://theposterdb.com/api/assets/237395
   'Thor: Ragnarok':
-    edition: IMAX
     url_poster: https://theposterdb.com/api/assets/169536
   'Thor: The Dark World':
     url_poster: https://theposterdb.com/api/assets/169478
