@@ -265,6 +265,60 @@ clients:
         schedule:
           time_zone: Europe/Lisbon
         ids: []
+      name: CAM-ReolinkE1Pro-Garage
+      ids:
+        - 10.0.80.95
+      tags:
+        - device_camera
+        - os_other
+        - user_regular
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: false
+        duckduckgo: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: Europe/Lisbon
+        ids: []
+      name: CAM-ReolinkE1Pro-LivingRoom
+      ids:
+        - 10.0.80.91
+      tags:
+        - device_camera
+        - os_other
+        - user_regular
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: true
+        bing: true
+        duckduckgo: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Europe/Lisbon
+        ids: []
       name: DMP-BraviaA90J
       ids:
         - 10.0.80.200
@@ -275,7 +329,7 @@ clients:
       upstreams: []
       use_global_settings: false
       filtering_enabled: true
-      parental_enabled: false
+      parental_enabled: true
       safebrowsing_enabled: true
       use_global_blocked_services: true
       ignore_querylog: false
@@ -870,7 +924,34 @@ clients:
         - 10.0.1.201
       tags:
         - device_other
-        - os_linux
+        - os_other
+        - user_admin
+      upstreams: []
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: false
+        duckduckgo: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: Europe/Lisbon
+        ids: []
+      name: UAP-U6Lite
+      ids:
+        - 10.0.1.205
+      tags:
+        - device_other
+        - os_other
         - user_admin
       upstreams: []
       use_global_settings: true
