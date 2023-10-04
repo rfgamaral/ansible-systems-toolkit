@@ -11,3 +11,10 @@
   cronvar:
     name: PATH
     value: '/usr/local/bin:/usr/bin:/bin'
+
+# ref: https://wiki.debian.org/resolv.conf
+- name: Disable 'openresolv' in favor of 'resolvconf'
+  lineinfile:
+    path: /etc/resolvconf.conf
+    line: resolvconf=NO
+    insertbefore: resolv_conf=/etc/resolv.conf
