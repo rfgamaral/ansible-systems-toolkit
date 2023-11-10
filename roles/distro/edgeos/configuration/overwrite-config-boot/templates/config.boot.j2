@@ -758,7 +758,7 @@ service {
                 }
                 static-mapping RFA-DesktopPC {
                     ip-address 10.0.10.12
-                    mac-address b4:2e:99:99:81:a0
+                    mac-address 08:bf:b8:1d:42:d9
                 }
                 static-mapping RFA-GarminVenu2S {
                     ip-address 10.0.10.16
@@ -900,7 +900,7 @@ system {
         user {{ config_admin_user_name }} {
             authentication {
                 plaintext-password {{ config_admin_user_pass }}
-                public-keys BLACKBOX {
+                public-keys WHITEBOX {
                     key {{ config_admin_user_public_key }}
                     type ssh-rsa
                 }

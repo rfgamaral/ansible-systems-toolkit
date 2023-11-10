@@ -19,7 +19,7 @@ static_mappings = re.findall('static-mapping ([^ ]+) \{\s+ip-address ([0-9.]+)[^
 
 static_mappings_aliases = {
     "RFA-DellLaptop": "BLACKDELL",
-    "RFA-DesktopPC": "BLACKBOX",
+    "RFA-DesktopPC": "WHITEBOX",
     "SYN-DiskStation": "HYPERCUBE",
     "SYS-RaspberryPi-Alpha": "POLYMERBOX",
 }

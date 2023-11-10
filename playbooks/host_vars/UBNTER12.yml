@@ -30,4 +30,4 @@ config_admin_user_public_key: !vault |
   66633331623530656536393230343963616637636565643438363037373033663232393634373462
   33363530333236666565666438636361323864323737666135386131656662303161363161366432
   393033316334356165666135333336376562
-config_admin_user_private_key_file: '~/.ssh/id_rsa-{{ config_admin_user_name }}@{{ inventory_hostname_short }}.{{ config_network_domain }}-BLACKBOX.key'
+config_admin_user_private_key_file: '~/.ssh/id_rsa-{{ config_admin_user_name }}@{{ inventory_hostname_short }}.{{ config_network_domain }}-WHITEBOX.key'
