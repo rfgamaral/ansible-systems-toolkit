@@ -27,8 +27,7 @@
         network_mode: host
         memory: 2G
         devices:
-          - /dev/dri/card0:/dev/dri/card0:rwm
-          - /dev/dri/renderD128:/dev/dri/renderD128:rwm
+          - /dev/dri:/dev/dri:rwm
         volumes:
           - /volume1/Docker/plex/config:/config:rw
           - /volume1/Docker/plex/transcode:/transcode:rw
