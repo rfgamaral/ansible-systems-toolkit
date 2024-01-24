@@ -41,9 +41,11 @@
         restart_policy: always
         env:
           TZ: '{{ config_system_timezone }}'
+          PUID: '{{ config_docker_user_id | string }}'
+          PGID: '{{ config_docker_group_id | string }}'
         volumes:
           - /volume1/Docker/{{ container_name }}:/app/config:rw
-        entrypoint: python -m plextraktsync watch
+        command: watch
 
   vars:
     container_name: '{{ role_name | basename }}'
