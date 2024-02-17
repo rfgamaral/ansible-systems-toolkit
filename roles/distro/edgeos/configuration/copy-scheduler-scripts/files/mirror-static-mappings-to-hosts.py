@@ -18,8 +18,8 @@ config = subprocess.check_output(['cat', '/config/config.boot'])
 static_mappings = re.findall('static-mapping ([^ ]+) \{\s+ip-address ([0-9.]+)[^\}]+\}', config, re.S)
 
 static_mappings_aliases = {
-    "RFA-DellLaptop": "BLACKDELL",
     "RFA-DesktopPC": "WHITEBOX",
+    "RFA-SurfacePro9": "GRAPHITE",
     "SYN-DiskStation": "HYPERCUBE",
     "SYS-RaspberryPi-Alpha": "POLYMERBOX",
 }
