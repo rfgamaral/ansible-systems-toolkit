@@ -16,6 +16,8 @@ dns:
   port: 53
   anonymize_client_ip: false
   ratelimit: 20
+  ratelimit_subnet_len_ipv4: 24
+  ratelimit_subnet_len_ipv6: 56
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
@@ -30,8 +32,7 @@ dns:
     - 1.1.1.1
     - 1.0.0.1
   fallback_dns: []
-  all_servers: false
-  fastest_addr: false
+  upstream_mode: load_balance
   fastest_timeout: 1s
   allowed_clients: []
   disallowed_clients: []
@@ -61,12 +62,14 @@ dns:
   bootstrap_prefer_ipv6: false
   upstream_timeout: 10s
   private_networks: []
-  use_private_ptr_resolvers: true
+  use_private_ptr_resolvers: false
   local_ptr_upstreams: []
   use_dns64: false
   dns64_prefixes: []
   serve_http3: false
   use_http3_upstreams: false
+  serve_plain_dns: true
+  hostsfile_enabled: true
 tls:
   enabled: false
   server_name: adguard.{{ config_network_domain }}
@@ -110,6 +113,7 @@ querylog:
   enabled: true
   file_enabled: true
 statistics:
+  dir_path: ''
   ignored:
     - local.todoist.com
     - local.twist.com
@@ -166,6 +170,7 @@ user_rules:
   - '# Tailscale Machine IPs (https://tailscale.com/)'
   - '|hypercube.{{ config_network_domain }}^$client=100.64.0.0/10,dnsrewrite=NOERROR;A;100.92.108.77'
   - '|polymerbox.{{ config_network_domain }}^$client=100.64.0.0/10,dnsrewrite=NOERROR;A;100.78.45.65'
+  - '@@||get.deel.com^$important'
 dhcp:
   enabled: false
   interface_name: ''
@@ -269,14 +274,16 @@ clients:
         schedule:
           time_zone: Europe/Lisbon
         ids: []
-      name: APP-Roombai7
+      name: APP-CosoriAirFryer
       ids:
-        - 10.0.80.11
+        - 10.0.80.12
       tags:
         - device_other
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -296,14 +303,16 @@ clients:
         schedule:
           time_zone: Europe/Lisbon
         ids: []
-      name: APP-CosoriAirFryer
+      name: APP-Roombai7
       ids:
-        - 10.0.80.12
+        - 10.0.80.11
       tags:
         - device_other
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -331,6 +340,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -358,6 +369,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -385,6 +398,8 @@ clients:
         - os_android
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: false
       filtering_enabled: true
       parental_enabled: true
@@ -412,6 +427,8 @@ clients:
         - os_android
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -439,6 +456,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -467,6 +486,8 @@ clients:
         - os_macos
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -494,6 +515,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -521,6 +544,8 @@ clients:
         - os_ios
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -548,6 +573,8 @@ clients:
         - os_macos
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -575,6 +602,8 @@ clients:
         - os_ios
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -602,6 +631,8 @@ clients:
         - os_ios
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -629,6 +660,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -656,6 +689,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -683,36 +718,10 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
-      parental_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-      ignore_querylog: false
-      ignore_statistics: false
-    - safe_search:
-        enabled: false
-        bing: false
-        duckduckgo: false
-        google: false
-        pixabay: false
-        yandex: false
-        youtube: false
-      blocked_services:
-        schedule:
-          time_zone: Europe/Lisbon
-        ids: []
-      name: RFA-SurfacePro9
-      ids:
-        - 10.0.10.13
-        - 100.84.223.63
-      tags:
-        - device_laptop
-        - os_windows
-        - user_admin
-      upstreams: []
-      use_global_settings: false
-      filtering_enabled: true
       parental_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
@@ -738,6 +747,8 @@ clients:
         - os_windows
         - user_admin
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: false
       filtering_enabled: true
       parental_enabled: false
@@ -765,6 +776,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -793,6 +806,8 @@ clients:
         - os_android
         - user_admin
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: false
       filtering_enabled: true
       parental_enabled: false
@@ -820,6 +835,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -847,8 +864,40 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: false
+        duckduckgo: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: Europe/Lisbon
+        ids: []
+      name: RFA-SurfacePro9
+      ids:
+        - 10.0.10.13
+        - 100.84.223.63
+      tags:
+        - device_laptop
+        - os_windows
+        - user_admin
+      upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: true
       parental_enabled: false
       safebrowsing_enabled: false
       use_global_blocked_services: true
@@ -874,6 +923,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -901,6 +952,8 @@ clients:
         - os_other
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -929,6 +982,8 @@ clients:
         - os_linux
         - user_regular
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -958,6 +1013,8 @@ clients:
         - os_linux
         - user_admin
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -985,6 +1042,8 @@ clients:
         - os_other
         - user_admin
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -1012,6 +1071,8 @@ clients:
         - os_other
         - user_admin
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -1039,6 +1100,8 @@ clients:
         - os_linux
         - user_admin
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
@@ -1066,6 +1129,8 @@ clients:
         - os_linux
         - user_admin
       upstreams: []
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
       use_global_settings: true
       filtering_enabled: false
       parental_enabled: false
