@@ -37,7 +37,7 @@
     - name: Create '{{ container_name }}' container
       docker_container:
         name: '{{ container_name }}'
-        image: ghcr.io/taxel/plextraktsync:0.31.6
+        image: ghcr.io/taxel/plextraktsync:0.31.7
         restart_policy: always
         env:
           TZ: '{{ config_system_timezone }}'
